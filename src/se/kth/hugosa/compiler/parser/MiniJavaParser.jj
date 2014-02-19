@@ -1,0 +1,57 @@
+options {
+  JAVA_UNICODE_ESCAPE = true;
+}
+
+PARSER_BEGIN(MiniJavaParser)
+  public class TestParser {}
+PARSER_END(MiniJavaParser)
+
+TOKEN : {
+     < CLASS: "class" >
+  |  < PUBLIC : "public" >
+  |  < STATIC : "static" >
+  |  < VOID : "void" >
+  |  < STRING : "String" >
+  |  < RETURN : "return" >
+  |  < INT : "int" >
+  |  < LBRACKET : "[" >
+  |  < RBRACKET : "]" >
+  |  < BOOLEAN : "boolean" >
+  |  < LBRACE : "{" >
+  |  < RBRACE : "}" >
+  |  < LPAREN : "(" >
+  |  < RPAREN : ")" >
+  |  < IF : "if" >
+  |  < ELSE : "else" >
+  |  < WHILE : "while" >
+  |  < SYSO : "System.out.println" >
+  |  < DOT : "." >
+  |  < LENGTH : "length" >
+  |  < TRUE : "true" >
+  |  < FALSE : "false" >
+  |  < THIS : "this" >
+  |  < NEW : "new" >
+  |  < EXCLMARK : "!" >
+  |  < AND : "&&" >
+  |  < LT : "<" >
+  |  < PLUS : "+" >
+  |  < MINUS : "-" >
+  |  < MULT : "*" >
+  |  < COMMA : "," >
+  |  < ID : (["a"-"z""A"-"Z""_"]["a"-"z""A"-"Z""0"-"9""_"])*
+  |  < INT_LIT : "0"|["1"-"9"]["0"-"9"]*
+}
+
+SKIP : {
+     " "
+  |  "\t"
+  |  "\n"
+  |  "\r"
+  |  "\f"
+}
+
+void start() :
+{}
+{
+
+}
