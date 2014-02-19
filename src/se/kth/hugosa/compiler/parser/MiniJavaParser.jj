@@ -38,6 +38,8 @@ TOKEN : {
   |  < MINUS : "-" >
   |  < MULT : "*" >
   |  < COMMA : "," >
+  |  < ASSIGN : "=" >
+  |  < SEMICOLON : ";" >
   |  < ID : ((["a"-"z"]|["A"-"Z"]|"_")(["a"-"z"]|["A"-"Z"]|["0"-"9"]|"_"))* >
   |  < INT_LIT : ("0"|(["1"-"9"]["0"-"9"])*) >
 }
@@ -53,5 +55,5 @@ SKIP : {
 void start() :
 {}
 {
-    <PUBLIC> <CLASS> <LBRACE> <RBRACE> <EOF>
+    <PUBLIC> <CLASS> <LBRACE> (<ID> <ASSIGN> <INT_LIT> <SEMICOLON>)* <RBRACE> <EOF>
 }
