@@ -3,7 +3,7 @@ options {
 }
 
 PARSER_BEGIN(MiniJavaParser)
-  public class TestParser {}
+  public class MiniJavaParser {}
 PARSER_END(MiniJavaParser)
 
 TOKEN : {
@@ -38,8 +38,8 @@ TOKEN : {
   |  < MINUS : "-" >
   |  < MULT : "*" >
   |  < COMMA : "," >
-  |  < ID : (["a"-"z""A"-"Z""_"]["a"-"z""A"-"Z""0"-"9""_"])*
-  |  < INT_LIT : "0"|["1"-"9"]["0"-"9"]*
+  |  < ID : ((["a"-"z"]|["A"-"Z"]|"_")(["a"-"z"]|["A"-"Z"]|["0"-"9"]|"_"))* >
+  |  < INT_LIT : ("0"|(["1"-"9"]["0"-"9"])*) >
 }
 
 SKIP : {
@@ -53,5 +53,5 @@ SKIP : {
 void start() :
 {}
 {
-
+    <PUBLIC> <CLASS> <LBRACE> <RBRACE> <EOF>
 }
