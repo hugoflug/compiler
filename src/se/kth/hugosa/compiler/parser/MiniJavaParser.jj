@@ -3,6 +3,7 @@ options {
 }
 
 PARSER_BEGIN(MiniJavaParser)
+  package se.kth.hugosa.compiler.parser;
   public class MiniJavaParser {}
 PARSER_END(MiniJavaParser)
 
@@ -40,8 +41,8 @@ TOKEN : {
   |  < COMMA : "," >
   |  < ASSIGN : "=" >
   |  < SEMICOLON : ";" >
-  |  < ID : ((["a"-"z"]|["A"-"Z"]|"_")(["a"-"z"]|["A"-"Z"]|["0"-"9"]|"_"))* >
-  |  < INT_LIT : ("0"|(["1"-"9"]["0"-"9"])*) >
+  |  < ID : ((["a"-"z"]|["A"-"Z"]|"_")(["a"-"z"]|["A"-"Z"]|["0"-"9"]|"_")*) >
+  |  < INT_LIT : ("0"|(["1"-"9"](["0"-"9"])*)) >
 }
 
 SKIP : {
