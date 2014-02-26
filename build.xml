@@ -1,0 +1,18 @@
+<project name="compiler" default="run">
+    <target name="compilecompile">
+        <javacc javacchome="lib" target="src/se/kth/hugosa/compiler/parser/MiniJavaParser.jj" />
+    </target>
+    <target name="compile" depends="compilecompile">
+        <mkdir dir="bin"/>
+        <javac srcdir="src" destdir="bin" />
+    </target>
+    <target name="clean">
+        <delete dir="bin/"/>
+        <delete>
+            <fileset dir="src/se/kth/hugosa/compiler/parser" includes="*.java"/>
+        </delete>
+    </target>
+    <target name="run" depends="compile">
+        <java classname="se.kth.hugosa.compiler.Main" classpath="bin" fork="true"/>
+    </target>
+</project>
