@@ -58,3 +58,17 @@ void start() :
 {
     <PUBLIC> <CLASS> <LBRACE> (<ID> <ASSIGN> <INT_LIT> <SEMICOLON>)* <RBRACE> <EOF>
 }
+
+void Type() : {}
+{
+    <INT> <LBRACE> <RBRACE>
+}
+
+void Op() : {}
+{
+      <AND>
+    | <LT>
+    | <PLUS>
+    | <MINUS>
+    | <MULT>
+}
