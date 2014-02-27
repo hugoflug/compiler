@@ -56,12 +56,14 @@ SKIP : {
 void start() :
 {}
 {
-    <PUBLIC> <CLASS> <LBRACE> (<ID> <ASSIGN> <INT_LIT> <SEMICOLON>)* <RBRACE> <EOF>
+    Type() Op() Type()
 }
 
 void Type() : {}
 {
-    <INT> <LBRACE> <RBRACE>
+      <INT> <LBRACKET> <RBRACKET>
+    | <BOOLEAN>
+    | <ID>
 }
 
 void Op() : {}

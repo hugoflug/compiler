@@ -23,7 +23,7 @@ public class MiniJavaParserTest {
 
     @Test
     public void testStart() throws Exception {
-        InputStream stream = new ByteArrayInputStream("public class { a = 5; b = 7; z = 3; }".getBytes("UTF-8"));
+        InputStream stream = new ByteArrayInputStream("int[] &&  boolean".getBytes("UTF-8"));
         MiniJavaParser parser = new MiniJavaParser(stream);
         parser.start();
     }
