@@ -53,10 +53,31 @@ SKIP : {
   |  "\f"
 }
 
-void start() :
-{}
+void start() : {}
 {
     Type() Op() Type()
+}
+
+void VarDecl() : {}
+{
+    Type() <ID>
+}
+
+void MethodDecl() : {}
+{
+    <PUBLIC> Type() <ID> <LPAREN> FormalList() <RPAREN> <LBRACE>
+        (VarDecl())* (Stmt())* <RETURN> Exp() <SEMICOLON>
+    <RBRACE>
+}
+
+void FormalList() : {}
+{
+    Type() <ID> (FormalRest())*
+}
+
+void FormalRest() : {}
+{
+    <COMMA> Type() <ID>
 }
 
 void Type() : {}
@@ -66,6 +87,11 @@ void Type() : {}
     | <ID>
 }
 
+void Stmt() : {}
+{
+    <ID>
+}
+
 void Op() : {}
 {
       <AND>
@@ -73,4 +99,9 @@ void Op() : {}
     | <PLUS>
     | <MINUS>
     | <MULT>
+}
+
+void Exp() : {}
+{
+    <ID>
 }
