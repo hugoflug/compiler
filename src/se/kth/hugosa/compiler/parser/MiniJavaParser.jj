@@ -53,55 +53,111 @@ SKIP : {
   |  "\f"
 }
 
-void start() : {}
+void Program() : {}
 {
-    Type() Op() Type()
+    MainClass() (ClassDecl())*
+}
+
+void MainClass() : {}
+{
+    <CLASS> <ID> <LBRACE> <PUBLIC> <STATIC> <VOID> "main" <LPAREN> <STRING> <LBRACKET> <RBRACKET> <ID> <RPAREN> <LBRACE>
+       (LOOKAHEAD(2) VarDecl())*
+       (Stmt())*
+    <RBRACE>
+    <RBRACE>
+}
+
+void ClassDecl() : {}
+{
+    <CLASS> <ID> <LBRACE> (VarDecl())* (MethodDecl())* <RBRACE>
+}
+
+void Exp() : {}
+{
+    ExpLT() (<AND> ExpLT())*
+}
+
+void ExpLT() : {}
+{
+    ExpPlusMinus() (<LT> ExpPlusMinus())*
+}
+
+void ExpPlusMinus() : {}
+{
+    ExpMult() ((<PLUS>|<MINUS>) ExpMult())*
+}
+
+void ExpMult() : {}
+{
+    ExpInfo() (<MULT> ExpInfo())*
+}
+
+void ExpInfo() : {}
+{
+    ExpParens() (LOOKAHEAD(2)
+                 <DOT> <LENGTH>
+               | <DOT> <ID> <LPAREN> ExpList() <RPAREN>
+               | <LBRACKET> Exp() <RBRACKET>
+               | {})
+
+}
+
+void ExpList() : {}
+{
+    [Exp() (<COMMA> Exp())*]
+}
+
+void ExpParens() : {}
+{
+    <LPAREN> Exp() <RPAREN>
+  | ExpVal()
+}
+
+void ExpVal() : {}
+{
+    <INT_LIT>
+  | <TRUE>
+  | <FALSE>
+  | <THIS>
+  | <ID>
+  | LOOKAHEAD(2)
+    <NEW> <INT> <LBRACKET> Exp() <RBRACKET>
+  | <NEW> <ID> <LPAREN> <RPAREN>
 }
 
 void VarDecl() : {}
 {
-    Type() <ID>
+    Type() <ID> <SEMICOLON>
 }
 
 void MethodDecl() : {}
 {
     <PUBLIC> Type() <ID> <LPAREN> FormalList() <RPAREN> <LBRACE>
-        (VarDecl())* (Stmt())* <RETURN> Exp() <SEMICOLON>
+        (LOOKAHEAD(2) VarDecl())* (Stmt())* <RETURN> Exp() <SEMICOLON>
     <RBRACE>
 }
 
 void FormalList() : {}
 {
-    Type() <ID> (FormalRest())*
-}
-
-void FormalRest() : {}
-{
-    <COMMA> Type() <ID>
+    Type() <ID> (<COMMA> Type() <ID>)*
 }
 
 void Type() : {}
 {
+      LOOKAHEAD(2)
       <INT> <LBRACKET> <RBRACKET>
     | <BOOLEAN>
+    | <INT>
     | <ID>
 }
 
 void Stmt() : {}
 {
-    <ID>
-}
-
-void Op() : {}
-{
-      <AND>
-    | <LT>
-    | <PLUS>
-    | <MINUS>
-    | <MULT>
-}
-
-void Exp() : {}
-{
-    <ID>
+    <LBRACE> (Stmt())* <RBRACE>
+  | <IF> <LPAREN> Exp() <RPAREN> Stmt() <ELSE> Stmt()
+  | <WHILE> <LPAREN> Exp() <RPAREN> Stmt()
+  | <SYSO> <LPAREN> Exp() <RPAREN>
+  | LOOKAHEAD(2)
+    <ID> <ASSIGN> Exp() <SEMICOLON>
+  | <ID> <LBRACKET> Exp() <RBRACKET> <ASSIGN> Exp() <SEMICOLON>
 }
