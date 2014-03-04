@@ -21,6 +21,8 @@ class MiniJavaTest2 {
         MiniJavaTest2 c;
         int i;
         boolean b;
+        Test d;
+        int[] banan;
         while(true) {
             if (c.isGood()) {
               i = c.getGoodness();
@@ -35,6 +37,14 @@ class MiniJavaTest2 {
         b = !true;
         b = (!true && false && c.partay());
 
+        d = new Test();
+        {
+            banan = new int[5];
+            banan[4] = 18;
+        }
+
         return 5*3+2-(5+2)-7;
     }
 }
+
+class Empty {}
