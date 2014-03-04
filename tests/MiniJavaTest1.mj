@@ -18,6 +18,23 @@ class MiniJavaTest2 {
     }
 
     public int calculate() {
+        MiniJavaTest2 c;
+        int i;
+        boolean b;
+        while(true) {
+            if (c.isGood()) {
+              i = c.getGoodness();
+            } else {
+              i = c.getBadness(1337, 1338);
+            }
+            System.out.println(i);
+            c = this;
+            System.out.println(c.length);
+            System.out.println(i.length);
+        }
+        b = !true;
+        b = (!true && false && c.partay());
+
         return 5*3+2-(5+2)-7;
     }
 }

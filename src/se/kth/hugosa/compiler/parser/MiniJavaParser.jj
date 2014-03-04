@@ -94,6 +94,7 @@ void ExpMult() : {}
 
 void ExpInfo() : {}
 {
+    [<EXCLMARK>]
     ExpParens() (LOOKAHEAD(2)
                  <DOT> <LENGTH>
                | <DOT> <ID> <LPAREN> ExpList() <RPAREN>
