@@ -139,7 +139,7 @@ void MethodDecl() : {}
 
 void FormalList() : {}
 {
-    Type() <ID> (<COMMA> Type() <ID>)*
+    [Type() <ID> (<COMMA> Type() <ID>)*]
 }
 
 void Type() : {}
