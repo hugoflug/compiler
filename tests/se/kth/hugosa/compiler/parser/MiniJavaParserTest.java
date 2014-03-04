@@ -1,10 +1,14 @@
 package se.kth.hugosa.compiler.parser;
 
+import java.io.InputStream;
+
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
@@ -23,7 +27,7 @@ public class MiniJavaParserTest {
 
     @Test
     public void testStart() throws Exception {
-        InputStream stream = new ByteArrayInputStream("int &&  boolean".getBytes("UTF-8"));
+        InputStream stream = new FileInputStream("tests/MiniJavaTest1.mj");
         MiniJavaParser parser = new MiniJavaParser(stream);
         parser.Program();
     }
