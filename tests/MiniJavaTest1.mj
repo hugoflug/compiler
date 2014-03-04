@@ -6,6 +6,18 @@ class MiniJavaTest1 {
             System.out.println(1);
         else
             System.out.println(3);
+    }
+}
 
+class MiniJavaTest2 {
+    public int doStuff(int a, int b) {
+        int[] x;
+        Foo b;
+        x = b.doOtherStuff(b, a);
+        return x;
+    }
+
+    public int calculate() {
+        return 5*3+2-(5+2)-7;
     }
 }
