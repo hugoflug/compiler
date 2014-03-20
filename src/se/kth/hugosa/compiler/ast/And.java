@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class And {
+public class And extends Exp {
     private Exp leftOp, rightOp;
 
     public Exp getLeftOp() {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class VarDeclList {
     private ArrayList<VarDecl> varDeclList;
 
-    private VarDeclList() {
+    public VarDeclList() {
         varDeclList = new ArrayList<VarDecl>();
     }
 

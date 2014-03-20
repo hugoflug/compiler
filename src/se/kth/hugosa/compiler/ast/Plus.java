@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class Plus {
+public class Plus extends Exp {
     private Exp leftOp, rightOp;
 
     public Plus(Exp leftOp, Exp rightOp) {

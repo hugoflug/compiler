@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class Block {
+public class Block extends Stmt {
     private StmtList stmtList;
 
     public Block(StmtList stmtList) {

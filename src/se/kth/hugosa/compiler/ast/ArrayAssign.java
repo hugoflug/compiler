@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class ArrayAssign {
+public class ArrayAssign extends Stmt {
     private Identifier id;
     private Exp index, newValue;
 

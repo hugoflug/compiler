@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class StmtList {
     private ArrayList<Stmt> stmtList;
 
-    private StmtList() {
+    public StmtList() {
         stmtList = new ArrayList<Stmt>();
     }
 

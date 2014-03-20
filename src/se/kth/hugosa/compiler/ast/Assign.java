@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class Assign {
+public class Assign extends Stmt {
     private Identifier assignee;
     private Exp newValue;
 
