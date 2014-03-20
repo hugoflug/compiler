@@ -22,7 +22,7 @@ class MiniJavaTest2 {
         int i;
         boolean b;
         Test d;
-        int[] banan;
+        //int[] banan;
         while(true) {
             if (c.isGood()) {
               i = c.getGoodness();
