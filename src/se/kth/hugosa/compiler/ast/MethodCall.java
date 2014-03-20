@@ -28,4 +28,14 @@ public class MethodCall extends Exp {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MethodCall{\n");
+        sb.append("object=").append(object).append("\n");
+        sb.append("methodName=").append(methodName).append("\n");
+        sb.append("argumentList=").append(argumentList).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

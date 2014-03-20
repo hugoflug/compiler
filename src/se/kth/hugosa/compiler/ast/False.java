@@ -7,4 +7,9 @@ public class False extends Exp {
     public void accept(Visitor v) {
 
     }
+
+    @Override
+    public String toString() {
+        return "False{}";
+    }
 }

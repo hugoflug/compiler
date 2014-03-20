@@ -22,4 +22,13 @@ public class VarDecl {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("VarDecl{\n");
+        sb.append("type=").append(type).append("\n");
+        sb.append("id=").append(id).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

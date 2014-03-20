@@ -20,4 +20,15 @@ public class ExpList {
     public int size() {
         return expList.size();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ExpList[\n");
+        for (Exp exp : expList) {
+            sb.append(exp);
+            sb.append("\n");
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
 }

@@ -28,4 +28,14 @@ public class ClassDecl {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ClassDecl{\n");
+        sb.append("className=").append(className).append("\n");
+        sb.append("varDeclarations=").append(varDeclarations).append("\n");
+        sb.append("methodDeclarations=").append(methodDeclarations).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -16,4 +16,12 @@ public class NewArray extends Exp {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("NewArray{\n");
+        sb.append("arraySize=").append(arraySize).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

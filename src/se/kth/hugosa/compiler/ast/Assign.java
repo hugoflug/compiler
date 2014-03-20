@@ -22,4 +22,13 @@ public class Assign extends Stmt {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Assign{\n");
+        sb.append("assignee=").append(assignee).append("\n");
+        sb.append("newValue=").append(newValue).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import se.kth.hugosa.compiler.ast.Program;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -29,6 +30,7 @@ public class MiniJavaParserTest {
     public void testStart() throws Exception {
         InputStream stream = new FileInputStream("tests/MiniJavaTest1.mj");
         MiniJavaParser parser = new MiniJavaParser(stream);
-        parser.Program();
+        Program program = parser.Program();
+        System.out.println(program.toString());
     }
 }

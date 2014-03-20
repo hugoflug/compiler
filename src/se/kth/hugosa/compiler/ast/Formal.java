@@ -22,4 +22,13 @@ public class Formal {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Formal{\n");
+        sb.append("type=").append(type).append("\n");
+        sb.append("name=").append(name).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

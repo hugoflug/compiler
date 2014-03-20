@@ -22,4 +22,13 @@ public class While extends Stmt {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("While{\n");
+        sb.append("condition=").append(condition).append("\n");
+        sb.append("statement=").append(statement).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

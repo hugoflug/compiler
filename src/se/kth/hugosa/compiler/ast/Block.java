@@ -16,4 +16,13 @@ public class Block extends Stmt {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Block{\n");
+        sb.append("stmtList=").append(stmtList).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

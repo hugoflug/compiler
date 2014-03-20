@@ -13,4 +13,13 @@ public class LessThan extends Exp {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("LessThan{\n");
+        sb.append("leftOp=").append(leftOp).append("\n");
+        sb.append("rightOp=").append(rightOp).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -16,4 +16,12 @@ public class Not extends Exp {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Not{\n");
+        sb.append("expression=").append(expression).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

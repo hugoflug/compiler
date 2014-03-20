@@ -20,4 +20,15 @@ public class VarDeclList {
     public int size() {
         return varDeclList.size();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("VarDeclList[\n");
+        for (VarDecl varDecl : varDeclList) {
+            sb.append(varDecl);
+            sb.append("\n");
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
 }

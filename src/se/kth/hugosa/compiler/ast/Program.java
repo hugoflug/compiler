@@ -22,4 +22,13 @@ public class Program {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Program{\n");
+        sb.append("mainClass=").append(mainClass).append("\n");
+        sb.append("classDeclarations=").append(classDeclarations).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

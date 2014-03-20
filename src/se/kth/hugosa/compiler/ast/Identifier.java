@@ -19,6 +19,9 @@ public class Identifier extends Exp {
 
     @Override
     public String toString() {
-        return name;
+        final StringBuilder sb = new StringBuilder("Identifier{\n");
+        sb.append("name='").append(name).append('\'').append("\n");
+        sb.append('}');
+        return sb.toString();
     }
 }

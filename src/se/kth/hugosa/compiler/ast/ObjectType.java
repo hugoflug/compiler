@@ -16,4 +16,12 @@ public class ObjectType extends Type {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ObjectType{\n");
+        sb.append("name='").append(name).append('\'').append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

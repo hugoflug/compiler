@@ -20,4 +20,15 @@ public class FormalList {
     public int size() {
         return formalList.size();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("FormalList[\n");
+        for (Formal formal : formalList) {
+            sb.append(formal);
+            sb.append("\n");
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
 }

@@ -46,4 +46,17 @@ public class MethodDecl {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MethodDecl{\n");
+        sb.append("type=").append(type).append("\n");
+        sb.append("name=").append(name).append("\n");
+        sb.append("argumentList=").append(argumentList).append("\n");
+        sb.append("varDeclarations=").append(varDeclarations).append("\n");
+        sb.append("statements=").append(statements).append("\n");
+        sb.append("returnValue=").append(returnValue).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

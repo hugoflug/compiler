@@ -16,4 +16,12 @@ public class ArrayLength extends Exp {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ArrayLength{\n");
+        sb.append("array=").append(array).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -27,4 +27,14 @@ public class ArrayAssign extends Stmt {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ArrayAssign{\n");
+        sb.append("id=").append(id).append("\n");
+        sb.append("index=").append(index).append("\n");
+        sb.append("newValue=").append(newValue).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

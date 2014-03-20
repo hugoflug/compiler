@@ -12,4 +12,12 @@ public class IntLit extends Exp {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("IntLit{\n");
+        sb.append("value=").append(value).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

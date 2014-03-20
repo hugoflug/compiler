@@ -16,4 +16,12 @@ public class Syso extends Stmt {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Syso{\n");
+        sb.append("printee=").append(printee).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -22,4 +22,15 @@ public class MethodDeclList {
     public int size() {
         return methodDeclList.size();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("MethodDeclList[\n");
+        for (MethodDecl methodDecl : methodDeclList) {
+            sb.append(methodDecl);
+            sb.append("\n");
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
 }

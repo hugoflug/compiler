@@ -21,4 +21,13 @@ public class ArrayLookup extends Exp {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ArrayLookup{\n");
+        sb.append("array=").append(array).append("\n");
+        sb.append("index=").append(index).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }

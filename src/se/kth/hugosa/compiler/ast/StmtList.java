@@ -20,4 +20,15 @@ public class StmtList {
     public int size() {
         return stmtList.size();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("StmtList[\n");
+        for (Stmt stmt : stmtList) {
+            sb.append(stmt);
+            sb.append("\n");
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
 }

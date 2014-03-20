@@ -20,4 +20,15 @@ public class ClassDeclList {
     public int size() {
         return classDeclarations.size();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("ClassDeclList[\n");
+        for (ClassDecl classDecl : classDeclarations) {
+            sb.append(classDecl);
+            sb.append("\n");
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
 }

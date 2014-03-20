@@ -15,4 +15,14 @@ public class If extends Stmt {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("If{\n");
+        sb.append("condition=").append(condition).append("\n");
+        sb.append("thenStmt=").append(thenStmt).append("\n");
+        sb.append("elseStmt=").append(elseStmt).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }
