@@ -54,47 +54,100 @@ SKIP : {
   |  "\f"
 }
 
-void Program() :{}
+Program Program() :
 {
-    MainClass() (ClassDecl())*
+    MainClass mainClass;
+    ClassDeclList classDecls = new ClassDeclList();
+    ClassDecl classDecl;
+}
+{
+    mainClass = MainClass() (classDecl = ClassDecl() { classDecls.addClassDecl(classDecl); })*
+    { return new Program(mainClass, classDecls); }
 }
 
-void MainClass() : {}
+MainClass MainClass() :
 {
-    <CLASS> <ID> <LBRACE> <PUBLIC> <STATIC> <VOID> <ID> <LPAREN> <STRING> <LBRACKET> <RBRACKET> <ID> <RPAREN> <LBRACE>
-       (LOOKAHEAD(2) VarDecl())*
-       (Stmt())*
+    Token className;
+    Token stdArgsName;
+    Token main;
+    VarDeclList varDecls = new VarDeclList();
+    VarDecl varDecl;
+    StmtList statements = new StmtList();
+    Stmt stmt;
+}
+{
+    <CLASS> className = <ID> <LBRACE> <PUBLIC> <STATIC> <VOID> main = <ID> <LPAREN> <STRING> <LBRACKET> <RBRACKET> stdArgsName = <ID> <RPAREN> <LBRACE>
+       (LOOKAHEAD(2) varDecl = VarDecl() { varDecls.addVarDecl(varDecl); })*
+       (stmt = Stmt() { statements.addStmt(stmt); })*
     <RBRACE>
     <RBRACE>
+
+    {
+        if (!main.image.equals("main")) {
+            throw new ParseException();
+        }
+        return new MainClass(new Identifier(className.image), new Identifier(stdArgsName.image),
+            varDecls, statements);
+    }
 }
 
-void ClassDecl() : {}
+ClassDecl ClassDecl() :
 {
-    <CLASS> <ID> <LBRACE> (VarDecl())* (MethodDecl())* <RBRACE>
+    Token id;
+    VarDeclList varDecls = new VarDeclList();
+    VarDecl varDecl;
+    MethodDeclList methodDecls = new MethodDeclList();
+    MethodDecl methodDecl;
 }
-
-void Exp() : {}
 {
-    ExpLT() (<AND> ExpLT())*
+    <CLASS> id = <ID>
+    <LBRACE> (varDecl = VarDecl() { varDecls.addVarDecl(varDecl); })*
+    (methodDecl = MethodDecl() { methodDecls.addMethodDecl(methodDecl); })* <RBRACE>
+
+    { return new ClassDecl(new Identifier(id.image), varDecls, methodDecls); }
 }
 
-void ExpLT() : {}
-{
-    ExpPlusMinus() (<LT> ExpPlusMinus())*
-}
-
-void ExpPlusMinus() : {}
-{
-    ExpMult() ((<PLUS>|<MINUS>) ExpMult())*
-}
-
-void ExpMult() :
+Exp Exp() :
 {
     Exp exp1;
     Exp exp2;
 }
 {
-    exp1 = ExpInfo() (<MULT> ExpInfo())*
+    exp1 = ExpLT() (<AND> exp2 = ExpLT() { exp1 = new And(exp1, exp2); })*
+    { return exp1; }
+}
+
+Exp ExpLT() :
+{
+    Exp exp1;
+    Exp exp2;
+}
+{
+    exp1 = ExpPlusMinus() (<LT> exp2 = ExpPlusMinus() { exp1 = new LessThan(exp1, exp2); })*
+    { return exp1; }
+}
+
+Exp ExpPlusMinus() :
+{
+    Exp exp1;
+    Exp exp2;
+}
+{
+    exp1 = ExpMult() (
+                <PLUS> ExpMult() { exp1 = new Plus(exp1, exp2); }
+               |<MINUS> ExpMult() { exp1 = new Plus(exp1, exp2); }
+               )*
+    { return exp1; }
+}
+
+Exp ExpMult() :
+{
+    Exp exp1;
+    Exp exp2;
+}
+{
+    exp1 = ExpInfo() (<MULT> exp2 = ExpInfo() { exp1 = new Mult(exp1, exp2); })*
+    { return exp1; }
 }
 
 void ExpInfo() : {}
@@ -140,7 +193,7 @@ Exp ExpVal() :
   | token = <THIS> { value = new This(); }
   | token = <ID> { value = new Identifier(token.image); }
   | LOOKAHEAD(2)
-    <NEW> <INT> <LBRACKET> token = Exp() <RBRACKET> { value = new NewArray(value); }
+    <NEW> <INT> <LBRACKET> value = Exp() <RBRACKET> { value = new NewArray(value); }
   | <NEW> token = <ID> <LPAREN> <RPAREN>) { value = new NewObject(new Identifier(token.image)); }
 
   { return value; }
@@ -167,7 +220,7 @@ MethodDecl MethodDecl() :
     Formal formal;
     FormalList argList;
     VarDeclList varDecls = new VarDeclList();
-    VarDecl varDecl,
+    VarDecl varDecl;
     Stmt stmt;
     StmtList statements = new StmtList();
     Exp returnValue;
@@ -175,7 +228,7 @@ MethodDecl MethodDecl() :
 {
     <PUBLIC>
     type = Type()
-    name = <ID> { name = new Identifier(token.image);}
+    id = <ID> { name = new Identifier(id.image);}
     <LPAREN> argList = FormalList() <RPAREN> <LBRACE>
     (LOOKAHEAD(2) varDecl = VarDecl() {varDecls.addVarDecl(varDecl);})*
     (stmt = Stmt() {statements.addStmt(stmt);})*
@@ -201,7 +254,7 @@ FormalList FormalList() :
 Type Type() :
 {
     Type type;
-    Token id
+    Token id;
 }
 {
       LOOKAHEAD(2)
