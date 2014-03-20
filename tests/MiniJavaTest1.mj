@@ -21,7 +21,9 @@ class MiniJavaTest2 {
         MiniJavaTest2 c;
         int i;
         boolean b;
+        /*
         Test d;
+        */
         //int[] banan;
         while(true) {
             if (c.isGood()) {

@@ -52,7 +52,13 @@ SKIP : {
   |  "\n"
   |  "\r"
   |  "\f"
-  |   < "//" (~["\r", "\n"])* >
+  |  <"//" (~["\r", "\n"])*>
+  |  "/*" : COMMENT_STATE
+}
+
+<COMMENT_STATE> SKIP : {
+      "*/" : DEFAULT
+    | < ~[] >
 }
 
 Program Program() :
