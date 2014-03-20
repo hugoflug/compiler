@@ -30,7 +30,7 @@ public class MiniJavaParserTest {
     public void testStart() throws Exception {
         InputStream stream = new FileInputStream("tests/MiniJavaTest1.mj");
         MiniJavaParser parser = new MiniJavaParser(stream);
-        Program program = parser.Program();
+        Program program = parser.parse();
         System.out.println(program.toString());
     }
 }
