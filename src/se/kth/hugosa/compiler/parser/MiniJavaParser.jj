@@ -4,6 +4,7 @@ options {
 
 PARSER_BEGIN(MiniJavaParser)
   package se.kth.hugosa.compiler.parser;
+  import se.kth.hugosa.compiler.ast.*;
   public class MiniJavaParser {}
 PARSER_END(MiniJavaParser)
 
@@ -53,7 +54,7 @@ SKIP : {
   |  "\f"
 }
 
-void Program() : {}
+void Program() :{}
 {
     MainClass() (ClassDecl())*
 }
@@ -87,9 +88,13 @@ void ExpPlusMinus() : {}
     ExpMult() ((<PLUS>|<MINUS>) ExpMult())*
 }
 
-void ExpMult() : {}
+void ExpMult() :
 {
-    ExpInfo() (<MULT> ExpInfo())*
+    Exp exp1;
+    Exp exp2;
+}
+{
+    exp1 = ExpInfo() (<MULT> ExpInfo())*
 }
 
 void ExpInfo() : {}
@@ -103,62 +108,128 @@ void ExpInfo() : {}
 
 }
 
-void ExpList() : {}
+ExpList ExpList() :
 {
-    [Exp() (<COMMA> Exp())*]
+    ExpList expList = new ExpList();
+    Exp exp;
+}
+{
+    [exp = Exp() { expList.addExp(exp); }(<COMMA> exp = Exp() { expList.addExp(exp); })*]
+    { return expList; }
 }
 
-void ExpParens() : {}
+Exp ExpParens() :
 {
-    <LPAREN> Exp() <RPAREN>
-  | ExpVal()
+    Exp value;
+}
+{
+    <LPAREN> value = Exp() <RPAREN>
+    | value = ExpVal()
+    { return value; }
 }
 
-void ExpVal() : {}
+Exp ExpVal() :
 {
-    <INT_LIT>
-  | <TRUE>
-  | <FALSE>
-  | <THIS>
-  | <ID>
+   Token token;
+   Exp value;
+}
+{
+   (token = <INT_LIT> { value = new IntLit(Integer.parseInt(token.image)); }
+  | token = <TRUE> { value = new True(); }
+  | token = <FALSE> { value = new False(); }
+  | token = <THIS> { value = new This(); }
+  | token = <ID> { value = new Identifier(token.image); }
   | LOOKAHEAD(2)
-    <NEW> <INT> <LBRACKET> Exp() <RBRACKET>
-  | <NEW> <ID> <LPAREN> <RPAREN>
+    <NEW> <INT> <LBRACKET> token = Exp() <RBRACKET> { value = new NewArray(value); }
+  | <NEW> token = <ID> <LPAREN> <RPAREN>) { value = new NewObject(new Identifier(token.image)); }
+
+  { return value; }
 }
 
-void VarDecl() : {}
+VarDecl VarDecl() :
 {
-    Type() <ID> <SEMICOLON>
+    VarDecl varDecl;
+    Token id;
+    Type type;
+}
+{
+    type = Type()
+    id = <ID>
+    <SEMICOLON>
+    { return new VarDecl(type, new Identifier(id.image)); }
 }
 
-void MethodDecl() : {}
+MethodDecl MethodDecl() :
 {
-    <PUBLIC> Type() <ID> <LPAREN> FormalList() <RPAREN> <LBRACE>
-        (LOOKAHEAD(2) VarDecl())* (Stmt())* <RETURN> Exp() <SEMICOLON>
+    Type type;
+    Token id;
+    Identifier name;
+    Formal formal;
+    FormalList argList;
+    VarDeclList varDecls = new VarDeclList();
+    VarDecl varDecl,
+    Stmt stmt;
+    StmtList statements = new StmtList();
+    Exp returnValue;
+}
+{
+    <PUBLIC>
+    type = Type()
+    name = <ID> { name = new Identifier(token.image);}
+    <LPAREN> argList = FormalList() <RPAREN> <LBRACE>
+    (LOOKAHEAD(2) varDecl = VarDecl() {varDecls.addVarDecl(varDecl);})*
+    (stmt = Stmt() {statements.addStmt(stmt);})*
+    <RETURN> returnValue = Exp() <SEMICOLON>
     <RBRACE>
+    { return new MethodDecl(type, name, argList, varDecls, statements, returnValue); }
 }
 
-void FormalList() : {}
+FormalList FormalList() :
 {
-    [Type() <ID> (<COMMA> Type() <ID>)*]
+    FormalList formalList = new FormalList();
+    Type type;
+    Token id;
+    Identifier name;
+}
+{
+    [type = Type() id = <ID> { formalList.addFormal(new Formal(type, new Identifier(id.image))); }
+    (<COMMA> type = Type() id = <ID> { formalList.addFormal(new Formal(type, new Identifier(id.image))); } )*]
+
+    { return formalList; }
 }
 
-void Type() : {}
+Type Type() :
+{
+    Type type;
+    Token id
+}
 {
       LOOKAHEAD(2)
-      <INT> <LBRACKET> <RBRACKET>
-    | <BOOLEAN>
-    | <INT>
-    | <ID>
+      <INT> <LBRACKET> <RBRACKET> { type = new IntArrayType(); }
+    | <BOOLEAN> { type = new BooleanType(); }
+    | <INT> { type = new IntType(); }
+    | id = <ID> { type = new ObjectType(id.image); }
+
+    { return type; }
 }
 
-void Stmt() : {}
+Stmt Stmt() :
 {
-    <LBRACE> (Stmt())* <RBRACE>
-  | <IF> <LPAREN> Exp() <RPAREN> Stmt() <ELSE> Stmt()
-  | <WHILE> <LPAREN> Exp() <RPAREN> Stmt()
-  | <SYSO> <LPAREN> Exp() <RPAREN> <SEMICOLON>
+    Stmt stmt;
+    Stmt stmt2;
+    StmtList stmtList = new StmtList();
+    Exp exp1;
+    Exp exp2;
+    Token id;
+}
+{
+    <LBRACE> (stmt = Stmt() { stmtList.addStmt(stmt); })* <RBRACE> { stmt = new Block(stmtList); }
+  | <IF> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() <ELSE> stmt2 = Stmt() { stmt = new If(exp1, stmt, stmt2); }
+  | <WHILE> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() { stmt = new While(exp1, stmt); }
+  | <SYSO> <LPAREN> exp1 = Exp() <RPAREN> <SEMICOLON> { stmt = new Syso(exp1); }
   | LOOKAHEAD(2)
-    <ID> <ASSIGN> Exp() <SEMICOLON>
-  | <ID> <LBRACKET> Exp() <RBRACKET> <ASSIGN> Exp() <SEMICOLON>
+    id = <ID> <ASSIGN> exp1 = Exp() <SEMICOLON> { stmt = new Assign(new Identifier(id.image), exp1); }
+  | id = <ID> <LBRACKET> exp1 = Exp() <RBRACKET> <ASSIGN> exp2 = Exp() <SEMICOLON> { stmt = new ArrayAssign(new Identifier(id.image), exp1, exp2); }
+
+  { return stmt; }
 }
