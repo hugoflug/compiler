@@ -9,6 +9,6 @@ public class IntType extends Type {
 
     @Override
     public String toString() {
-        return "This{}";
+        return "Int{}";
     }
 }
