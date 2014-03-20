@@ -35,5 +35,14 @@ public class MainClass {
         v.visit(this);
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MainClass{\n");
+        sb.append("name=").append(name).append("\n");
+        sb.append("stdArgsName=").append(stdArgsName).append("\n");
+        sb.append("varDeclarations=").append(varDeclarations).append("\n");
+        sb.append("statements=").append(statements).append("\n");
+        sb.append('}');
+        return sb.toString();
+    }
 }
