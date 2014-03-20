@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class Identifier {
+public class Identifier extends Exp {
     private String name;
 
     public Identifier(String name) {

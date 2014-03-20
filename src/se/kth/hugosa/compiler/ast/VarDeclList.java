@@ -9,7 +9,7 @@ public class VarDeclList {
         varDeclList = new ArrayList<VarDecl>();
     }
 
-    public void addStmt(VarDecl varDecl) {
+    public void addVarDecl(VarDecl varDecl) {
         varDeclList.add(varDecl);
     }
 
