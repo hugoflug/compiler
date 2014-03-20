@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class ArrayLength {
+public class ArrayLength extends Exp {
     private Exp array;
 
     public ArrayLength(Exp array) {

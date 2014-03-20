@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class ArrayLookup {
+public class ArrayLookup extends Exp {
     private Exp array, index;
 
     public ArrayLookup(Exp array, Exp index) {

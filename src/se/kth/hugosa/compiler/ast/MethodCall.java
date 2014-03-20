@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class MethodCall {
+public class MethodCall extends Exp {
     private Exp object;
     private Identifier methodName;
     private ExpList argumentList;

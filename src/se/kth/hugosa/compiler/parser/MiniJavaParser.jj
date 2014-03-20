@@ -134,8 +134,8 @@ Exp ExpPlusMinus() :
 }
 {
     exp1 = ExpMult() (
-                <PLUS> ExpMult() { exp1 = new Plus(exp1, exp2); }
-               |<MINUS> ExpMult() { exp1 = new Plus(exp1, exp2); }
+                <PLUS> exp2 = ExpMult() { exp1 = new Plus(exp1, exp2); }
+               |<MINUS> exp2 = ExpMult() { exp1 = new Plus(exp1, exp2); }
                )*
     { return exp1; }
 }
@@ -146,19 +146,37 @@ Exp ExpMult() :
     Exp exp2;
 }
 {
-    exp1 = ExpInfo() (<MULT> exp2 = ExpInfo() { exp1 = new Mult(exp1, exp2); })*
+    exp1 = ExpNot() (<MULT> exp2 = ExpNot() { exp1 = new Mult(exp1, exp2); })*
     { return exp1; }
 }
 
-void ExpInfo() : {}
+Exp ExpNot ():
 {
-    [<EXCLMARK>]
-    ExpParens() (LOOKAHEAD(2)
-                 <DOT> <LENGTH>
-               | <DOT> <ID> <LPAREN> ExpList() <RPAREN>
-               | <LBRACKET> Exp() <RBRACKET>
-               | {})
+    Exp value;
+}
+{
+    (
+         <EXCLMARK> value = ExpInfo() { value = new Not(value);}
+        | value = ExpInfo()
+    )
 
+    { return value; }
+}
+
+Exp ExpInfo() :
+{
+    Exp value;
+    Exp exp2;
+    Token id;
+    ExpList expList;
+}
+{
+    value = ExpParens() (LOOKAHEAD(2)
+                             <DOT> <LENGTH> { value = new ArrayLength(value); }
+                           | <DOT> id = <ID> <LPAREN> expList = ExpList() { value = new MethodCall(value, new Identifier(id.image), expList); }  <RPAREN>
+                           | <LBRACKET> exp2 = Exp() <RBRACKET> { value = new ArrayLookup(value, exp2); }
+                           | {})
+    { return value; }
 }
 
 ExpList ExpList() :
@@ -176,26 +194,29 @@ Exp ExpParens() :
     Exp value;
 }
 {
-    <LPAREN> value = Exp() <RPAREN>
-    | value = ExpVal()
+    (
+        <LPAREN> value = Exp() <RPAREN>
+        | value = ExpVal()
+    )
     { return value; }
 }
 
 Exp ExpVal() :
 {
-   Token token;
+   Token token = null;
    Exp value;
 }
 {
-   (token = <INT_LIT> { value = new IntLit(Integer.parseInt(token.image)); }
-  | token = <TRUE> { value = new True(); }
-  | token = <FALSE> { value = new False(); }
-  | token = <THIS> { value = new This(); }
-  | token = <ID> { value = new Identifier(token.image); }
-  | LOOKAHEAD(2)
-    <NEW> <INT> <LBRACKET> value = Exp() <RBRACKET> { value = new NewArray(value); }
-  | <NEW> token = <ID> <LPAREN> <RPAREN>) { value = new NewObject(new Identifier(token.image)); }
-
+  (
+       token = <INT_LIT> { value = new IntLit(Integer.parseInt(token.image)); }
+      | token = <TRUE> { value = new True(); }
+      | token = <FALSE> { value = new False(); }
+      | token = <THIS> { value = new This(); }
+      | token = <ID> { value = new Identifier(token.image); }
+      | LOOKAHEAD(2)
+        <NEW> <INT> <LBRACKET> value = Exp() <RBRACKET> { value = new NewArray(value); }
+      | <NEW> token = <ID> <LPAREN> <RPAREN> { value = new NewObject(new Identifier(token.image)); }
+  )
   { return value; }
 }
 
@@ -257,12 +278,13 @@ Type Type() :
     Token id;
 }
 {
-      LOOKAHEAD(2)
-      <INT> <LBRACKET> <RBRACKET> { type = new IntArrayType(); }
-    | <BOOLEAN> { type = new BooleanType(); }
-    | <INT> { type = new IntType(); }
-    | id = <ID> { type = new ObjectType(id.image); }
-
+    (
+          LOOKAHEAD(2)
+          <INT> <LBRACKET> <RBRACKET> { type = new IntArrayType(); }
+        | <BOOLEAN> { type = new BooleanType(); }
+        | <INT> { type = new IntType(); }
+        | id = <ID> { type = new ObjectType(id.image); }
+    )
     { return type; }
 }
 
@@ -276,13 +298,14 @@ Stmt Stmt() :
     Token id;
 }
 {
-    <LBRACE> (stmt = Stmt() { stmtList.addStmt(stmt); })* <RBRACE> { stmt = new Block(stmtList); }
-  | <IF> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() <ELSE> stmt2 = Stmt() { stmt = new If(exp1, stmt, stmt2); }
-  | <WHILE> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() { stmt = new While(exp1, stmt); }
-  | <SYSO> <LPAREN> exp1 = Exp() <RPAREN> <SEMICOLON> { stmt = new Syso(exp1); }
-  | LOOKAHEAD(2)
-    id = <ID> <ASSIGN> exp1 = Exp() <SEMICOLON> { stmt = new Assign(new Identifier(id.image), exp1); }
-  | id = <ID> <LBRACKET> exp1 = Exp() <RBRACKET> <ASSIGN> exp2 = Exp() <SEMICOLON> { stmt = new ArrayAssign(new Identifier(id.image), exp1, exp2); }
-
+    (
+            <LBRACE> (stmt = Stmt() { stmtList.addStmt(stmt); })* <RBRACE> { stmt = new Block(stmtList); }
+          | <IF> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() <ELSE> stmt2 = Stmt() { stmt = new If(exp1, stmt, stmt2); }
+          | <WHILE> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() { stmt = new While(exp1, stmt); }
+          | <SYSO> <LPAREN> exp1 = Exp() <RPAREN> <SEMICOLON> { stmt = new Syso(exp1); }
+          | LOOKAHEAD(2)
+            id = <ID> <ASSIGN> exp1 = Exp() <SEMICOLON> { stmt = new Assign(new Identifier(id.image), exp1); }
+          | id = <ID> <LBRACKET> exp1 = Exp() <RBRACKET> <ASSIGN> exp2 = Exp() <SEMICOLON> { stmt = new ArrayAssign(new Identifier(id.image), exp1, exp2); }
+    )
   { return stmt; }
 }
