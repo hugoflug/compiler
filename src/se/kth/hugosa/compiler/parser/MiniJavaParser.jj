@@ -135,7 +135,7 @@ Exp ExpPlusMinus() :
 {
     exp1 = ExpMult() (
                 <PLUS> exp2 = ExpMult() { exp1 = new Plus(exp1, exp2); }
-               |<MINUS> exp2 = ExpMult() { exp1 = new Plus(exp1, exp2); }
+               |<MINUS> exp2 = ExpMult() { exp1 = new Minus(exp1, exp2); }
                )*
     { return exp1; }
 }
