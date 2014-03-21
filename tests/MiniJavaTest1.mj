@@ -39,6 +39,16 @@ class MiniJavaTest2 {
         b = !true;
         b = (!true && false && c.partay());
 
+        a = d.foo().bar();
+        a = array.length.length;
+        a = bar[24][27];
+
+        //not working:
+        //a = !!true;
+
+
+        b = 5 + true * foo.bar(hejsan.length);
+
         d = new Test();
         {
             banan = new int[5];

@@ -187,11 +187,16 @@ Exp ExpInfo() :
     ExpList expList;
 }
 {
-    value = ExpParens() (LOOKAHEAD(2)
-                             <DOT> <LENGTH> { value = new ArrayLength(value); }
-                           | <DOT> id = <ID> <LPAREN> expList = ExpList() { value = new MethodCall(value, new Identifier(id.image), expList); }  <RPAREN>
-                           | <LBRACKET> exp2 = Exp() <RBRACKET> { value = new ArrayLookup(value, exp2); }
-                           | {})
+    value = ExpParens()
+    (
+        (
+                 LOOKAHEAD(2)
+                 <DOT> <LENGTH> { value = new ArrayLength(value); }
+               | <DOT> id = <ID> <LPAREN> expList = ExpList() { value = new MethodCall(value, new Identifier(id.image), expList); }  <RPAREN>
+               | <LBRACKET> exp2 = Exp() <RBRACKET> { value = new ArrayLookup(value, exp2); }
+        )*
+        | {}
+    )
     { return value; }
 }
 
