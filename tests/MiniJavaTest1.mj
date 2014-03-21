@@ -39,12 +39,16 @@ class MiniJavaTest2 {
         b = !true;
         b = (!true && false && c.partay());
 
-        a = d.foo().bar();
+        a = d.foo().bar() + array[24].length;
         a = array.length.length;
         a = bar[24][27];
+        a = !!true;
+        b = !!!!!!true;
 
-        //not working:
-        //a = !!true;
+        x = !(!false && (true && !false)) + 5 * 6 * 3 - 4 + 5 - 3 + (5 - 3)*7;
+        z = !cat.car().bar()[47].length;
+
+        a = !5 + !(2 && 3 - hej.i().crow());
 
 
         b = 5 + true * foo.bar(hejsan.length);
