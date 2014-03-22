@@ -25,6 +25,9 @@ class MiniJavaTest2 {
         Test d;
         */
         //int[] banan;
+
+        if (a < true) {} else {}
+
         while(true) {
             if (c.isGood()) {
               i = c.getGoodness();
