@@ -34,6 +34,7 @@ public interface Visitor {
     public void visit(Not not);
     public void visit(NotEqual notEqual);
     public void visit(ObjectType objectType);
+    public void visit(Or or);
     public void visit(Plus plus);
     public void visit(Program program);
     public void visit(Syso syso);
