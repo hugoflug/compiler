@@ -8,6 +8,7 @@ public class Table<E> {
 
     public Table() {
         stackMap = new StackMap<String, E>();
+        scopes = new ArrayDeque<Deque<String>>();
     }
 
     public boolean put(String key, E value) {
