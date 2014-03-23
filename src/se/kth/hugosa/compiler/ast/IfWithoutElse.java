@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.visitors.Visitor;
 
-public class IfWithoutElse {
+public class IfWithoutElse extends Stmt {
     private Exp condition;
     private Stmt thenStmt;
 

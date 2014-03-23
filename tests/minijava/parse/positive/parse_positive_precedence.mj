@@ -1,0 +1,5 @@
+class MiniJavaTest1 {
+    public static void main(String[] args) {
+        a = 5 + 3 || 7 * 3 && 57 == 63 != 84 < 34 > 39 >= 938;
+    }
+}

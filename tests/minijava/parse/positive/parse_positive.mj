@@ -42,6 +42,10 @@ class MiniJavaTest2 {
             }
         }
 
+        if (a == 5) {
+            System.out.println(56);
+        }
+
         while(true) {
             if (c.isGood()) {
               i = c.getGoodness();

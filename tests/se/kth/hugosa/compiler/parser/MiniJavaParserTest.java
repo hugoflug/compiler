@@ -24,15 +24,18 @@ public class MiniJavaParserTest {
 
     @Test
     public void testParse() throws Exception {
-        InputStream stream = new FileInputStream("tests/minijava/parse_positive.mj");
-        MiniJavaParser parser = new MiniJavaParser(stream);
-        Program program = parser.parse();
-        //System.out.println(Indenter.indent(program.toString()));
+        File dir = new File("tests/minijava/parse/positive");
+        for (File file : dir.listFiles()) {
+            InputStream stream = new FileInputStream(file);
+            MiniJavaParser parser = new MiniJavaParser(stream);
+            Program program = parser.parse();
+            //System.out.println(Indenter.indent(program.toString()));
+        }
     }
 
     @Test
     public void testParseNegative() throws Exception {
-        File dir = new File("tests/minijava/parse_negative");
+        File dir = new File("tests/minijava/parse/negative");
         for (File file : dir.listFiles()) {
             InputStream stream = new FileInputStream(file);
             MiniJavaParser parser = new MiniJavaParser(stream);
