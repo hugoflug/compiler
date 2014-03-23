@@ -26,11 +26,17 @@ public class TableTest {
         Assert.assertFalse(table.put("foo", "car"));
         Assert.assertFalse(table.put("foo", "dar"));
         table.beginScope();
+        Assert.assertTrue(table.put("goo", "gar"));
         Assert.assertTrue(table.put("foo", "tsar"));
         Assert.assertEquals(table.get("foo"), "tsar");
+        Assert.assertEquals(table.get("goo"), "gar");
         Assert.assertFalse(table.put("foo", "car"));
         Assert.assertFalse(table.put("foo", "dar"));
         table.endScope();
+        try {
+            String value = table.get("goo");
+            Assert.fail("Should have thrown NoSuchElementException. Instead returned: " + value);
+        } catch (NoSuchElementException e) {}
         Assert.assertFalse(table.put("foo", "car"));
         Assert.assertEquals(table.get("foo"), "zar");
         table.endScope();
