@@ -147,8 +147,10 @@ Exp ExpLT() :
 }
 {
     exp1 = ExpPlusMinus() (
-        <LT> exp2 = ExpPlusMinus() { exp1 = new LessThan(exp1, exp2); }
-
+         <LT> exp2 = ExpPlusMinus() { exp1 = new LessThan(exp1, exp2); }
+        |<MT> exp2 = ExpPlusMinus()  { exp1 = new MoreThan(exp1, exp2); }
+        |<LET> exp2 = ExpPlusMinus()  { exp1 = new LessOrEqualThan(exp1, exp2); }
+        |<MET> exp2 = ExpPlusMinus()  { exp1 = new MoreOrEqualThan(exp1, exp2); }
     )*
     { return exp1; }
 }

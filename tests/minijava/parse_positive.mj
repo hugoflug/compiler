@@ -26,7 +26,16 @@ class MiniJavaTest2 {
         */
         //int[] banan;
 
+
         if (a < true) {} else {}
+
+        if (a > 3 && g <= 78) {
+            while (a >= 5) {
+
+            }
+        } else {
+
+        }
 
         while(true) {
             if (c.isGood()) {
