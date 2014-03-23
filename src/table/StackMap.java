@@ -5,6 +5,10 @@ import java.util.*;
 public class StackMap<K, V> {
     private HashMap<K, Deque<V>> hashMap;
 
+    public StackMap() {
+        hashMap = new HashMap<K, Deque<V>>();
+    }
+
     public void insert(K key, V value) {
         Deque<V> stack = hashMap.get(key);
         if (stack == null) {
@@ -19,7 +23,7 @@ public class StackMap<K, V> {
     public V get(K key) {
         Deque<V> stack = hashMap.get(key);
         if (stack == null) {
-            return null;
+            throw new NoSuchElementException();
         } else {
             return stack.getFirst();
         }
