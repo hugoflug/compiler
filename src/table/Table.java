@@ -4,15 +4,18 @@ import java.util.*;
 
 public class Table<E> {
     private StackMap<String, E> stackMap;
-    private Deque<Deque<String>> scopes;
+    private Deque<Set<String>> scopes;
 
     public Table() {
         stackMap = new StackMap<String, E>();
-        scopes = new ArrayDeque<Deque<String>>();
+        scopes = new ArrayDeque<Set<String>>();
     }
 
     public boolean put(String key, E value) {
-        scopes.getFirst().push(key);
+        boolean newValue = scopes.getFirst().add(key);
+        if (!newValue) {
+            return false;
+        }
         stackMap.insert(key, value);
         return true;
     }
@@ -22,11 +25,11 @@ public class Table<E> {
     }
 
     public void beginScope() {
-        scopes.push(new ArrayDeque<String>());
+        scopes.push(new HashSet<String>());
     }
 
     public void endScope() {
-        Deque<String> endedScope = scopes.pop();
+        Set<String> endedScope = scopes.pop();
         for (String s : endedScope) {
             stackMap.pop(s);
         }
