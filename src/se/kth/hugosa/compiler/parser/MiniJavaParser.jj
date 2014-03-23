@@ -36,7 +36,13 @@ TOKEN : {
   |  < NEW : "new" >
   |  < EXCLMARK : "!" >
   |  < AND : "&&" >
+  |  < OR : "||" >
   |  < LT : "<" >
+  |  < LET : "<=" >
+  |  < MT : ">" >
+  |  < MET : ">=" >
+  |  < EQ : "==" >
+  |  < NOTEQ : "!=" >
   |  < PLUS : "+" >
   |  < MINUS : "-" >
   |  < MULT : "*" >
@@ -140,7 +146,10 @@ Exp ExpLT() :
     Exp exp2;
 }
 {
-    exp1 = ExpPlusMinus() (<LT> exp2 = ExpPlusMinus() { exp1 = new LessThan(exp1, exp2); })*
+    exp1 = ExpPlusMinus() (
+        <LT> exp2 = ExpPlusMinus() { exp1 = new LessThan(exp1, exp2); }
+
+    )*
     { return exp1; }
 }
 
