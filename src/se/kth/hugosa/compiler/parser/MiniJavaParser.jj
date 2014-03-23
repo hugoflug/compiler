@@ -136,6 +136,16 @@ Exp Exp() :
     Exp exp2;
 }
 {
+    exp1 = ExpAnd() (<OR> exp2 = ExpCompare() { exp1 = new Or(exp1, exp2); })*
+    { return exp1; }
+}
+
+Exp ExpAnd() :
+{
+    Exp exp1;
+    Exp exp2;
+}
+{
     exp1 = ExpCompare() (<AND> exp2 = ExpCompare() { exp1 = new And(exp1, exp2); })*
     { return exp1; }
 }
