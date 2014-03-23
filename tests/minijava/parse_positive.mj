@@ -34,7 +34,12 @@ class MiniJavaTest2 {
 
             }
         } else {
+            c = a == g;
+            if (a != b && foo) {
 
+            } else {
+                b = g.foo(a != c > d);
+            }
         }
 
         while(true) {

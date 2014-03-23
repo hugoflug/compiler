@@ -146,7 +146,20 @@ Exp ExpAnd() :
     Exp exp2;
 }
 {
-    exp1 = ExpCompare() (<AND> exp2 = ExpCompare() { exp1 = new And(exp1, exp2); })*
+    exp1 = ExpEquality() (<AND> exp2 = ExpCompare() { exp1 = new And(exp1, exp2); })*
+    { return exp1; }
+}
+
+Exp ExpEquality() :
+{
+    Exp exp1;
+    Exp exp2;
+}
+{
+    exp1 = ExpCompare() (
+          <EQ> exp2 = ExpCompare() { exp1 = new Equal(exp1, exp2); }
+        | <NOTEQ> exp2 = ExpCompare() { exp1 = new NotEqual(exp1, exp2); }
+    )*
     { return exp1; }
 }
 
