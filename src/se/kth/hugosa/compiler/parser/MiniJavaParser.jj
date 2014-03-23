@@ -136,11 +136,11 @@ Exp Exp() :
     Exp exp2;
 }
 {
-    exp1 = ExpLT() (<AND> exp2 = ExpLT() { exp1 = new And(exp1, exp2); })*
+    exp1 = ExpCompare() (<AND> exp2 = ExpCompare() { exp1 = new And(exp1, exp2); })*
     { return exp1; }
 }
 
-Exp ExpLT() :
+Exp ExpCompare() :
 {
     Exp exp1;
     Exp exp2;
