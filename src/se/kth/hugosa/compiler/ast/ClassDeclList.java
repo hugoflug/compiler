@@ -1,5 +1,7 @@
 package se.kth.hugosa.compiler.ast;
 
+import se.kth.hugosa.compiler.visitors.Visitor;
+
 import java.util.ArrayList;
 
 public class ClassDeclList {
@@ -19,6 +21,12 @@ public class ClassDeclList {
 
     public int size() {
         return classDeclarations.size();
+    }
+
+    public void acceptAll(Visitor visitor) {
+        for (ClassDecl classDecl : classDeclarations) {
+            visitor.visit(classDecl);
+        }
     }
 
     @Override

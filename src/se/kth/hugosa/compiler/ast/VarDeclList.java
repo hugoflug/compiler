@@ -1,5 +1,7 @@
 package se.kth.hugosa.compiler.ast;
 
+import se.kth.hugosa.compiler.visitors.Visitor;
+
 import java.util.ArrayList;
 
 public class VarDeclList {
@@ -19,6 +21,12 @@ public class VarDeclList {
 
     public int size() {
         return varDeclList.size();
+    }
+
+    public void acceptAll(Visitor visitor) {
+        for (VarDecl varDecl : varDeclList) {
+            visitor.visit(varDecl);
+        }
     }
 
     @Override

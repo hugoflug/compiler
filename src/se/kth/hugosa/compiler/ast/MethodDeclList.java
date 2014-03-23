@@ -23,6 +23,12 @@ public class MethodDeclList {
         return methodDeclList.size();
     }
 
+    public void acceptAll(Visitor visitor) {
+        for (MethodDecl decl : methodDeclList) {
+            visitor.visit(decl);
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("MethodDeclList[\n");

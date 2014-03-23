@@ -1,5 +1,7 @@
 package se.kth.hugosa.compiler.ast;
 
+import se.kth.hugosa.compiler.visitors.Visitor;
+
 import java.util.ArrayList;
 
 public class FormalList {
@@ -19,6 +21,12 @@ public class FormalList {
 
     public int size() {
         return formalList.size();
+    }
+
+    public void acceptAll(Visitor visitor) {
+        for (Formal formal : formalList) {
+            visitor.visit(formal);
+        }
     }
 
     @Override
