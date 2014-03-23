@@ -136,7 +136,7 @@ Exp Exp() :
     Exp exp2;
 }
 {
-    exp1 = ExpAnd() (<OR> exp2 = ExpCompare() { exp1 = new Or(exp1, exp2); })*
+    exp1 = ExpAnd() (<OR> exp2 = ExpAnd() { exp1 = new Or(exp1, exp2); })*
     { return exp1; }
 }
 
@@ -146,7 +146,7 @@ Exp ExpAnd() :
     Exp exp2;
 }
 {
-    exp1 = ExpEquality() (<AND> exp2 = ExpCompare() { exp1 = new And(exp1, exp2); })*
+    exp1 = ExpEquality() (<AND> exp2 = ExpEquality() { exp1 = new And(exp1, exp2); })*
     { return exp1; }
 }
 
@@ -347,6 +347,18 @@ Type Type() :
     { return type; }
 }
 
+Stmt ElseStmt(Exp condition, Stmt thenStmt) :
+{
+    Stmt stmt;
+    Stmt elseStmt;
+}
+{
+    ( <ELSE> elseStmt = Stmt() { stmt = new If(condition, thenStmt, elseStmt); }
+     |{} { stmt = new IfWithoutElse(condition, thenStmt); }
+    )
+    { return stmt; }
+}
+
 Stmt Stmt() :
 {
     Stmt stmt;
@@ -359,7 +371,7 @@ Stmt Stmt() :
 {
     (
             <LBRACE> (stmt = Stmt() { stmtList.addStmt(stmt); })* <RBRACE> { stmt = new Block(stmtList); }
-          | <IF> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() <ELSE> stmt2 = Stmt() { stmt = new If(exp1, stmt, stmt2); }
+          | <IF> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() stmt2 = ElseStmt(exp1, stmt) { stmt = stmt2; }
           | <WHILE> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() { stmt = new While(exp1, stmt); }
           | <SYSO> <LPAREN> exp1 = Exp() <RPAREN> <SEMICOLON> { stmt = new Syso(exp1); }
           | LOOKAHEAD(2)
