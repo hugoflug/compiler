@@ -9,6 +9,7 @@ public class Table<E> {
     public Table() {
         stackMap = new StackMap<String, E>();
         scopes = new ArrayDeque<Set<String>>();
+        scopes.push(new HashSet<String>());
     }
 
     public boolean put(String key, E value) {
@@ -29,7 +30,12 @@ public class Table<E> {
     }
 
     public void endScope() {
-        Set<String> endedScope = scopes.pop();
+        Set<String> endedScope = null;
+        try {
+            endedScope = scopes.pop();
+        } catch (NoSuchElementException e) {
+            throw new IllegalStateException("No scope to end");
+        }
         for (String s : endedScope) {
             stackMap.pop(s);
         }
