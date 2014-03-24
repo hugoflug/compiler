@@ -44,7 +44,7 @@ public class Errors {
         errors = new ArrayList<Error>();
     }
 
-    private boolean hasErrors() {
+    public boolean hasErrors() {
         return !errors.isEmpty();
     }
 
