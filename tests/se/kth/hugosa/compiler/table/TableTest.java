@@ -1,4 +1,4 @@
-package table;
+package se.kth.hugosa.compiler.table;
 
 import org.junit.Assert;
 import org.junit.Test;

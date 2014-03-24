@@ -1,7 +1,7 @@
 package se.kth.hugosa.compiler.visitors;
 
 import se.kth.hugosa.compiler.ast.*;
-import table.Table;
+import se.kth.hugosa.compiler.table.Table;
 
 public class SymbolTableCreator implements Visitor {
     private Table<Type> typeTable;

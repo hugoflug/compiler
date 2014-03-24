@@ -1,4 +1,4 @@
-package table;
+package se.kth.hugosa.compiler.table;
 
 import java.util.*;
 
