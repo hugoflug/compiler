@@ -1,13 +1,32 @@
 package se.kth.hugosa.compiler.visitors;
 
 import se.kth.hugosa.compiler.ast.*;
+import se.kth.hugosa.compiler.table.ClassTable;
+import se.kth.hugosa.compiler.table.MethodTable;
 import se.kth.hugosa.compiler.table.Table;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SymbolTableCreator implements Visitor {
+    private Map<String, ClassTable> classes;
     private Table<Type> typeTable;
+    private ClassTable currentClass;
+    private MethodTable currentMethod;
+    private Errors errors;
+
+    public Map<String, ClassTable> getClasses() {
+        return classes;
+    }
+
+    public Errors getErrors() {
+        return errors;
+    }
 
     public SymbolTableCreator() {
+        classes = new HashMap<String, ClassTable>();
         typeTable = new Table<Type>();
+        errors = new Errors();
     }
 
     @Override
@@ -37,7 +56,7 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(Block block) {
-
+        block.getStmtList().acceptAll(this);
     }
 
     @Override
@@ -47,7 +66,16 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(ClassDecl classDecl) {
-
+        currentClass = new ClassTable();
+        String className = classDecl.getClassName().getName();
+        if (classes.containsKey(className)) {
+            errors.addError(new Errors.RedefinitionError(className, "global namespace"));
+        } else {
+            classes.put(className, currentClass);
+        }
+        classDecl.getVarDeclarations().acceptAll(this);
+        classDecl.getMethodDeclarations().acceptAll(this);
+        currentClass = null;
     }
 
     @Override
@@ -62,7 +90,13 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(Formal formal) {
-
+        Type type = formal.getType();
+        String name = formal.getName().getName();
+        if (currentMethod.hasParam(name)) {
+            errors.addError(new Errors.RedefinitionError(name, "some method"));
+        } else {
+            currentMethod.setParam(name, type);
+        }
     }
 
     @Override
@@ -72,12 +106,13 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(If i) {
-
+        i.getThenStmt().accept(this);
+        i.getElseStmt().accept(this);
     }
 
     @Override
     public void visit(IfWithoutElse ifWithoutElse) {
-
+        ifWithoutElse.getThenStmt().accept(this);
     }
 
     @Override
@@ -107,7 +142,26 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(MainClass main) {
+        currentClass = new ClassTable();
 
+        String className = main.getName().getName();
+        if (classes.containsKey(className)) {
+            errors.addError(new Errors.RedefinitionError(className, "global namespace"));
+        } else {
+            classes.put(main.getName().getName(), currentClass);
+        }
+
+        currentMethod = new MethodTable(null);
+
+        if (currentClass.hasMethod("main")) {
+            errors.addError(new Errors.RedefinitionError("main", className));
+        } else {
+            currentClass.setMethod("main", currentMethod);
+        }
+
+        main.getVarDeclarations().acceptAll(this);
+        main.getStatements().acceptAll(this);
+        currentClass = null;
     }
 
     @Override
@@ -117,7 +171,12 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(MethodDecl decl) {
-
+        currentMethod = new MethodTable(decl.getType());
+        currentClass.setMethod(decl.getName().getName(), currentMethod);
+        decl.getArgumentList().acceptAll(this);
+        decl.getVarDeclarations().acceptAll(this);
+        decl.getStatements().acceptAll(this);
+        currentMethod = null;
     }
 
     @Override
@@ -203,16 +262,26 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(VarDecl varDecl) {
-        String name = varDecl.getId().getName();
         Type type = varDecl.getType();
-        boolean old = typeTable.put(name, type);
-        if (old) {
-            //signal an error somehow
+        String name = varDecl.getId().getName();
+
+        if (currentMethod != null) {
+            if (currentMethod.hasLocal(name) || currentMethod.hasParam(name)) {
+                errors.addError(new Errors.RedefinitionError(name, "some method"));
+            } else {
+                currentMethod.setLocal(name, type);
+            }
+        } else {
+            if (currentClass.hasField(name)) {
+                errors.addError(new Errors.RedefinitionError(name, "some class"));
+            } else {
+                currentClass.setType(name, type);
+            }
         }
     }
 
     @Override
     public void visit(While w) {
-
+        w.getStatement().accept(this);
     }
 }
