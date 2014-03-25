@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class SymbolTableCreator implements Visitor {
     private Map<String, ClassTable> classes;
-    private Table<Type> typeTable;
     private ClassTable currentClass;
     private MethodTable currentMethod;
     private Errors errors;
@@ -25,7 +24,6 @@ public class SymbolTableCreator implements Visitor {
 
     public SymbolTableCreator() {
         classes = new HashMap<String, ClassTable>();
-        typeTable = new Table<Type>();
         errors = new Errors();
     }
 
