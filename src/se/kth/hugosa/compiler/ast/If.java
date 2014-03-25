@@ -12,6 +12,14 @@ public class If extends Stmt {
         this.elseStmt = elseStmt;
     }
 
+    public Stmt getThenStmt() {
+        return thenStmt;
+    }
+
+    public Stmt getElseStmt() {
+        return elseStmt;
+    }
+
     public void accept(Visitor v) {
         v.visit(this);
     }

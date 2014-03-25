@@ -15,6 +15,10 @@ public class IfWithoutElse extends Stmt {
         v.visit(this);
     }
 
+    public Stmt getThenStmt() {
+        return thenStmt;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("IfWithoutElse{\n");
