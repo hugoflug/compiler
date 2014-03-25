@@ -37,6 +37,12 @@ public class Errors {
         private String var;
         private Type shouldBe;
 
+        public TypeError(Type type, Type shouldBe) {
+            this.type = type;
+            this.shouldBe = shouldBe;
+            this.var = null;
+        }
+
         public TypeError(Type type, Type shouldBe, String var) {
             this.type = type;
             this.var = var;
@@ -45,7 +51,11 @@ public class Errors {
 
         @Override
         public String toString() {
-            return var + " is of type " + type + ". " + shouldBe + " expected";
+            if (var == null) {
+                return "Actual type: " + type + ". " + shouldBe + " expected";
+            } else {
+                return var + "is of type: " + type + ". " + shouldBe + " expected";
+            }
         }
     }
 

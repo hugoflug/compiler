@@ -18,6 +18,16 @@ public class TypeChecker implements TypeVisitor {
         errors = new Errors();
     }
 
+    private boolean assertType(Exp exp, Type expectedType) {
+        Type actualType = exp.accept(this);
+        if (!(actualType.getClass().equals(expectedType.getClass()))) {
+            errors.addError(new Errors.TypeError(actualType, expectedType));
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     @Override
     public Type visit(And and) {
         return null;
@@ -40,14 +50,15 @@ public class TypeChecker implements TypeVisitor {
         Exp index = arrayAssign.getIndex();
         Type indexType = index.accept(this);
         if (!(indexType instanceof IntType)) {
-            errors.addError(new Errors.TypeError(indexType, new IntType(), index.toString()));
+            errors.addError(new Errors.TypeError(indexType, new IntType()));
         }
+
 
         Exp newValue = arrayAssign.getNewValue();
         Type newValueType = newValue.accept(this);
 
         if (!(newValueType instanceof IntType)) {
-            errors.addError(new Errors.TypeError(indexType, new IntType(), newValue.toString()));
+            errors.addError(new Errors.TypeError(indexType, new IntType()));
         }
 
         return null;
