@@ -9,11 +9,17 @@ public class MethodTable {
     private Map<String, Type> params;
     private Map<String, Type> locals;
     private Type type;
+    private String name;
 
-    public MethodTable(Type type) {
+    public MethodTable(String name, Type type) {
         this.type = type;
+        this.name = name;
         params = new HashMap<String, Type>();
         locals = new HashMap<String, Type>();
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Type getParamType(String name) {

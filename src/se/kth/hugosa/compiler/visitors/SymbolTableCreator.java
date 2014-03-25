@@ -66,10 +66,10 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(ClassDecl classDecl) {
-        currentClass = new ClassTable();
         String className = classDecl.getClassName().getName();
+        currentClass = new ClassTable(className);
         if (classes.containsKey(className)) {
-            errors.addError(new Errors.RedefinitionError(className, "global namespace"));
+            errors.addError(new Errors.RedefinitionError(className));
         } else {
             classes.put(className, currentClass);
         }
@@ -93,7 +93,7 @@ public class SymbolTableCreator implements Visitor {
         Type type = formal.getType();
         String name = formal.getName().getName();
         if (currentMethod.hasParam(name)) {
-            errors.addError(new Errors.RedefinitionError(name, "some method"));
+            errors.addError(new Errors.RedefinitionError(name, currentMethod.getName()));
         } else {
             currentMethod.setParam(name, type);
         }
@@ -142,16 +142,16 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(MainClass main) {
-        currentClass = new ClassTable();
-
         String className = main.getName().getName();
+        currentClass = new ClassTable(className);
+
         if (classes.containsKey(className)) {
-            errors.addError(new Errors.RedefinitionError(className, "global namespace"));
+            errors.addError(new Errors.RedefinitionError(className));
         } else {
             classes.put(main.getName().getName(), currentClass);
         }
 
-        currentMethod = new MethodTable(null);
+        currentMethod = new MethodTable("main", null);
 
         if (currentClass.hasMethod("main")) {
             errors.addError(new Errors.RedefinitionError("main", className));
@@ -171,8 +171,9 @@ public class SymbolTableCreator implements Visitor {
 
     @Override
     public void visit(MethodDecl decl) {
-        currentMethod = new MethodTable(decl.getType());
-        currentClass.setMethod(decl.getName().getName(), currentMethod);
+        String name = decl.getName().getName();
+        currentMethod = new MethodTable(name, decl.getType());
+        currentClass.setMethod(name, currentMethod);
         decl.getArgumentList().acceptAll(this);
         decl.getVarDeclarations().acceptAll(this);
         decl.getStatements().acceptAll(this);
@@ -267,13 +268,13 @@ public class SymbolTableCreator implements Visitor {
 
         if (currentMethod != null) {
             if (currentMethod.hasLocal(name) || currentMethod.hasParam(name)) {
-                errors.addError(new Errors.RedefinitionError(name, "some method"));
+                errors.addError(new Errors.RedefinitionError(name, currentMethod.getName()));
             } else {
                 currentMethod.setLocal(name, type);
             }
         } else {
             if (currentClass.hasField(name)) {
-                errors.addError(new Errors.RedefinitionError(name, "some class"));
+                errors.addError(new Errors.RedefinitionError(name, currentClass.getName()));
             } else {
                 currentClass.setType(name, type);
             }

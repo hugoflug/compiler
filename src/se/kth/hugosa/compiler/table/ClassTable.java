@@ -8,10 +8,16 @@ import java.util.Map;
 public class ClassTable {
     private Map<String, MethodTable> methods;
     private Map<String, Type> fields;
+    private String name;
 
-    public ClassTable() {
+    public ClassTable(String className) {
         methods = new HashMap<String, MethodTable>();
         fields = new HashMap<String, Type>();
+        name = className;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean hasMethod(String name) {

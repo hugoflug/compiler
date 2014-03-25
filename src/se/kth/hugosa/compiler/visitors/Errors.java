@@ -17,9 +17,18 @@ public class Errors {
             this.scope = scope;
         }
 
+        public RedefinitionError(String redeffedVar) {
+            this.redeffedVar = redeffedVar;
+            this.scope = null;
+        }
+
         @Override
         public String toString() {
-            return redeffedVar + " already defined in " + scope;
+           if (scope != null) {
+               return redeffedVar + " already defined in " + scope;
+           } else {
+               return redeffedVar + " already defined";
+           }
         }
     }
 
