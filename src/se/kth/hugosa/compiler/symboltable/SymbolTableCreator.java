@@ -1,5 +1,6 @@
 package se.kth.hugosa.compiler.symboltable;
 
+import se.kth.hugosa.compiler.CompilationException;
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.Errors;
 import se.kth.hugosa.compiler.ast.Visitor;
@@ -13,17 +14,17 @@ public class SymbolTableCreator implements Visitor {
     private MethodTable currentMethod;
     private Errors errors;
 
-    public Map<String, ClassTable> getClasses() {
-        return classes;
-    }
-
-    public Errors getErrors() {
-        return errors;
-    }
-
     public SymbolTableCreator() {
         classes = new HashMap<String, ClassTable>();
         errors = new Errors();
+    }
+
+    public Map<String, ClassTable> createSymbolTable(Program program) throws CompilationException {
+        visit(program);
+        if (errors.hasErrors()) {
+            throw new CompilationException(errors);
+        }
+        return classes;
     }
 
     @Override
