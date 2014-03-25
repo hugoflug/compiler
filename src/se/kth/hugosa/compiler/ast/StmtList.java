@@ -24,6 +24,12 @@ public class StmtList {
         return stmtList.size();
     }
 
+    public void acceptAll(Visitor visitor) {
+        for (Stmt stmt : stmtList) {
+            stmt.accept(visitor);
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("StmtList[\n");

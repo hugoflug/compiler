@@ -25,7 +25,7 @@ public class FormalList {
 
     public void acceptAll(Visitor visitor) {
         for (Formal formal : formalList) {
-            visitor.visit(formal);
+            formal.accept(visitor);
         }
     }
 

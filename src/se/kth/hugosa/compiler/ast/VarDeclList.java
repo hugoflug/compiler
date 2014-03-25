@@ -25,7 +25,7 @@ public class VarDeclList {
 
     public void acceptAll(Visitor visitor) {
         for (VarDecl varDecl : varDeclList) {
-            visitor.visit(varDecl);
+            varDecl.accept(visitor);
         }
     }
 

@@ -1,5 +1,7 @@
 package se.kth.hugosa.compiler.ast;
 
+import se.kth.hugosa.compiler.visitors.Visitor;
+
 import java.util.ArrayList;
 
 public class ExpList {
@@ -19,6 +21,12 @@ public class ExpList {
 
     public int size() {
         return expList.size();
+    }
+
+    public void acceptAll(Visitor visitor) {
+        for (Exp exp : expList) {
+            exp.accept(visitor);
+        }
     }
 
     @Override

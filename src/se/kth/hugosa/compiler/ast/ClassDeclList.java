@@ -25,7 +25,7 @@ public class ClassDeclList {
 
     public void acceptAll(Visitor visitor) {
         for (ClassDecl classDecl : classDeclarations) {
-            visitor.visit(classDecl);
+            classDecl.accept(visitor);
         }
     }
 

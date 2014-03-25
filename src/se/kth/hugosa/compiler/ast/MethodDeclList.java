@@ -25,7 +25,7 @@ public class MethodDeclList {
 
     public void acceptAll(Visitor visitor) {
         for (MethodDecl decl : methodDeclList) {
-            visitor.visit(decl);
+            decl.accept(visitor);
         }
     }
 
