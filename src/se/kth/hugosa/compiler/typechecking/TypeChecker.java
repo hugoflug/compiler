@@ -1,15 +1,21 @@
 package se.kth.hugosa.compiler.typechecking;
 
+import se.kth.hugosa.compiler.Errors;
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.ClassTable;
+import se.kth.hugosa.compiler.symboltable.MethodTable;
 
 import java.util.Map;
 
 public class TypeChecker implements TypeVisitor {
     private Map<String, ClassTable> classes;
+    private ClassTable currentClass;
+    private MethodTable currentMethod;
+    private Errors errors;
 
     public TypeChecker(Map<String, ClassTable> classes) {
         this.classes = classes;
+        errors = new Errors();
     }
 
     @Override
@@ -19,16 +25,53 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(ArrayAssign arrayAssign) {
+        String id = arrayAssign.getId().getName();
+        Type arrayType = currentMethod.getLocalType(id);
+        if (arrayType == null) {
+            arrayType = currentClass.getType(id);
+            if (arrayType == null) {
+                errors.addError(new Errors.UndefinedError(id));
+            }
+        }
+        if (!(arrayType instanceof IntArrayType)) {
+            errors.addError(new Errors.TypeError(arrayType, new IntArrayType(), id));
+        }
+
+        Exp index = arrayAssign.getIndex();
+        Type indexType = index.accept(this);
+        if (!(indexType instanceof IntType)) {
+            errors.addError(new Errors.TypeError(indexType, new IntType(), index.toString()));
+        }
+
+        Exp newValue = arrayAssign.getNewValue();
+        Type newValueType = newValue.accept(this);
+
+        if (!(newValueType instanceof IntType)) {
+            errors.addError(new Errors.TypeError(indexType, new IntType(), newValue.toString()));
+        }
+
         return null;
     }
 
     @Override
     public Type visit(ArrayLength arrayLength) {
+        Exp array = arrayLength.getArray();
+        Type arrayType = array.accept(this);
+
+        if (!(arrayType instanceof IntArrayType)) {
+            errors.addError(new Errors.TypeError(arrayType, new IntArrayType(), array.toString()));
+        }
+
         return null;
     }
 
     @Override
     public Type visit(ArrayLookup arrayLookup) {
+        Exp array = arrayLookup.getArray();
+        Exp index = arrayLookup.getIndex();
+
+
+
         return null;
     }
 
@@ -109,7 +152,16 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(MainClass main) {
+        String className = main.getName().getName();
+        currentClass = classes.get(className);
 
+        currentMethod = currentClass.getMethod("main");
+        StmtList statements = main.getStatements();
+        for (int i = 0; i < statements.size(); i++) {
+            statements.get(i).accept(this);
+        }
+        currentMethod = null;
+        currentClass = null;
         return null;
     }
 
