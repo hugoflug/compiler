@@ -1,0 +1,20 @@
+class MiniJavaTest1 {
+    public static void main(String[] args) {
+        int a;
+        boolean b;
+        if (a < 2)
+            System.out.println(1);
+        else
+            System.out.println(3);
+    }
+}
+
+class MiniJavaTest2 {
+    public int doStuff(int a, int b) {
+        int[] x;
+        x = b.doOtherStuff(b, a);
+        return x;
+    }
+}
+
+class Empty {}
