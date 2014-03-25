@@ -14,6 +14,14 @@ public class ClassTable {
         fields = new HashMap<String, Type>();
     }
 
+    public boolean hasMethod(String name) {
+        return methods.containsKey(name);
+    }
+
+    public boolean hasField(String name) {
+        return fields.containsKey(name);
+    }
+
     public MethodTable getMethod(String name) {
         return methods.get(name);
     }
@@ -22,11 +30,11 @@ public class ClassTable {
         return fields.get(fieldName);
     }
 
-    public void setMethod(String name, MethodTable method) {
-        methods.put(name, method);
+    public boolean setMethod(String name, MethodTable method) {
+        return methods.put(name, method) == null;
     }
 
-    public void setType(String fieldName, Type type) {
-        fields.put(fieldName, type);
+    public boolean setType(String fieldName, Type type) {
+        return fields.put(fieldName, type) == null;
     }
 }

@@ -8,8 +8,10 @@ import java.util.Map;
 public class MethodTable {
     private Map<String, Type> params;
     private Map<String, Type> locals;
+    private Type type;
 
-    public MethodTable() {
+    public MethodTable(Type type) {
+        this.type = type;
         params = new HashMap<String, Type>();
         locals = new HashMap<String, Type>();
     }
@@ -20,6 +22,14 @@ public class MethodTable {
 
     public Type getLocalType(String name) {
         return locals.get(name);
+    }
+
+    public boolean hasParam(String name) {
+        return params.containsKey(name);
+    }
+
+    public boolean hasLocal(String name) {
+        return locals.containsKey(name);
     }
 
     public void setParam(String name, Type type) {
