@@ -21,4 +21,12 @@ public class ClassTable {
     public Type getType(String fieldName) {
         return fields.get(fieldName);
     }
+
+    public void setMethod(String name, MethodTable method) {
+        methods.put(name, method);
+    }
+
+    public void setType(String fieldName, Type type) {
+        fields.put(fieldName, type);
+    }
 }

@@ -21,4 +21,12 @@ public class MethodTable {
     public Type getLocalType(String name) {
         return locals.get(name);
     }
+
+    public void setParam(String name, Type type) {
+        params.put(name, type);
+    }
+
+    public void setLocal(String name, Type type) {
+        locals.put(name, type);
+    }
 }
