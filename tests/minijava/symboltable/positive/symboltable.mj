@@ -10,9 +10,14 @@ class MiniJavaTest1 {
 }
 
 class MiniJavaTest2 {
+    int foo;
+    int x;
+
     public int doStuff(int a, int b) {
         int[] x;
+        int foo;
         x = b.doOtherStuff(b, a);
+        foo = 5;
         return x;
     }
 }
