@@ -161,6 +161,7 @@ public class SymbolTableCreator implements Visitor {
 
         main.getVarDeclarations().acceptAll(this);
         main.getStatements().acceptAll(this);
+        currentMethod = null;
         currentClass = null;
     }
 
