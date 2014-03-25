@@ -49,6 +49,21 @@ public class Errors {
         }
     }
 
+    public static class UndefinedError implements MiniJavaError {
+        private String var;
+
+        public UndefinedError(String var) {
+            this.var = var;
+        }
+
+        @Override
+        public String toString() {
+            return var + " is undefined";
+        }
+    }
+
+
+
     private List<MiniJavaError> errors;
 
     public Errors() {
