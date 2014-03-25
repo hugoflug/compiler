@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Errors {
-    public class RedefinitionError {
+    public interface MiniJavaError {}
+
+    public static class RedefinitionError implements MiniJavaError {
         private String redeffedVar;
         private String scope;
 
@@ -21,7 +23,7 @@ public class Errors {
         }
     }
 
-    public class TypeError {
+    public static class TypeError implements MiniJavaError {
         private Type type;
         private String var;
         private Type shouldBe;
@@ -38,17 +40,21 @@ public class Errors {
         }
     }
 
-    private List<Error> errors;
+    private List<MiniJavaError> errors;
 
     public Errors() {
-        errors = new ArrayList<Error>();
+        errors = new ArrayList<MiniJavaError>();
+    }
+
+    public void addError(MiniJavaError error) {
+        errors.add(error);
     }
 
     public boolean hasErrors() {
         return !errors.isEmpty();
     }
 
-    public List<Error> getErrors() {
+    public List<MiniJavaError> getErrors() {
         return errors;
     }
 }
