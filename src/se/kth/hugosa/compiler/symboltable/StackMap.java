@@ -1,4 +1,4 @@
-package se.kth.hugosa.compiler.table;
+package se.kth.hugosa.compiler.symboltable;
 
 import java.util.*;
 
@@ -12,7 +12,7 @@ public class StackMap<K, V> {
     public void insert(K key, V value) {
         Deque<V> stack = hashMap.get(key);
         if (stack == null) {
-            stack = new ArrayDeque();
+            stack = new ArrayDeque<V>();
             stack.push(value);
             hashMap.put(key, stack);
         } else {

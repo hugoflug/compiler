@@ -1,4 +1,4 @@
-package se.kth.hugosa.compiler.visitors;
+package se.kth.hugosa.compiler.typechecking;
 
 import se.kth.hugosa.compiler.ast.*;
 

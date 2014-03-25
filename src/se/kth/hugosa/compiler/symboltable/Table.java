@@ -1,4 +1,4 @@
-package se.kth.hugosa.compiler.table;
+package se.kth.hugosa.compiler.symboltable;
 
 import java.util.*;
 

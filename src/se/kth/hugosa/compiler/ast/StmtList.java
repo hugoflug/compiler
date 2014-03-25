@@ -1,9 +1,6 @@
 package se.kth.hugosa.compiler.ast;
 
-import se.kth.hugosa.compiler.visitors.Visitor;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class StmtList {
     private ArrayList<Stmt> stmtList;

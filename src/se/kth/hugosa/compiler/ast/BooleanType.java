@@ -1,7 +1,6 @@
 package se.kth.hugosa.compiler.ast;
 
-import se.kth.hugosa.compiler.visitors.TypeVisitor;
-import se.kth.hugosa.compiler.visitors.Visitor;
+import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
 public class BooleanType extends Type {
     public void accept(Visitor v) {

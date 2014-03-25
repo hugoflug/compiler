@@ -1,8 +1,5 @@
 package se.kth.hugosa.compiler.ast;
 
-import se.kth.hugosa.compiler.visitors.TypeVisitor;
-import se.kth.hugosa.compiler.visitors.Visitor;
-
 import java.util.ArrayList;
 
 public class ClassDeclList {

@@ -1,9 +1,8 @@
-package se.kth.hugosa.compiler.visitors;
+package se.kth.hugosa.compiler.symboltable;
 
 import se.kth.hugosa.compiler.ast.*;
-import se.kth.hugosa.compiler.table.ClassTable;
-import se.kth.hugosa.compiler.table.MethodTable;
-import se.kth.hugosa.compiler.table.Table;
+import se.kth.hugosa.compiler.Errors;
+import se.kth.hugosa.compiler.ast.Visitor;
 
 import java.util.HashMap;
 import java.util.Map;
