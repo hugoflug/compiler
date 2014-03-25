@@ -39,4 +39,23 @@ public class MethodTable {
     public void setLocal(String name, Type type) {
         locals.put(name, type);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("MethodTable{\n");
+        sb.append("params={\n");
+        for (Map.Entry<String, Type> entry : params.entrySet()) {
+            sb.append(entry.getKey() + " = " + entry.getValue() + "\n");
+        }
+        sb.append("}\n");
+        sb.append("fields={\n");
+        for (Map.Entry<String, Type> entry : locals.entrySet()) {
+            sb.append(entry.getKey() + " = " + entry.getValue() + "\n");
+        }
+        sb.append("}\n");
+        sb.append("}\n");
+        return sb.toString();
+    }
 }
+

@@ -37,4 +37,22 @@ public class ClassTable {
     public boolean setType(String fieldName, Type type) {
         return fields.put(fieldName, type) == null;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ClassTable{\n");
+        sb.append("methods={\n");
+        for (Map.Entry<String, MethodTable> entry : methods.entrySet()) {
+            sb.append(entry.getKey() + " = " + entry.getValue() + "\n");
+        }
+        sb.append("}\n");
+        sb.append("fields={\n");
+        for (Map.Entry<String, Type> entry : fields.entrySet()) {
+            sb.append(entry.getKey() + " = " + entry.getValue() + "\n");
+        }
+        sb.append("}\n");
+        sb.append("}");
+        return sb.toString();
+    }
 }
