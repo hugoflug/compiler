@@ -18,8 +18,8 @@ public class MethodTable {
     public MethodTable(String name, Type type) {
         this.type = type;
         this.name = name;
-        params = new HashMap<String, Type>();
-        locals = new LinkedHashMap<String, Type>();
+        params = new LinkedHashMap<String, Type>();
+        locals = new HashMap<String, Type>();
     }
 
     public String getName() {
