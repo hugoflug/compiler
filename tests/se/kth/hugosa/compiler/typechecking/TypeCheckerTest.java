@@ -21,13 +21,7 @@ public class TypeCheckerTest {
             Program program = parser.parse();
             SymbolTableCreator creator = new SymbolTableCreator();
             Map<String, ClassTable> classes = null;
-            try {
-                classes = creator.createSymbolTable(program);
-            } catch (CompilationException e) {
-                for (Errors.MiniJavaError error : e.getErrors().getErrors()) {
-                    throw new Exception();
-                }
-            }
+            classes = creator.createSymbolTable(program);
 
             TypeChecker typeChecker = new TypeChecker(classes);
             typeChecker.visit(program);

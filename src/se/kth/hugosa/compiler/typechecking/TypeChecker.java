@@ -134,8 +134,14 @@ public class TypeChecker implements TypeVisitor {
         Type idType = null;
         if (currentMethod != null) {
             idType = currentMethod.getLocalType(name);
-            //getParamType also!
-            if (idType != null) {
+            if (idType == null) {
+                idType = currentMethod.getParamType(name);
+                if (idType == null) {
+                    errors.addError(new Errors.UndefinedError(name));
+                } else {
+                    return idType;
+                }
+            } else  {
                 return idType;
             }
         }

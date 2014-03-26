@@ -29,7 +29,10 @@ public class MiniJavaParserTest {
             InputStream stream = new FileInputStream(file);
             MiniJavaParser parser = new MiniJavaParser(stream);
             Program program = parser.parse();
-            //System.out.println(Indenter.indent(program.toString()));
+            System.out.println(file.getName());
+            System.out.println("============");
+            System.out.println(Indenter.indent(program.toString()));
+            System.out.println("\n\n");
         }
     }
 

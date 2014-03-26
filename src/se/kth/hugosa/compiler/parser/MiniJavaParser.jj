@@ -84,7 +84,7 @@ Program Program() :
     ClassDecl classDecl;
 }
 {
-    mainClass = MainClass() (classDecl = ClassDecl() { classDecls.addClassDecl(classDecl); })*
+    mainClass = MainClass() (classDecl = ClassDecl() { classDecls.addClassDecl(classDecl); })* <EOF>
     { return new Program(mainClass, classDecls); }
 }
 
