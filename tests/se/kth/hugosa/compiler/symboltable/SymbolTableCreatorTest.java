@@ -22,10 +22,13 @@ public class SymbolTableCreatorTest {
             SymbolTableCreator creator = new SymbolTableCreator();
             Map<String, ClassTable> classes = creator.createSymbolTable(program);
             StringBuilder sb = new StringBuilder();
+            System.out.println(file.getName());
+            System.out.println("==============");
             for (Map.Entry<String, ClassTable> entry : classes.entrySet()) {
                 sb.append(entry.getKey() + " = " + entry.getValue() + "\n");
             }
             System.out.println(Indenter.indent(sb.toString()));
+            System.out.println("\n\n");
         }
     }
 
