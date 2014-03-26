@@ -5,8 +5,9 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class NewObject extends Exp {
     private Identifier name;
 
-    public NewObject(Identifier name) {
+    public NewObject(Identifier name, int line, int column) {
         this.name = name;
+        setPosition(line, column);
     }
 
     public Identifier getName() {

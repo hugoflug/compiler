@@ -5,8 +5,9 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class Block extends Stmt {
     private StmtList stmtList;
 
-    public Block(StmtList stmtList) {
+    public Block(StmtList stmtList, int line, int column) {
         this.stmtList = stmtList;
+        setPosition(line, column);
     }
 
     public StmtList getStmtList() {

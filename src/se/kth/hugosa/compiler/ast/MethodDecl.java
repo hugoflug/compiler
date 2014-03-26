@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
-public class MethodDecl {
+public class MethodDecl extends SyntaxTreeNode {
     private Type type;
     private Identifier name;
     private FormalList argumentList;
@@ -10,13 +10,14 @@ public class MethodDecl {
     private StmtList statements;
     private Exp returnValue;
 
-    public MethodDecl(Type type, Identifier name, FormalList argumentList, VarDeclList varDeclarations, StmtList statements, Exp returnValue) {
+    public MethodDecl(Type type, Identifier name, FormalList argumentList, VarDeclList varDeclarations, StmtList statements, Exp returnValue, int line, int column) {
         this.type = type;
         this.name = name;
         this.argumentList = argumentList;
         this.varDeclarations = varDeclarations;
         this.statements = statements;
         this.returnValue = returnValue;
+        setPosition(line, column);
     }
 
     public Type getType() {

@@ -5,8 +5,9 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class IntLit extends Exp {
     private int value;
 
-    public IntLit(int value) {
+    public IntLit(int value, int line, int column) {
         this.value = value;
+        setPosition(line, column);
     }
 
     public void accept(Visitor v) {

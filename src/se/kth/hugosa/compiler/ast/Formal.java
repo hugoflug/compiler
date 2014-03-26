@@ -2,13 +2,14 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
-public class Formal {
+public class Formal extends SyntaxTreeNode {
     private Type type;
     private Identifier name;
 
-    public Formal(Type type, Identifier name) {
+    public Formal(Type type, Identifier name, int line, int column) {
         this.type = type;
         this.name = name;
+        setPosition(line, column);
     }
 
     public Type getType() {

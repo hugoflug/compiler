@@ -6,9 +6,10 @@ public class While extends Stmt {
     private Exp condition;
     private Stmt statement;
 
-    public While(Exp condition, Stmt statement) {
+    public While(Exp condition, Stmt statement, int line, int column) {
         this.condition = condition;
         this.statement = statement;
+        setPosition(line, column);
     }
 
     public Exp getCondition() {

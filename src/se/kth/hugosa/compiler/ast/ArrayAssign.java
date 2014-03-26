@@ -6,10 +6,11 @@ public class ArrayAssign extends Stmt {
     private Identifier id;
     private Exp index, newValue;
 
-    public ArrayAssign(Identifier id, Exp index, Exp newValue) {
+    public ArrayAssign(Identifier id, Exp index, Exp newValue, int line, int column) {
         this.id = id;
         this.index = index;
         this.newValue = newValue;
+        setPosition(line, column);
     }
 
     public Identifier getId() {

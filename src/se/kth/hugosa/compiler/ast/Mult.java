@@ -5,9 +5,10 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class Mult extends Exp {
     private Exp leftOp, rightOp;
 
-    public Mult(Exp leftOp, Exp rightOp) {
+    public Mult(Exp leftOp, Exp rightOp, int line, int column) {
         this.leftOp = leftOp;
         this.rightOp = rightOp;
+        setPosition(line, column);
     }
 
     public Exp getLeftOp() {

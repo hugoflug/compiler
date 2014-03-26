@@ -13,9 +13,10 @@ public class Or extends Exp {
         return rightOp;
     }
 
-    public Or(Exp leftOp, Exp rightOp) {
+    public Or(Exp leftOp, Exp rightOp, int line, int column) {
         this.leftOp = leftOp;
         this.rightOp = rightOp;
+        setPosition(line, column);
     }
 
     public void accept(Visitor v) {

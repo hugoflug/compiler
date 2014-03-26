@@ -5,8 +5,11 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class ObjectType extends Type {
     private String name;
 
-    public ObjectType(String name) {
+    public ObjectType() {}
+
+    public ObjectType(String name, int line, int column) {
         this.name = name;
+        setPosition(line, column);
     }
 
     public String getName() {

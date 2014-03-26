@@ -2,15 +2,16 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
-public class ClassDecl {
+public class ClassDecl extends SyntaxTreeNode {
     private Identifier className;
     private VarDeclList varDeclarations;
     private MethodDeclList methodDeclarations;
 
-    public ClassDecl(Identifier className, VarDeclList varDeclarations, MethodDeclList methodDeclarations) {
+    public ClassDecl(Identifier className, VarDeclList varDeclarations, MethodDeclList methodDeclarations, int line, int column) {
         this.className = className;
         this.varDeclarations = varDeclarations;
         this.methodDeclarations = methodDeclarations;
+        setPosition(line, column);
     }
 
     public Identifier getClassName() {

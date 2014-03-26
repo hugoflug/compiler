@@ -6,9 +6,10 @@ public class IfWithoutElse extends Stmt {
     private Exp condition;
     private Stmt thenStmt;
 
-    public IfWithoutElse(Exp condition, Stmt thenStmt) {
+    public IfWithoutElse(Exp condition, Stmt thenStmt, int line, int column) {
         this.condition = condition;
         this.thenStmt = thenStmt;
+        setPosition(line, column);
     }
 
     public void accept(Visitor v) {

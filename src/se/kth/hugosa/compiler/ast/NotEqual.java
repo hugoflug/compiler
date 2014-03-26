@@ -5,9 +5,10 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class NotEqual extends Exp {
     private Exp leftOp, rightOp;
 
-    public NotEqual(Exp leftOp, Exp rightOp) {
+    public NotEqual(Exp leftOp, Exp rightOp, int line, int column) {
         this.leftOp = leftOp;
         this.rightOp = rightOp;
+        setPosition(line, column);
     }
 
     public Exp getLeftOp() {

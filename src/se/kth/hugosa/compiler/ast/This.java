@@ -3,6 +3,10 @@ package se.kth.hugosa.compiler.ast;
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
 public class This extends Exp {
+    public This(int line, int column) {
+        setPosition(line, column);
+    }
+
     public void accept(Visitor v) {
         v.visit(this);
     }

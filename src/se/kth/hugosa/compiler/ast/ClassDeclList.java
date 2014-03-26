@@ -2,7 +2,7 @@ package se.kth.hugosa.compiler.ast;
 
 import java.util.ArrayList;
 
-public class ClassDeclList {
+public class ClassDeclList extends SyntaxTreeNode {
     private ArrayList<ClassDecl> classDeclarations;
 
     public ClassDeclList() {

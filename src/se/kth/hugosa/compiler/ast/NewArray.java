@@ -5,8 +5,9 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class NewArray extends Exp {
     private Exp arraySize;
 
-    public NewArray(Exp arraySize) {
+    public NewArray(Exp arraySize, int line, int column) {
         this.arraySize = arraySize;
+        setPosition(line, column);
     }
 
     public Exp getArraySize() {

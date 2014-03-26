@@ -5,8 +5,9 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class Not extends Exp {
     private Exp expression;
 
-    public Not(Exp expression) {
+    public Not(Exp expression, int line, int column) {
         this.expression = expression;
+        setPosition(line, column);
     }
 
     public Exp getExpression() {

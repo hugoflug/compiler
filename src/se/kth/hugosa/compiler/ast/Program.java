@@ -2,13 +2,14 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
-public class Program {
+public class Program extends SyntaxTreeNode {
     private MainClass mainClass;
     private ClassDeclList classDeclarations;
 
-    public Program(MainClass mainClass, ClassDeclList classDeclarations) {
+    public Program(MainClass mainClass, ClassDeclList classDeclarations, int line, int column) {
         this.mainClass = mainClass;
         this.classDeclarations = classDeclarations;
+        setPosition(line, column);
     }
 
     public MainClass getMainClass() {

@@ -5,9 +5,10 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class LessOrEqualThan extends Exp {
     private Exp leftOp, rightOp;
 
-    public LessOrEqualThan(Exp leftOp, Exp rightOp) {
+    public LessOrEqualThan(Exp leftOp, Exp rightOp, int line, int column) {
         this.leftOp = leftOp;
         this.rightOp = rightOp;
+        setPosition(line, column);
     }
 
     public void accept(Visitor v) {

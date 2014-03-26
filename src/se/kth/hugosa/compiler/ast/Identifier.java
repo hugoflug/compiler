@@ -5,8 +5,9 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class Identifier extends Exp {
     private String name;
 
-    public Identifier(String name) {
+    public Identifier(String name, int line, int column) {
         this.name = name;
+        setPosition(line, column);
     }
 
     public String getName() {

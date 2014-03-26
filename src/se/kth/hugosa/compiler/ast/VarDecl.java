@@ -2,13 +2,14 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
-public class VarDecl {
+public class VarDecl extends SyntaxTreeNode {
     private Type type;
     private Identifier id;
 
-    public VarDecl(Type type, Identifier id) {
+    public VarDecl(Type type, Identifier id, int line, int column) {
         this.type = type;
         this.id = id;
+        setPosition(line, column);
     }
 
     public Type getType() {

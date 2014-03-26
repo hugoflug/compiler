@@ -6,9 +6,10 @@ public class Assign extends Stmt {
     private Identifier assignee;
     private Exp newValue;
 
-    public Assign(Identifier assignee, Exp newValue) {
+    public Assign(Identifier assignee, Exp newValue, int line, int column) {
         this.assignee = assignee;
         this.newValue = newValue;
+        setPosition(line, column);
     }
 
     public Identifier getAssignee() {

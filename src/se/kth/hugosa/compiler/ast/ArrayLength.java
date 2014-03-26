@@ -5,8 +5,9 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class ArrayLength extends Exp {
     private Exp array;
 
-    public ArrayLength(Exp array) {
+    public ArrayLength(Exp array, int line, int column) {
         this.array = array;
+        setPosition(line, column);
     }
 
     public Exp getArray() {

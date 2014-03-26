@@ -13,9 +13,10 @@ public class And extends Exp {
         return rightOp;
     }
 
-    public And(Exp leftOp, Exp rightOp) {
+    public And(Exp leftOp, Exp rightOp, int line, int column) {
         this.leftOp = leftOp;
         this.rightOp = rightOp;
+        setPosition(line, column);
     }
 
     public void accept(Visitor v) {
@@ -34,4 +35,5 @@ public class And extends Exp {
         sb.append('}');
         return sb.toString();
     }
+
 }

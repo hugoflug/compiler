@@ -3,6 +3,12 @@ package se.kth.hugosa.compiler.ast;
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
 public class BooleanType extends Type {
+    public BooleanType() {}
+
+    public BooleanType(int line, int column) {
+        setPosition(line, column);
+    }
+
     public void accept(Visitor v) {
         v.visit(this);
     }

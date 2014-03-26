@@ -5,8 +5,9 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class Syso extends Stmt {
     private Exp printee;
 
-    public Syso(Exp printee) {
+    public Syso(Exp printee, int line, int column) {
         this.printee = printee;
+        setPosition(line, column);
     }
 
     public Exp getPrintee() {

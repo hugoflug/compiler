@@ -3,6 +3,12 @@ package se.kth.hugosa.compiler.ast;
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
 public class IntArrayType extends Type {
+    public IntArrayType() {}
+
+    public IntArrayType(int line, int column) {
+        setPosition(line, column);
+    }
+
     public void accept(Visitor v) {
         v.visit(this);
     }

@@ -2,17 +2,18 @@ package se.kth.hugosa.compiler.ast;
 
 import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 
-public class MainClass {
+public class MainClass extends SyntaxTreeNode {
     private Identifier name;
     private Identifier stdArgsName;
     private VarDeclList varDeclarations;
     private StmtList statements;
 
-    public MainClass(Identifier name, Identifier stdArgsName, VarDeclList varDeclarations, StmtList statements) {
+    public MainClass(Identifier name, Identifier stdArgsName, VarDeclList varDeclarations, StmtList statements, int line, int column) {
         this.name = name;
         this.stdArgsName = stdArgsName;
         this.varDeclarations = varDeclarations;
         this.statements = statements;
+        setPosition(line, column);
     }
 
     public Identifier getName() {

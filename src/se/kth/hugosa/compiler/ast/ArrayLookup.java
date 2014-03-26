@@ -5,9 +5,10 @@ import se.kth.hugosa.compiler.typechecking.TypeVisitor;
 public class ArrayLookup extends Exp {
     private Exp array, index;
 
-    public ArrayLookup(Exp array, Exp index) {
+    public ArrayLookup(Exp array, Exp index, int line, int column) {
         this.array = array;
         this.index = index;
+        setPosition(line, column);
     }
 
     public Exp getArray() {

@@ -7,10 +7,11 @@ public class MethodCall extends Exp {
     private Identifier methodName;
     private ExpList argumentList;
 
-    public MethodCall(Exp object, Identifier methodName, ExpList argumentList) {
+    public MethodCall(Exp object, Identifier methodName, ExpList argumentList, int line, int column) {
         this.object = object;
         this.methodName = methodName;
         this.argumentList = argumentList;
+        setPosition(line, column);
     }
 
     public Exp getObject() {

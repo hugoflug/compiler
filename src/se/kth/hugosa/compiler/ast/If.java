@@ -6,10 +6,11 @@ public class If extends Stmt {
     private Exp condition;
     private Stmt thenStmt, elseStmt;
 
-    public If(Exp condition, Stmt thenStmt, Stmt elseStmt) {
+    public If(Exp condition, Stmt thenStmt, Stmt elseStmt, int line, int column) {
         this.condition = condition;
         this.thenStmt = thenStmt;
         this.elseStmt = elseStmt;
+        setPosition(line, column);
     }
 
     public Stmt getThenStmt() {
