@@ -20,6 +20,10 @@ public class TypeChecker implements TypeVisitor {
 
     private boolean assertType(Exp exp, Type expectedType) {
         Type actualType = exp.accept(this);
+        return assertType(actualType, expectedType);
+    }
+
+    private boolean assertType(Type actualType, Type expectedType) {
         if (!(actualType.getClass().equals(expectedType.getClass()))) {
             errors.addError(new Errors.TypeError(actualType, expectedType));
             return false;
@@ -30,7 +34,9 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(And and) {
-        return null;
+        assertType(and.getLeftOp(), new BooleanType());
+        assertType(and.getRightOp(), new BooleanType());
+        return new BooleanType();
     }
 
     @Override
@@ -43,122 +49,143 @@ public class TypeChecker implements TypeVisitor {
                 errors.addError(new Errors.UndefinedError(id));
             }
         }
-        if (!(arrayType instanceof IntArrayType)) {
-            errors.addError(new Errors.TypeError(arrayType, new IntArrayType(), id));
-        }
 
-        Exp index = arrayAssign.getIndex();
-        Type indexType = index.accept(this);
-        if (!(indexType instanceof IntType)) {
-            errors.addError(new Errors.TypeError(indexType, new IntType()));
-        }
-
-
-        Exp newValue = arrayAssign.getNewValue();
-        Type newValueType = newValue.accept(this);
-
-        if (!(newValueType instanceof IntType)) {
-            errors.addError(new Errors.TypeError(indexType, new IntType()));
-        }
+        assertType(arrayType, new IntArrayType());
+        assertType(arrayAssign.getIndex(), new IntType());
+        assertType(arrayAssign.getNewValue(), new IntType());
 
         return null;
     }
 
     @Override
     public Type visit(ArrayLength arrayLength) {
-        Exp array = arrayLength.getArray();
-        Type arrayType = array.accept(this);
-
-        if (!(arrayType instanceof IntArrayType)) {
-            errors.addError(new Errors.TypeError(arrayType, new IntArrayType(), array.toString()));
-        }
-
-        return null;
+        assertType(arrayLength.getArray(), new IntArrayType());
+        return new IntType();
     }
 
     @Override
     public Type visit(ArrayLookup arrayLookup) {
-        Exp array = arrayLookup.getArray();
-        Exp index = arrayLookup.getIndex();
-
-
-
-        return null;
+        assertType(arrayLookup.getArray(), new IntArrayType());
+        assertType(arrayLookup.getIndex(), new IntType());
+        return new IntType();
     }
 
     @Override
     public Type visit(Assign assign) {
+        Type assigneeType = assign.getAssignee().accept(this);
+        Type newValueType = assign.getNewValue().accept(this);
+        assertType(assigneeType, newValueType);
         return null;
     }
 
     @Override
     public Type visit(Block block) {
+        StmtList stmtList = block.getStmtList();
+        for (int i = 0; i < stmtList.size(); i++) {
+            stmtList.get(i).accept(this);
+        }
         return null;
     }
 
     @Override
     public Type visit(BooleanType booleanType) {
-        return null;
+        return new BooleanType();
     }
 
     @Override
     public Type visit(ClassDecl classDecl) {
+        currentClass = classes.get(classDecl.getClassName().getName());
+
+        VarDeclList varDecls = classDecl.getVarDeclarations();
+        for (int i = 0; i < varDecls.size(); i++) {
+            varDecls.get(i).accept(this);
+        }
+        MethodDeclList methodDecls = classDecl.getMethodDeclarations();
+        for (int i = 0; i < methodDecls.size(); i++) {
+            methodDecls.get(i).accept(this);
+        }
+
+        currentClass = null;
         return null;
     }
 
     @Override
     public Type visit(Equal equal) {
-        return null;
+        Type leftOpType = equal.getLeftOp().accept(this);
+        Type rightOpType = equal.getRightOp().accept(this);
+        assertType(leftOpType, rightOpType);
+        return new BooleanType();
     }
 
     @Override
     public Type visit(False f) {
-        return null;
+        return new BooleanType();
     }
 
     @Override
     public Type visit(Formal formal) {
-        return null;
+        return formal.getType();
     }
 
     @Override
     public Type visit(Identifier id) {
-        return null;
+        String name = id.getName();
+        Type idType = null;
+        if (currentMethod != null) {
+            idType = currentMethod.getLocalType(name);
+            if (idType != null) {
+                return idType;
+            }
+        }
+        idType = currentClass.getType(name);
+        if (idType == null) {
+            errors.addError(new Errors.UndefinedError(name));
+        }
+        return idType;
     }
 
     @Override
     public Type visit(If i) {
+        assertType(i.getCondition().accept(this), new BooleanType());
+        i.getThenStmt().accept(this);
+        i.getElseStmt().accept(this);
         return null;
     }
 
     @Override
     public Type visit(IfWithoutElse ifWithoutElse) {
+        assertType(ifWithoutElse.getCondition().accept(this), new BooleanType());
+        ifWithoutElse.getThenStmt().accept(this);
         return null;
     }
 
     @Override
     public Type visit(IntArrayType intArrayType) {
-        return null;
+        return new IntArrayType();
     }
 
     @Override
     public Type visit(IntLit intLit) {
-        return null;
+        return new IntType();
     }
 
     @Override
     public Type visit(IntType intType) {
-        return null;
+        return new IntType();
     }
 
     @Override
     public Type visit(LessThan lessThan) {
-        return null;
+        assertType(lessThan.getLeftOp(), new IntType());
+        assertType(lessThan.getRightOp(), new IntType());
+        return new BooleanType();
     }
 
     @Override
     public Type visit(LessOrEqualThan lessThan) {
-        return null;
+        assertType(lessThan.getLeftOp(), new IntType());
+        assertType(lessThan.getRightOp(), new IntType());
+        return new BooleanType();
     }
 
     @Override
@@ -178,6 +205,11 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(MethodCall call) {
+        Exp object = call.getObject();
+        assertType(object, new ObjectType(""));
+
+        //String typeName = classes.get(object.)
+
         return null;
     }
 

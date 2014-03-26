@@ -20,6 +20,8 @@ public class If extends Stmt {
         return elseStmt;
     }
 
+    public Exp getCondition() {  return condition; }
+
     public void accept(Visitor v) {
         v.visit(this);
     }

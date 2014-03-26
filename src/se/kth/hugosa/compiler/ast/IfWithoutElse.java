@@ -23,6 +23,9 @@ public class IfWithoutElse extends Stmt {
         return thenStmt;
     }
 
+    public Exp getCondition() {  return condition; }
+
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("IfWithoutElse{\n");
