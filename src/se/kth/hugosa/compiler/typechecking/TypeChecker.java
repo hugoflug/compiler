@@ -209,12 +209,12 @@ public class TypeChecker implements TypeVisitor {
         Exp object = call.getObject();
         boolean isObject = assertType(object, new ObjectType(""));
 
+        String typeName = ((ObjectType)object.accept(this)).getName();
         if (!isObject) {
-            errors.addError(new Errors.TypeError(object.accept(this), new ObjectType("")));
+            errors.addError(new Errors.TypeError(object.accept(this), new ObjectType(typeName)));
             return null;
         }
 
-        String typeName = ((ObjectType)object.accept(this)).getName();
         ClassTable classTable = classes.get(typeName);
         if (classTable == null) {
             errors.addError(new Errors.UndefinedError(typeName));
@@ -253,6 +253,21 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(MethodDecl decl) {
+        currentMethod = currentClass.getMethod(decl.getName().getName());
+
+        VarDeclList varDecls = decl.getVarDeclarations();
+        for (int i = 0; i < varDecls.size(); i++) {
+            varDecls.get(i).accept(this);
+        }
+
+        StmtList statements = decl.getStatements();
+        for (int i = 0; i < statements.size(); i++) {
+            statements.get(i).accept(this);
+        }
+
+        assertType(decl.getReturnValue(), decl.getType());
+
+        currentMethod = null;
         return null;
     }
 
@@ -286,7 +301,13 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(NewObject object) {
-        return null;
+        String name = object.getName().getName();
+        if (classes.get(name) == null) {
+            errors.addError(new Errors.UndefinedError(name));
+            return null;
+        }
+
+        return object.accept(this);
     }
 
     @Override
