@@ -61,7 +61,7 @@ public class SymbolTableCreator implements Visitor {
         String className = classDecl.getClassName().getName();
         currentClass = new ClassTable(className);
         if (classes.containsKey(className)) {
-            throw new RedefinitionException(className);
+            throw new RedefinitionException(className, classDecl.getLine(), classDecl.getColumn());
         } else {
             classes.put(className, currentClass);
         }
@@ -85,7 +85,7 @@ public class SymbolTableCreator implements Visitor {
         Type type = formal.getType();
         String name = formal.getName().getName();
         if (currentMethod.hasParam(name)) {
-            throw new RedefinitionException(name, currentMethod.getName());
+            throw new RedefinitionException(name, currentMethod.getName(), formal.getLine(), formal.getColumn());
         } else {
             currentMethod.addParam(name, type);
         }
@@ -138,7 +138,7 @@ public class SymbolTableCreator implements Visitor {
         currentClass = new ClassTable(className);
 
         if (classes.containsKey(className)) {
-            throw new RedefinitionException(className);
+            throw new RedefinitionException(className, main.getLine(), main.getColumn());
         } else {
             classes.put(main.getName().getName(), currentClass);
         }
@@ -261,13 +261,13 @@ public class SymbolTableCreator implements Visitor {
 
         if (currentMethod != null) {
             if (currentMethod.hasLocal(name) || currentMethod.hasParam(name)) {
-                throw new RedefinitionException(name, currentMethod.getName());
+                throw new RedefinitionException(name, currentMethod.getName(), varDecl.getLine(), varDecl.getColumn());
             } else {
                 currentMethod.setLocal(name, type);
             }
         } else {
             if (currentClass.hasField(name)) {
-                throw new RedefinitionException(name, currentMethod.getName());
+                throw new RedefinitionException(name, currentClass.getName(), varDecl.getLine(), varDecl.getColumn());
             } else {
                 currentClass.setType(name, type);
             }
