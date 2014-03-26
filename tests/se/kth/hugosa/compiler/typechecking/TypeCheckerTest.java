@@ -15,6 +15,7 @@ public class TypeCheckerTest {
     public void testTypeCheck() throws Exception {
         File dir = new File("tests/minijava/typecheck/positive");
         for (File file : dir.listFiles()) {
+            System.out.println(file);
             MiniJavaParser parser = new MiniJavaParser(new FileInputStream(file));
             Program program = parser.parse();
             SymbolTableCreator creator = new SymbolTableCreator();

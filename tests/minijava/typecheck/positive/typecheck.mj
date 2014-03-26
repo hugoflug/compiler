@@ -1,0 +1,13 @@
+class Foo {
+    public static void main(String[] a){
+
+    }
+}
+
+class Boo {
+    public int foo() {
+        Foo foo;
+        foo = new Foo();
+        return 0;
+    }
+}

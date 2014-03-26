@@ -310,7 +310,7 @@ public class TypeChecker implements TypeVisitor {
             throw new UndefinedVariableException(name, object.getLine(), object.getColumn());
         }
 
-        return object.accept(this);
+        return new ObjectType(name);
     }
 
     @Override
