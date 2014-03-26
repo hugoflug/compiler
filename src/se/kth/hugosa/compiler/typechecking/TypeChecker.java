@@ -22,12 +22,12 @@ public class TypeChecker implements TypeVisitor {
 
     private boolean assertType(Exp exp, Type expectedType) {
         Type actualType = exp.accept(this);
-        return assertType(actualType, expectedType);
+        return assertType(actualType, expectedType, exp.getLine(), exp.getColumn());
     }
 
-    private boolean assertType(Type actualType, Type expectedType) {
+    private boolean assertType(Type actualType, Type expectedType, int line, int column) {
         if (!(actualType.getClass().equals(expectedType.getClass()))) {
-            throw new WrongTypeException(actualType, expectedType);
+            throw new WrongTypeException(actualType, expectedType, line, column);
         } else {
             return true;
         }
@@ -47,11 +47,12 @@ public class TypeChecker implements TypeVisitor {
         if (arrayType == null) {
             arrayType = currentClass.getType(id);
             if (arrayType == null) {
-                throw new UndefinedVariableException(id);
+                throw new UndefinedVariableException(id, arrayAssign.getLine(), arrayAssign.getColumn());
             }
         }
 
-        assertType(arrayType, new IntArrayType());
+
+        assertType(arrayType, new IntArrayType(), arrayAssign.getLine(), arrayAssign.getColumn());
         assertType(arrayAssign.getIndex(), new IntType());
         assertType(arrayAssign.getNewValue(), new IntType());
 
@@ -75,7 +76,7 @@ public class TypeChecker implements TypeVisitor {
     public Type visit(Assign assign) {
         Type assigneeType = assign.getAssignee().accept(this);
         Type newValueType = assign.getNewValue().accept(this);
-        assertType(assigneeType, newValueType);
+        assertType(assigneeType, newValueType, assign.getLine(), assign.getColumn());
         return null;
     }
 
@@ -114,7 +115,7 @@ public class TypeChecker implements TypeVisitor {
     public Type visit(Equal equal) {
         Type leftOpType = equal.getLeftOp().accept(this);
         Type rightOpType = equal.getRightOp().accept(this);
-        assertType(leftOpType, rightOpType);
+        assertType(leftOpType, rightOpType, equal.getLine(), equal.getColumn());
         return new BooleanType();
     }
 
@@ -137,7 +138,7 @@ public class TypeChecker implements TypeVisitor {
             if (idType == null) {
                 idType = currentMethod.getParamType(name);
                 if (idType == null) {
-                    throw new UndefinedVariableException(name);
+                    throw new UndefinedVariableException(name, id.getLine(), id.getColumn());
                 } else {
                     return idType;
                 }
@@ -147,14 +148,14 @@ public class TypeChecker implements TypeVisitor {
         }
         idType = currentClass.getType(name);
         if (idType == null) {
-            throw new UndefinedVariableException(name);
+            throw new UndefinedVariableException(name, id.getLine(), id.getColumn());
         }
         return idType;
     }
 
     @Override
     public Type visit(If i) {
-        assertType(i.getCondition().accept(this), new BooleanType());
+        assertType(i.getCondition(), new BooleanType());
         i.getThenStmt().accept(this);
         i.getElseStmt().accept(this);
         return null;
@@ -162,7 +163,7 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(IfWithoutElse ifWithoutElse) {
-        assertType(ifWithoutElse.getCondition().accept(this), new BooleanType());
+        assertType(ifWithoutElse.getCondition(), new BooleanType());
         ifWithoutElse.getThenStmt().accept(this);
         return null;
     }
@@ -218,7 +219,7 @@ public class TypeChecker implements TypeVisitor {
 
         String typeName = ((ObjectType)object.accept(this)).getName();
         if (!isObject) {
-            throw new WrongTypeException(object.accept(this), new ObjectType(typeName));
+            throw new WrongTypeException(object.accept(this), new ObjectType(typeName), object.getLine(), object.getColumn());
         }
 
         ClassTable classTable = classes.get(typeName);
@@ -228,25 +229,23 @@ public class TypeChecker implements TypeVisitor {
         String methodName = call.getMethodName().getName();
         MethodTable method = classTable.getMethod(methodName);
         if (method == null) {
-            throw new UndefinedVariableException(methodName);
+            throw new UndefinedVariableException(methodName, call.getMethodName().getLine(), call.getMethodName().getColumn());
         }
 
         ExpList callParams = call.getArgumentList();
         int i = 0;
         for (Map.Entry<String, Type> param : method.getParams()) {
             if (i == callParams.size()) {
-                throw new WrongArgumentAmountException(methodName);
+                throw new WrongArgumentAmountException(methodName, call.getLine(), call.getColumn());
             }
 
             Type callType = callParams.get(i).accept(this);
             Type methodType = param.getValue();
-            if (!assertType(methodType, callType)) {
-                throw new WrongTypeException(callType, methodType);
-            }
+            assertType(methodType, callType, call.getLine(), call.getColumn());
             i++;
         }
         if (i < callParams.size()) {
-            throw new WrongArgumentAmountException(methodName);
+            throw new WrongArgumentAmountException(methodName, call.getLine(), call.getColumn());
         }
         return method.getType();
     }
@@ -303,7 +302,7 @@ public class TypeChecker implements TypeVisitor {
     public Type visit(NewObject object) {
         String name = object.getName().getName();
         if (classes.get(name) == null) {
-            throw new UndefinedVariableException(name);
+            throw new UndefinedVariableException(name, object.getLine(), object.getColumn());
         }
 
         return object.accept(this);
@@ -368,7 +367,7 @@ public class TypeChecker implements TypeVisitor {
     @Override
     public Type visit(This t) {
         if (currentClass == null) {
-            throw new UndefinedVariableException("this");
+            throw new UndefinedVariableException("this", t.getLine(), t.getColumn());
         }
         return new ObjectType(currentClass.getName());
     }

@@ -7,25 +7,31 @@ public class WrongTypeException extends CompilationException {
     private Type type;
     private String var;
     private Type shouldBe;
+    private int line, column;
 
-    public WrongTypeException(Type type, Type shouldBe) {
+    public WrongTypeException(Type type, Type shouldBe, int line, int column) {
         this.type = type;
         this.shouldBe = shouldBe;
         this.var = null;
+        this.line = line;
     }
 
-    public WrongTypeException(Type type, Type shouldBe, String var) {
+    public WrongTypeException(Type type, Type shouldBe, String var, int line, int column) {
         this.type = type;
         this.var = var;
         this.shouldBe = shouldBe;
+        this.column = column;
     }
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("WrongTypeException (line " + line + ", column " + column + "): ");
         if (var == null) {
-            return "Actual type: " + type + ". " + shouldBe + " expected";
+            sb.append("Actual type: " + type + ". " + shouldBe + " expected");
         } else {
-            return var + "is of type: " + type + ". " + shouldBe + " expected";
+            sb.append(var + "is of type: " + type + ". " + shouldBe + " expected");
         }
+        return sb.toString();
     }
 }

@@ -6,15 +6,17 @@ public class WrongArgumentAmountException extends CompilationException {
     private String methodName;
     private int args;
     private int expectedArgs;
+    private int line;
+    private int column;
 
-    public WrongArgumentAmountException(String methodName) {
+    public WrongArgumentAmountException(String methodName, int line, int column) {
         this.methodName = methodName;
-        this.args = args;
-        this.expectedArgs = expectedArgs;
+        this.line = line;
+        this.column = column;
     }
 
     @Override
     public String toString() {
-        return methodName + " was called with the wrong amount of arguments";
+        return "WrongArgumentAmountException (line " + line + ", column " + column + "): " + methodName + " was called with the wrong amount of arguments";
     }
 }
