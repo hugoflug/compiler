@@ -3,9 +3,13 @@ package se.kth.hugosa.compiler.symboltable;
 import se.kth.hugosa.compiler.ast.Type;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class MethodTable {
+
+    //params should be a list of (String, Type) tuples
     private Map<String, Type> params;
     private Map<String, Type> locals;
     private Type type;
@@ -15,7 +19,7 @@ public class MethodTable {
         this.type = type;
         this.name = name;
         params = new HashMap<String, Type>();
-        locals = new HashMap<String, Type>();
+        locals = new LinkedHashMap<String, Type>();
     }
 
     public String getName() {
@@ -30,6 +34,10 @@ public class MethodTable {
         return locals.get(name);
     }
 
+    public Set<Map.Entry<String, Type>> getParams() {
+        return params.entrySet();
+    }
+
     public boolean hasParam(String name) {
         return params.containsKey(name);
     }
@@ -38,7 +46,7 @@ public class MethodTable {
         return locals.containsKey(name);
     }
 
-    public void setParam(String name, Type type) {
+    public void addParam(String name, Type type) {
         params.put(name, type);
     }
 
@@ -62,6 +70,10 @@ public class MethodTable {
         sb.append("}\n");
         sb.append("}\n");
         return sb.toString();
+    }
+
+    public Type getType() {
+        return type;
     }
 }
 

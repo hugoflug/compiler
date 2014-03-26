@@ -72,6 +72,22 @@ public class Errors {
         }
     }
 
+    public static class WrongArgumentNumberError implements MiniJavaError {
+        private String methodName;
+        private int args;
+        private int expectedArgs;
+
+        public WrongArgumentNumberError(String methodName) {
+            this.methodName = methodName;
+            this.args = args;
+            this.expectedArgs = expectedArgs;
+        }
+
+        @Override
+        public String toString() {
+            return methodName + " was called with the wrong amount of arguments";
+        }
+    }
 
 
     private List<MiniJavaError> errors;

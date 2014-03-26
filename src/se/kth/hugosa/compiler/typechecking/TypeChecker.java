@@ -6,6 +6,7 @@ import se.kth.hugosa.compiler.symboltable.ClassTable;
 import se.kth.hugosa.compiler.symboltable.MethodTable;
 
 import java.util.Map;
+import java.util.Set;
 
 public class TypeChecker implements TypeVisitor {
     private Map<String, ClassTable> classes;
@@ -208,6 +209,7 @@ public class TypeChecker implements TypeVisitor {
         Exp object = call.getObject();
         boolean isObject = assertType(object, new ObjectType(""));
 
+
         if (isObject) {
             String typeName = ((ObjectType)object.accept(this)).getName();
             ClassTable classTable = classes.get(typeName);
@@ -219,12 +221,24 @@ public class TypeChecker implements TypeVisitor {
                 if (method == null) {
                     errors.addError(new Errors.UndefinedError(methodName));
                 } else {
-                    ExpList params = call.getArgumentList();
-                    for (int i = 0; i < params.size(); i++) {
-                        Exp exp = params.get(i);
-                        Type paramType = exp.accept(this);
+                    ExpList callParams = call.getArgumentList();
+                    int i = 0;
+                    for (Map.Entry<String, Type> param : method.getParams()) {
+                        if (i == callParams.size()) {
+                            errors.addError(new Errors.WrongArgumentNumberError(methodName));
+                        }
 
+                        Type callType = callParams.get(i).accept(this);
+                        Type methodType = param.getValue();
+                        if (!assertType(methodType, callType)) {
+                            errors.addError(new Errors.TypeError(callType, methodType));
+                        }
+                        i++;
                     }
+                    if (i < callParams.size()) {
+                        errors.addError(new Errors.WrongArgumentNumberError(methodName));
+                    }
+
                 }
             }
         }
@@ -238,22 +252,30 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(Minus minus) {
-        return null;
+        assertType(minus.getLeftOp(), new IntType());
+        assertType(minus.getRightOp(), new IntType());
+        return new IntType();
     }
 
     @Override
     public Type visit(MoreThan moreThan) {
-        return null;
+        assertType(moreThan.getLeftOp(), new IntType());
+        assertType(moreThan.getRightOp(), new IntType());
+        return new BooleanType();
     }
 
     @Override
     public Type visit(MoreOrEqualThan moreOrEqualThan) {
-        return null;
+        assertType(moreOrEqualThan.getLeftOp(), new IntType());
+        assertType(moreOrEqualThan.getRightOp(), new IntType());
+        return new BooleanType();
     }
 
     @Override
     public Type visit(Mult mult) {
-        return null;
+        assertType(mult.getLeftOp(), new IntType());
+        assertType(mult.getRightOp(), new IntType());
+        return new IntType();
     }
 
     @Override
@@ -263,36 +285,52 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(NewArray array) {
-        return null;
+        assertType(array.getArraySize(), new IntType());
+
+        return new IntArrayType();
     }
 
     @Override
     public Type visit(Not not) {
-        return null;
+        assertType(not.getExpression(), new BooleanType());
+
+        return new BooleanType();
     }
 
     @Override
     public Type visit(NotEqual notEqual) {
-        return null;
+        assertType(notEqual.getLeftOp(), new BooleanType());
+        assertType(notEqual.getRightOp(), new BooleanType());
+
+        return new BooleanType();
     }
 
     @Override
     public Type visit(ObjectType objectType) {
-        return null;
+        return objectType;
     }
 
     @Override
     public Type visit(Or or) {
-        return null;
+        assertType(or.getLeftOp(), new BooleanType());
+        assertType(or.getRightOp(), new BooleanType());
+        return new BooleanType();
     }
 
     @Override
     public Type visit(Plus plus) {
-        return null;
+        assertType(plus.getLeftOp(), new IntType());
+        assertType(plus.getRightOp(), new IntType());
+        return new IntType();
     }
 
     @Override
     public Type visit(Program program) {
+        program.getMainClass().accept(this);
+        ClassDeclList classDecls = program.getClassDeclarations();
+        for (int i = 0; i < classDecls.size(); i++) {
+            classDecls.get(i).accept(this);
+        }
         return null;
     }
 
@@ -303,17 +341,21 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(This t) {
-        return null;
+        if (currentClass == null) {
+            errors.addError(new Errors.UndefinedError("this"));
+            return null;
+        }
+        return new ObjectType(currentClass.getName());
     }
 
     @Override
     public Type visit(True tru) {
-        return null;
+        return new BooleanType();
     }
 
     @Override
     public Type visit(Type type) {
-        return null;
+        return type;
     }
 
     @Override
@@ -323,6 +365,8 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(While w) {
+        assertType(w.getCondition(), new BooleanType());
+        w.getStatement().accept(this);
         return null;
     }
 }

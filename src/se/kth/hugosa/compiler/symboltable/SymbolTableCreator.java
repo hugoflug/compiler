@@ -93,7 +93,7 @@ public class SymbolTableCreator implements Visitor {
         if (currentMethod.hasParam(name)) {
             errors.addError(new Errors.RedefinitionError(name, currentMethod.getName()));
         } else {
-            currentMethod.setParam(name, type);
+            currentMethod.addParam(name, type);
         }
     }
 

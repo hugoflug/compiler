@@ -10,6 +10,14 @@ public class NotEqual extends Exp {
         this.rightOp = rightOp;
     }
 
+    public Exp getLeftOp() {
+        return leftOp;
+    }
+
+    public Exp getRightOp() {
+        return rightOp;
+    }
+
     public void accept(Visitor v) {
         v.visit(this);
     }

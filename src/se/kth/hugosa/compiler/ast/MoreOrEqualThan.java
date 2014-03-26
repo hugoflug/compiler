@@ -18,6 +18,14 @@ public class MoreOrEqualThan extends Exp {
         return v.visit(this);
     }
 
+    public Exp getLeftOp() {
+        return leftOp;
+    }
+
+    public Exp getRightOp() {
+        return rightOp;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("MoreOrEqualThan{\n");
