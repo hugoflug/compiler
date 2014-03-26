@@ -14,6 +14,6 @@ public class UndefinedVariableException extends CompilationException {
 
     @Override
     public String toString() {
-        return "UndefinedVariableException (line" + line + ", column " + column + "): " + var + " is undefined";
+        return "UndefinedVariableException (line " + line + ", column " + column + "): " + var + " is undefined";
     }
 }
