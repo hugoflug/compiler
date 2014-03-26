@@ -206,10 +206,28 @@ public class TypeChecker implements TypeVisitor {
     @Override
     public Type visit(MethodCall call) {
         Exp object = call.getObject();
-        assertType(object, new ObjectType(""));
+        boolean isObject = assertType(object, new ObjectType(""));
 
-        //String typeName = classes.get(object.)
+        if (isObject) {
+            String typeName = ((ObjectType)object.accept(this)).getName();
+            ClassTable classTable = classes.get(typeName);
+            if (classTable == null) {
+                errors.addError(new Errors.UndefinedError(typeName));
+            } else {
+                String methodName = call.getMethodName().getName();
+                MethodTable method = classTable.getMethod(methodName);
+                if (method == null) {
+                    errors.addError(new Errors.UndefinedError(methodName));
+                } else {
+                    ExpList params = call.getArgumentList();
+                    for (int i = 0; i < params.size(); i++) {
+                        Exp exp = params.get(i);
+                        Type paramType = exp.accept(this);
 
+                    }
+                }
+            }
+        }
         return null;
     }
 
