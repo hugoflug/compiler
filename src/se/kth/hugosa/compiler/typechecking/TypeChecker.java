@@ -1,30 +1,23 @@
 package se.kth.hugosa.compiler.typechecking;
 
 import se.kth.hugosa.compiler.CompilationException;
-import se.kth.hugosa.compiler.Errors;
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.ClassTable;
 import se.kth.hugosa.compiler.symboltable.MethodTable;
 
 import java.util.Map;
-import java.util.Set;
 
 public class TypeChecker implements TypeVisitor {
     private Map<String, ClassTable> classes;
     private ClassTable currentClass;
     private MethodTable currentMethod;
-    private Errors errors;
 
     public TypeChecker(Map<String, ClassTable> classes) {
         this.classes = classes;
-        errors = new Errors();
     }
 
     public void typeCheck(Program program) throws CompilationException {
         visit(program);
-        if (errors.hasErrors()) {
-            throw new CompilationException(errors);
-        }
     }
 
     private boolean assertType(Exp exp, Type expectedType) {
@@ -34,8 +27,7 @@ public class TypeChecker implements TypeVisitor {
 
     private boolean assertType(Type actualType, Type expectedType) {
         if (!(actualType.getClass().equals(expectedType.getClass()))) {
-            errors.addError(new Errors.TypeError(actualType, expectedType));
-            return false;
+            throw new WrongTypeException(actualType, expectedType);
         } else {
             return true;
         }
@@ -55,7 +47,7 @@ public class TypeChecker implements TypeVisitor {
         if (arrayType == null) {
             arrayType = currentClass.getType(id);
             if (arrayType == null) {
-                errors.addError(new Errors.UndefinedError(id));
+                throw new UndefinedVariableException(id);
             }
         }
 
@@ -145,7 +137,7 @@ public class TypeChecker implements TypeVisitor {
             if (idType == null) {
                 idType = currentMethod.getParamType(name);
                 if (idType == null) {
-                    errors.addError(new Errors.UndefinedError(name));
+                    throw new UndefinedVariableException(name);
                 } else {
                     return idType;
                 }
@@ -155,7 +147,7 @@ public class TypeChecker implements TypeVisitor {
         }
         idType = currentClass.getType(name);
         if (idType == null) {
-            errors.addError(new Errors.UndefinedError(name));
+            throw new UndefinedVariableException(name);
         }
         return idType;
     }
@@ -226,42 +218,35 @@ public class TypeChecker implements TypeVisitor {
 
         String typeName = ((ObjectType)object.accept(this)).getName();
         if (!isObject) {
-            errors.addError(new Errors.TypeError(object.accept(this), new ObjectType(typeName)));
-            return null;
+            throw new WrongTypeException(object.accept(this), new ObjectType(typeName));
         }
 
         ClassTable classTable = classes.get(typeName);
         if (classTable == null) {
-            errors.addError(new Errors.UndefinedError(typeName));
-            return null;
         }
 
         String methodName = call.getMethodName().getName();
         MethodTable method = classTable.getMethod(methodName);
         if (method == null) {
-            errors.addError(new Errors.UndefinedError(methodName));
-            return null;
+            throw new UndefinedVariableException(methodName);
         }
 
         ExpList callParams = call.getArgumentList();
         int i = 0;
         for (Map.Entry<String, Type> param : method.getParams()) {
             if (i == callParams.size()) {
-                errors.addError(new Errors.WrongArgumentNumberError(methodName));
-                return null;
+                throw new WrongArgumentAmountException(methodName);
             }
 
             Type callType = callParams.get(i).accept(this);
             Type methodType = param.getValue();
             if (!assertType(methodType, callType)) {
-                errors.addError(new Errors.TypeError(callType, methodType));
-                return null;
+                throw new WrongTypeException(callType, methodType);
             }
             i++;
         }
         if (i < callParams.size()) {
-            errors.addError(new Errors.WrongArgumentNumberError(methodName));
-            return null;
+            throw new WrongArgumentAmountException(methodName);
         }
         return method.getType();
     }
@@ -318,8 +303,7 @@ public class TypeChecker implements TypeVisitor {
     public Type visit(NewObject object) {
         String name = object.getName().getName();
         if (classes.get(name) == null) {
-            errors.addError(new Errors.UndefinedError(name));
-            return null;
+            throw new UndefinedVariableException(name);
         }
 
         return object.accept(this);
@@ -384,8 +368,7 @@ public class TypeChecker implements TypeVisitor {
     @Override
     public Type visit(This t) {
         if (currentClass == null) {
-            errors.addError(new Errors.UndefinedError("this"));
-            return null;
+            throw new UndefinedVariableException("this");
         }
         return new ObjectType(currentClass.getName());
     }

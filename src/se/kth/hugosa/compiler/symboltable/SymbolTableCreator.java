@@ -2,7 +2,6 @@ package se.kth.hugosa.compiler.symboltable;
 
 import se.kth.hugosa.compiler.CompilationException;
 import se.kth.hugosa.compiler.ast.*;
-import se.kth.hugosa.compiler.Errors;
 import se.kth.hugosa.compiler.ast.Visitor;
 
 import java.util.HashMap;
@@ -12,18 +11,13 @@ public class SymbolTableCreator implements Visitor {
     private Map<String, ClassTable> classes;
     private ClassTable currentClass;
     private MethodTable currentMethod;
-    private Errors errors;
 
     public SymbolTableCreator() {
         classes = new HashMap<String, ClassTable>();
-        errors = new Errors();
     }
 
     public Map<String, ClassTable> createSymbolTable(Program program) throws CompilationException {
         visit(program);
-        if (errors.hasErrors()) {
-            throw new CompilationException(errors);
-        }
         return classes;
     }
 
@@ -67,7 +61,7 @@ public class SymbolTableCreator implements Visitor {
         String className = classDecl.getClassName().getName();
         currentClass = new ClassTable(className);
         if (classes.containsKey(className)) {
-            errors.addError(new Errors.RedefinitionError(className));
+            throw new RedefinitionException(className);
         } else {
             classes.put(className, currentClass);
         }
@@ -91,7 +85,7 @@ public class SymbolTableCreator implements Visitor {
         Type type = formal.getType();
         String name = formal.getName().getName();
         if (currentMethod.hasParam(name)) {
-            errors.addError(new Errors.RedefinitionError(name, currentMethod.getName()));
+            throw new RedefinitionException(name, currentMethod.getName());
         } else {
             currentMethod.addParam(name, type);
         }
@@ -144,7 +138,7 @@ public class SymbolTableCreator implements Visitor {
         currentClass = new ClassTable(className);
 
         if (classes.containsKey(className)) {
-            errors.addError(new Errors.RedefinitionError(className));
+            throw new RedefinitionException(className);
         } else {
             classes.put(main.getName().getName(), currentClass);
         }
@@ -152,7 +146,7 @@ public class SymbolTableCreator implements Visitor {
         currentMethod = new MethodTable("main", null);
 
         if (currentClass.hasMethod("main")) {
-            errors.addError(new Errors.RedefinitionError("main", className));
+            throw new RedefinitionException("main", className);
         } else {
             currentClass.setMethod("main", currentMethod);
         }
@@ -267,13 +261,13 @@ public class SymbolTableCreator implements Visitor {
 
         if (currentMethod != null) {
             if (currentMethod.hasLocal(name) || currentMethod.hasParam(name)) {
-                errors.addError(new Errors.RedefinitionError(name, currentMethod.getName()));
+                throw new RedefinitionException(name, currentMethod.getName());
             } else {
                 currentMethod.setLocal(name, type);
             }
         } else {
             if (currentClass.hasField(name)) {
-                errors.addError(new Errors.RedefinitionError(name, currentClass.getName()));
+                throw new RedefinitionException(name, currentMethod.getName());
             } else {
                 currentClass.setType(name, type);
             }

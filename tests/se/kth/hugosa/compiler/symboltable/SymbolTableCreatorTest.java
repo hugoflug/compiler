@@ -1,14 +1,11 @@
-package se.kth.hugosa.compiler.visitors;
+package se.kth.hugosa.compiler.symboltable;
 
 import org.junit.Assert;
 import org.junit.Test;
 import se.kth.hugosa.compiler.CompilationException;
-import se.kth.hugosa.compiler.Errors;
 import se.kth.hugosa.compiler.Indenter;
 import se.kth.hugosa.compiler.ast.Program;
 import se.kth.hugosa.compiler.parser.MiniJavaParser;
-import se.kth.hugosa.compiler.symboltable.ClassTable;
-import se.kth.hugosa.compiler.symboltable.SymbolTableCreator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,14 +20,7 @@ public class SymbolTableCreatorTest {
             MiniJavaParser parser = new MiniJavaParser(new FileInputStream(file));
             Program program = parser.parse();
             SymbolTableCreator creator = new SymbolTableCreator();
-            Map<String, ClassTable> classes = null;
-            try {
-                classes = creator.createSymbolTable(program);
-            } catch (CompilationException e) {
-                for (Errors.MiniJavaError error : e.getErrors().getErrors()) {
-                    throw new Exception();
-                }
-            }
+            Map<String, ClassTable> classes = creator.createSymbolTable(program);
             StringBuilder sb = new StringBuilder();
             for (Map.Entry<String, ClassTable> entry : classes.entrySet()) {
                 sb.append(entry.getKey() + " = " + entry.getValue() + "\n");
