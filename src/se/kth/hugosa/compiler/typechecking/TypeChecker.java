@@ -209,40 +209,46 @@ public class TypeChecker implements TypeVisitor {
         Exp object = call.getObject();
         boolean isObject = assertType(object, new ObjectType(""));
 
-
-        if (isObject) {
-            String typeName = ((ObjectType)object.accept(this)).getName();
-            ClassTable classTable = classes.get(typeName);
-            if (classTable == null) {
-                errors.addError(new Errors.UndefinedError(typeName));
-            } else {
-                String methodName = call.getMethodName().getName();
-                MethodTable method = classTable.getMethod(methodName);
-                if (method == null) {
-                    errors.addError(new Errors.UndefinedError(methodName));
-                } else {
-                    ExpList callParams = call.getArgumentList();
-                    int i = 0;
-                    for (Map.Entry<String, Type> param : method.getParams()) {
-                        if (i == callParams.size()) {
-                            errors.addError(new Errors.WrongArgumentNumberError(methodName));
-                        }
-
-                        Type callType = callParams.get(i).accept(this);
-                        Type methodType = param.getValue();
-                        if (!assertType(methodType, callType)) {
-                            errors.addError(new Errors.TypeError(callType, methodType));
-                        }
-                        i++;
-                    }
-                    if (i < callParams.size()) {
-                        errors.addError(new Errors.WrongArgumentNumberError(methodName));
-                    }
-
-                }
-            }
+        if (!isObject) {
+            errors.addError(new Errors.TypeError(object.accept(this), new ObjectType("")));
+            return null;
         }
-        return null;
+
+        String typeName = ((ObjectType)object.accept(this)).getName();
+        ClassTable classTable = classes.get(typeName);
+        if (classTable == null) {
+            errors.addError(new Errors.UndefinedError(typeName));
+            return null;
+        }
+
+        String methodName = call.getMethodName().getName();
+        MethodTable method = classTable.getMethod(methodName);
+        if (method == null) {
+            errors.addError(new Errors.UndefinedError(methodName));
+            return null;
+        }
+
+        ExpList callParams = call.getArgumentList();
+        int i = 0;
+        for (Map.Entry<String, Type> param : method.getParams()) {
+            if (i == callParams.size()) {
+                errors.addError(new Errors.WrongArgumentNumberError(methodName));
+                return null;
+            }
+
+            Type callType = callParams.get(i).accept(this);
+            Type methodType = param.getValue();
+            if (!assertType(methodType, callType)) {
+                errors.addError(new Errors.TypeError(callType, methodType));
+                return null;
+            }
+            i++;
+        }
+        if (i < callParams.size()) {
+            errors.addError(new Errors.WrongArgumentNumberError(methodName));
+            return null;
+        }
+        return method.getType();
     }
 
     @Override
