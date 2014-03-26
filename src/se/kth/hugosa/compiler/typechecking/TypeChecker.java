@@ -1,5 +1,6 @@
 package se.kth.hugosa.compiler.typechecking;
 
+import se.kth.hugosa.compiler.CompilationException;
 import se.kth.hugosa.compiler.Errors;
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.ClassTable;
@@ -17,6 +18,13 @@ public class TypeChecker implements TypeVisitor {
     public TypeChecker(Map<String, ClassTable> classes) {
         this.classes = classes;
         errors = new Errors();
+    }
+
+    public void typeCheck(Program program) throws CompilationException {
+        visit(program);
+        if (errors.hasErrors()) {
+            throw new CompilationException(errors);
+        }
     }
 
     private boolean assertType(Exp exp, Type expectedType) {

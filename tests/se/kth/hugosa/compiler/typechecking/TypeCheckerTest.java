@@ -24,7 +24,7 @@ public class TypeCheckerTest {
             classes = creator.createSymbolTable(program);
 
             TypeChecker typeChecker = new TypeChecker(classes);
-            typeChecker.visit(program);
+            typeChecker.typeCheck(program);
         }
     }
 }

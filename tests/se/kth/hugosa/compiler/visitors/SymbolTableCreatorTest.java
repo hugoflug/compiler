@@ -35,7 +35,7 @@ public class SymbolTableCreatorTest {
             for (Map.Entry<String, ClassTable> entry : classes.entrySet()) {
                 sb.append(entry.getKey() + " = " + entry.getValue() + "\n");
             }
-          //System.out.println(Indenter.indent(sb.toString()));
+            System.out.println(Indenter.indent(sb.toString()));
         }
     }
 
