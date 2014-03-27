@@ -45,9 +45,12 @@ public class TypeChecker implements TypeVisitor {
         String id = arrayAssign.getId().getName();
         Type arrayType = currentMethod.getLocalType(id);
         if (arrayType == null) {
-            arrayType = currentClass.getType(id);
+            arrayType = currentMethod.getParamType(id);
             if (arrayType == null) {
-                throw new UndefinedVariableException(id, arrayAssign.getLine(), arrayAssign.getColumn());
+                arrayType = currentClass.getType(id);
+                if (arrayType == null) {
+                    throw new UndefinedVariableException(id, arrayAssign.getLine(), arrayAssign.getColumn());
+                }
             }
         }
 

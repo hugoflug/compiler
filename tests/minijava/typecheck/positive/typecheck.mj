@@ -5,8 +5,9 @@ class Foo {
 }
 
 class Boo {
-    public int foo() {
+    public int foo(int[] bar) {
         Foo foo;
+        bar[5] = 7;
         foo = new Foo();
         return 0;
     }
