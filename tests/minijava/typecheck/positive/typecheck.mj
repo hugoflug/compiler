@@ -5,8 +5,22 @@ class Foo {
     }
 }
 
+class Zoo {
+    int[] x;
+
+    public int[] getX() {
+        return x;
+    }
+
+    public int[] setX(int[] y) {
+        x = y;
+        return x;
+    }
+}
+
 class Boo {
     public int foo(int[] bar, int[] zoo) {
+        int asdf;
         Foo foo;
         int a;
         bar[5] = 7;
@@ -18,12 +32,20 @@ class Boo {
 
     public int croo(Foo foo, Boo boo) {
         int e;
-        e = boo.croo(new Foo(), new Boo());
+        int[] f;
+        if (e == 2) {
+            while (true) {
+                e = boo.croo(new Foo(), new Boo());
+                f = new int[e];
+                f[0] = 56;
+            }
+        }
         return 0;
     }
 
     public int tzar(int[] arrayzish) {
         int a;
+        int[] i;
         Boo boo;
         boo = new Boo();
         arrayzish[5] = this.foo(arrayzish, arrayzish);

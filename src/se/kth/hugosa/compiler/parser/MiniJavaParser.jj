@@ -243,7 +243,12 @@ Exp ExpInfo() :
              LOOKAHEAD(2)
              pos = <DOT> <LENGTH> { value = new ArrayLength(value, pos.beginLine, pos.beginColumn); }
            | pos = <DOT> id = <ID> <LPAREN> expList = ExpList() { value = new MethodCall(value, new Identifier(id.image, id.beginLine, id.beginColumn), expList, pos.beginLine, pos.beginColumn); }  <RPAREN>
-           | pos = <LBRACKET> exp2 = Exp() <RBRACKET> { value = new ArrayLookup(value, exp2, pos.beginLine, pos.beginColumn); }
+           | pos = <LBRACKET> exp2 = Exp() <RBRACKET> {
+                if (value instanceof NewArray) {
+                    throw new ParseException("Multidimensional arrays not allowed");
+                }
+                value = new ArrayLookup(value, exp2, pos.beginLine, pos.beginColumn);
+             }
     )*
     { return value; }
 }
