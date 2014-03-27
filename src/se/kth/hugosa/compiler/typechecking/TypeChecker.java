@@ -246,9 +246,8 @@ public class TypeChecker implements TypeVisitor {
 
         int i = 0;
         for (Map.Entry<String, Type> param : methodParams) {
-            Type callType = callParams.get(i).accept(this);
             Type methodType = param.getValue();
-            assertType(callType, methodType, call.getLine(), call.getColumn());
+            assertType(callParams.get(i), methodType);
             i++;
         }
 
