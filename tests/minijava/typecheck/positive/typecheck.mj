@@ -18,7 +18,7 @@ class Boo {
 
     public int croo(Foo foo, Boo boo) {
         int e;
-        e = boo.tzar(new int[5]);
+        e = boo.croo(new Foo(), new Boo());
         return 0;
     }
 

@@ -97,10 +97,6 @@ public class TypeChecker implements TypeVisitor {
     public Type visit(ClassDecl classDecl) {
         currentClass = classes.get(classDecl.getClassName().getName());
 
-        VarDeclList varDecls = classDecl.getVarDeclarations();
-        for (int i = 0; i < varDecls.size(); i++) {
-            varDecls.get(i).accept(this);
-        }
         MethodDeclList methodDecls = classDecl.getMethodDeclarations();
         for (int i = 0; i < methodDecls.size(); i++) {
             methodDecls.get(i).accept(this);
@@ -207,6 +203,7 @@ public class TypeChecker implements TypeVisitor {
         currentClass = classes.get(className);
 
         currentMethod = currentClass.getMethod("main");
+
         StmtList statements = main.getStatements();
         for (int i = 0; i < statements.size(); i++) {
             statements.get(i).accept(this);
@@ -257,11 +254,6 @@ public class TypeChecker implements TypeVisitor {
     @Override
     public Type visit(MethodDecl decl) {
         currentMethod = currentClass.getMethod(decl.getName().getName());
-
-        VarDeclList varDecls = decl.getVarDeclarations();
-        for (int i = 0; i < varDecls.size(); i++) {
-            varDecls.get(i).accept(this);
-        }
 
         StmtList statements = decl.getStatements();
         for (int i = 0; i < statements.size(); i++) {
