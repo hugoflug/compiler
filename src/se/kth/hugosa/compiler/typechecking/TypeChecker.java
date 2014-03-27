@@ -20,16 +20,24 @@ public class TypeChecker implements TypeVisitor {
         visit(program);
     }
 
-    private boolean assertType(Exp exp, Type expectedType) {
+    private void assertType(Exp exp, Type expectedType) {
         Type actualType = exp.accept(this);
-        return assertType(actualType, expectedType, exp.getLine(), exp.getColumn());
+        assertType(actualType, expectedType, exp.getLine(), exp.getColumn());
     }
 
-    private boolean assertType(Type actualType, Type expectedType, int line, int column) {
+    private void assertType(Type actualType, Type expectedType, int line, int column) {
+
+        if (actualType instanceof ObjectType && expectedType instanceof ObjectType) {
+            if (!((ObjectType)actualType).getName().equals(((ObjectType)expectedType).getName())) {
+                throw new WrongTypeException(actualType, expectedType, line, column);
+            } else {
+                return;
+            }
+        }
+
+
         if (!(actualType.getClass().equals(expectedType.getClass()))) {
             throw new WrongTypeException(actualType, expectedType, line, column);
-        } else {
-            return true;
         }
     }
 
@@ -210,13 +218,13 @@ public class TypeChecker implements TypeVisitor {
     @Override
     public Type visit(MethodCall call) {
         Exp object = call.getObject();
-        boolean isObject = assertType(object, new ObjectType(""));
 
-        String typeName = ((ObjectType)object.accept(this)).getName();
-        if (!isObject) {
-            throw new WrongTypeException(object.accept(this), new ObjectType(typeName), object.getLine(), object.getColumn());
+        Type objectType = object.accept(this);
+        if (!(objectType instanceof ObjectType)) {
+            throw new WrongTypeException(object.accept(this), new ObjectType(""), object.getLine(), object.getColumn());
         }
 
+        String typeName = ((ObjectType)objectType).getName();
         ClassTable classTable = classes.get(typeName);
         if (classTable == null) {
             throw new UndefinedVariableException(typeName, call.getMethodName().getLine(), call.getMethodName().getColumn());

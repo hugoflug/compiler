@@ -1,6 +1,7 @@
 class Foo {
     public static void main(String[] a){
-
+        Foo foo;
+        foo = new Foo();
     }
 }
 
@@ -13,5 +14,14 @@ class Boo {
         a = bar[3];
         foo = new Foo();
         return 0;
+    }
+
+    public int tzar(int[] arrayzish) {
+        int a;
+        Boo boo;
+        boo = new Boo();
+        arrayzish[5] = this.foo(arrayzish);
+        a = boo.foo(arrayzish);
+        return arrayzish.length;
     }
 }
