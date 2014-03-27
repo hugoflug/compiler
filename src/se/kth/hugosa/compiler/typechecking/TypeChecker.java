@@ -245,7 +245,7 @@ public class TypeChecker implements TypeVisitor {
 
             Type callType = callParams.get(i).accept(this);
             Type methodType = param.getValue();
-            assertType(methodType, callType, call.getLine(), call.getColumn());
+            assertType(callType, methodType, call.getLine(), call.getColumn());
             i++;
         }
         if (i < callParams.size()) {

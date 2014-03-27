@@ -6,7 +6,7 @@ class Foo {
 }
 
 class Boo {
-    public int foo(int[] bar) {
+    public int foo(int[] bar, int[] zoo) {
         Foo foo;
         int a;
         bar[5] = 7;
@@ -20,8 +20,10 @@ class Boo {
         int a;
         Boo boo;
         boo = new Boo();
-        arrayzish[5] = this.foo(arrayzish);
-        a = boo.foo(arrayzish);
+        arrayzish[5] = this.foo(arrayzish, arrayzish);
+        a = boo.foo(arrayzish, arrayzish);
+    //    a = boo.foo();
+        a = boo.foo(a, a);
         return arrayzish.length;
     }
 }
