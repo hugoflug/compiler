@@ -165,6 +165,9 @@ public class SymbolTableCreator implements Visitor {
     @Override
     public void visit(MethodDecl decl) {
         String name = decl.getName().getName();
+        if (currentClass.hasMethod(name)) {
+            throw new RedefinitionException(name, currentClass.getName(), decl.getLine(), decl.getColumn());
+        }
         currentMethod = new MethodTable(name, decl.getType());
         currentClass.setMethod(name, currentMethod);
         decl.getArgumentList().acceptAll(this);
