@@ -1,0 +1,13 @@
+class Main {
+    public static void main(String[] a){
+
+    }
+}
+
+class Foo {
+    public int bar(int num) {
+        Bar bar;
+        bar = new Bar();
+        return this.bar(8, 9);
+    }
+}
