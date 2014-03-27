@@ -1,11 +1,9 @@
 package se.kth.hugosa.compiler.symboltable;
 
+import se.kth.hugosa.compiler.ast.ObjectType;
 import se.kth.hugosa.compiler.ast.Type;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MethodTable {
 
@@ -52,6 +50,32 @@ public class MethodTable {
 
     public void setLocal(String name, Type type) {
         locals.put(name, type);
+    }
+
+    public boolean equals(MethodTable methodTable) {
+        if (this.name != methodTable.name) {
+            return false;
+        }
+        Iterator<Map.Entry<String, Type>> paramIt = params.entrySet().iterator();
+        Iterator<Map.Entry<String, Type>> otherParamIt = params.entrySet().iterator();
+
+        while (paramIt.hasNext() && otherParamIt.hasNext()) {
+            Map.Entry<String, Type> param = paramIt.next();
+            Map.Entry<String, Type> otherParam = paramIt.next();
+            Type paramType = param.getValue();
+            Type otherParamType = otherParam.getValue();
+            if (paramType instanceof ObjectType && otherParamType instanceof ObjectType) {
+                if (((ObjectType)paramType).getName() != ((ObjectType)otherParamType).getName()) {
+                    return false;
+                }
+            } else if (!paramType.getClass().equals(otherParamType.getClass())) {
+                return false;
+            }
+        }
+        if (paramIt.hasNext() || otherParamIt.hasNext()) {
+            return false;
+        }
+        return true;
     }
 
     @Override
