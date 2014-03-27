@@ -329,8 +329,9 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(NotEqual notEqual) {
-        assertType(notEqual.getLeftOp(), new BooleanType());
-        assertType(notEqual.getRightOp(), new BooleanType());
+        Type leftOpType = notEqual.getLeftOp().accept(this);
+        Type rightOpType = notEqual.getRightOp().accept(this);
+        assertType(leftOpType, rightOpType, notEqual.getLine(), notEqual.getColumn());
 
         return new BooleanType();
     }
