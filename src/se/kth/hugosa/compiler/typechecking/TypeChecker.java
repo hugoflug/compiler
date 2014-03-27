@@ -6,6 +6,7 @@ import se.kth.hugosa.compiler.symboltable.ClassTable;
 import se.kth.hugosa.compiler.symboltable.MethodTable;
 
 import java.util.Map;
+import java.util.Set;
 
 public class TypeChecker implements TypeVisitor {
     private Map<String, ClassTable> classes;
@@ -237,20 +238,20 @@ public class TypeChecker implements TypeVisitor {
         }
 
         ExpList callParams = call.getArgumentList();
-        int i = 0;
-        for (Map.Entry<String, Type> param : method.getParams()) {
-            if (i == callParams.size()) {
-                throw new WrongArgumentAmountException(methodName, call.getLine(), call.getColumn());
-            }
+        Set<Map.Entry<String, Type>> methodParams = method.getParams();
 
+        if (callParams.size() != methodParams.size()) {
+            throw new WrongArgumentAmountException(methodName, call.getLine(), call.getColumn());
+        }
+
+        int i = 0;
+        for (Map.Entry<String, Type> param : methodParams) {
             Type callType = callParams.get(i).accept(this);
             Type methodType = param.getValue();
             assertType(callType, methodType, call.getLine(), call.getColumn());
             i++;
         }
-        if (i < callParams.size()) {
-            throw new WrongArgumentAmountException(methodName, call.getLine(), call.getColumn());
-        }
+
         return method.getType();
     }
 

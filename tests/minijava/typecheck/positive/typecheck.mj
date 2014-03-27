@@ -16,6 +16,12 @@ class Boo {
         return 0;
     }
 
+    public int croo(Foo foo, Boo boo) {
+        int e;
+        e = boo.tzar(new int[5], 5);
+        return 0;
+    }
+
     public int tzar(int[] arrayzish) {
         int a;
         Boo boo;
@@ -23,7 +29,8 @@ class Boo {
         arrayzish[5] = this.foo(arrayzish, arrayzish);
         a = boo.foo(arrayzish, arrayzish);
     //    a = boo.foo();
-        a = boo.foo(a, a);
+        a = boo.foo(arrayzish, arrayzish);
+        a = boo.croo(new Foo(), this);
         return arrayzish.length;
     }
 }
