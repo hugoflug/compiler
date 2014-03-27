@@ -7,7 +7,10 @@ class Foo {
 class Boo {
     public int foo(int[] bar) {
         Foo foo;
+        int a;
         bar[5] = 7;
+        System.out.println(bar.length);
+        a = bar[3];
         foo = new Foo();
         return 0;
     }
