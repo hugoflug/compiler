@@ -219,6 +219,7 @@ public class TypeChecker implements TypeVisitor {
 
         ClassTable classTable = classes.get(typeName);
         if (classTable == null) {
+            throw new UndefinedVariableException(typeName, call.getMethodName().getLine(), call.getMethodName().getColumn());
         }
 
         String methodName = call.getMethodName().getName();
