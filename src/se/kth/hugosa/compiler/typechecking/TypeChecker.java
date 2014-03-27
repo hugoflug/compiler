@@ -5,6 +5,8 @@ import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.ClassTable;
 import se.kth.hugosa.compiler.symboltable.MethodTable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,6 +21,17 @@ public class TypeChecker implements TypeVisitor {
 
     public void typeCheck(Program program) throws CompilationException {
         visit(program);
+    }
+
+    private void assertTypes(Exp exp, List<Type> expectedTypes) {
+        for (Type type : expectedTypes) {
+            try {
+                assertType(exp, type);
+                return;
+            } catch (WrongTypeException e) {}
+        }
+        //TODO: skriv ut alla expected types
+        throw new WrongTypeException(exp.accept(this), expectedTypes.get(0), exp.getLine(), exp.getColumn());
     }
 
     private void assertType(Exp exp, Type expectedType) {
@@ -358,6 +371,7 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(Syso syso) {
+        assertTypes(syso.getPrintee(), Arrays.asList(new IntType(), new BooleanType()));
         return null;
     }
 
