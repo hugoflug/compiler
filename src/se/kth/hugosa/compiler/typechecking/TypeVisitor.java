@@ -35,6 +35,7 @@ public interface TypeVisitor {
     public Type visit(NotEqual notEqual);
     public Type visit(ObjectType objectType);
     public Type visit(Or or);
+    public Type visit(Parens parens);
     public Type visit(Plus plus);
     public Type visit(Program program);
     public Type visit(Syso syso);

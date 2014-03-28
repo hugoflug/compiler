@@ -266,10 +266,11 @@ ExpList ExpList() :
 Exp ExpParens() :
 {
     Exp value;
+    Token pos;
 }
 {
     (
-        <LPAREN> value = Exp() <RPAREN>
+        pos = <LPAREN> value = Exp() { value = new Parens(value, pos.beginLine, pos.beginColumn); } <RPAREN>
         | value = ExpVal()
     )
     { return value; }

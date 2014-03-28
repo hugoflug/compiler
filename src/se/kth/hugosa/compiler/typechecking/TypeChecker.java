@@ -351,6 +351,11 @@ public class TypeChecker implements TypeVisitor {
     }
 
     @Override
+    public Type visit(Parens parens) {
+        return parens.getExp().accept(this);
+    }
+
+    @Override
     public Type visit(Plus plus) {
         assertType(plus.getLeftOp(), new IntType());
         assertType(plus.getRightOp(), new IntType());

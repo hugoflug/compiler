@@ -227,6 +227,11 @@ public class SymbolTableCreator implements Visitor {
     }
 
     @Override
+    public void visit(Parens parens) {
+
+    }
+
+    @Override
     public void visit(Plus plus) {
 
     }
