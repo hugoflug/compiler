@@ -108,9 +108,10 @@ MainClass MainClass() :
 
     {
         if (!main.image.equals("main")) {
-            throw new ParseException();
+            throw new ParseException("Method in main class must be named main");
         }
-        return new MainClass(new Identifier(className.image, className.beginLine, className.beginColumn), new Identifier(stdArgsName.image, stdArgsName.beginLine, stdArgsName.beginColumn),
+        return new MainClass(new Identifier(className.image, className.beginLine, className.beginColumn), new Identifier(stdArgsName.image,
+            stdArgsName.beginLine, stdArgsName.beginColumn),
             varDecls, statements, pos.beginLine, pos.beginColumn);
     }
 }
