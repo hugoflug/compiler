@@ -110,9 +110,9 @@ MainClass MainClass() :
         if (!main.image.equals("main")) {
             throw new ParseException("Method in main class must be named main");
         }
-        return new MainClass(new Identifier(className.image, className.beginLine, className.beginColumn),
-            new Identifier(stdArgsName.image, stdArgsName.beginLine, stdArgsName.beginColumn),
-            varDecls, statements, pos.beginLine, pos.beginColumn);
+        Identifier name = new Identifier(className.image, className.beginLine, className.beginColumn);
+        Identifier stdArgsNameId = new Identifier(stdArgsName.image, stdArgsName.beginLine, stdArgsName.beginColumn);
+        return new MainClass(name, stdArgsNameId, varDecls, statements, pos.beginLine, pos.beginColumn);
     }
 }
 
@@ -131,7 +131,10 @@ ClassDecl ClassDecl() :
     <LBRACE> (varDecl = VarDecl() { varDecls.addVarDecl(varDecl); })*
     (methodDecl = MethodDecl() { methodDecls.addMethodDecl(methodDecl); })* <RBRACE>
 
-    { return new ClassDecl(new Identifier(id.image, id.beginLine, id.beginColumn), varDecls, methodDecls, pos.beginLine, pos.beginColumn); }
+    {
+        Identifier name = new Identifier(id.image, id.beginLine, id.beginColumn);
+        return new ClassDecl(name, varDecls, methodDecls, pos.beginLine, pos.beginColumn);
+    }
 }
 
 Exp Exp() :
@@ -141,7 +144,8 @@ Exp Exp() :
     Token pos;
 }
 {
-    exp1 = ExpAnd() (pos = <OR> exp2 = ExpAnd() { exp1 = new Or(exp1, exp2, pos.beginLine, pos.beginColumn); })*
+    exp1 = ExpAnd()
+    (pos = <OR> exp2 = ExpAnd() { exp1 = new Or(exp1, exp2, pos.beginLine, pos.beginColumn); })*
     { return exp1; }
 }
 
@@ -248,8 +252,11 @@ Exp ExpInfo() :
     (
           LOOKAHEAD(2)
           pos = <DOT> <LENGTH> { value = new ArrayLength(value, pos.beginLine, pos.beginColumn); }
-        | pos = <DOT> id = <ID> <LPAREN> expList = ExpList()
-          { value = new MethodCall(value, new Identifier(id.image, id.beginLine, id.beginColumn), expList, pos.beginLine, pos.beginColumn); }  <RPAREN>
+        | pos = <DOT> id = <ID> <LPAREN> expList = ExpList() <RPAREN>
+          {
+              Identifier name = new Identifier(id.image, id.beginLine, id.beginColumn);
+              value = new MethodCall(value, name, expList, pos.beginLine, pos.beginColumn);
+          }
         | pos = <LBRACKET> exp2 = Exp() <RBRACKET>
           {
              if (value instanceof NewArray) {
@@ -299,7 +306,11 @@ Exp ExpVal() :
       | token = <ID> { value = new Identifier(token.image, token.beginLine, token.beginColumn); }
       | LOOKAHEAD(2)
         pos = <NEW> <INT> <LBRACKET> value = Exp() <RBRACKET> { value = new NewArray(value, pos.beginLine, pos.beginColumn); }
-      | pos = <NEW> token = <ID> <LPAREN> <RPAREN> { value = new NewObject(new Identifier(token.image, token.beginLine, token.beginColumn), pos.beginLine, pos.beginColumn); }
+      | pos = <NEW> token = <ID> <LPAREN> <RPAREN>
+        {
+            Identifier typeName = new Identifier(token.image, token.beginLine, token.beginColumn);
+            value = new NewObject(typeName, pos.beginLine, pos.beginColumn);
+        }
   )
   { return value; }
 }
@@ -314,7 +325,10 @@ VarDecl VarDecl() :
     type = Type()
     id = <ID>
     <SEMICOLON>
-    { return new VarDecl(type, new Identifier(id.image, id.beginLine, id.beginColumn), type.getLine(), type.getColumn()); }
+    {
+        Identifier name = new Identifier(id.image, id.beginLine, id.beginColumn);
+        return new VarDecl(type, name, type.getLine(), type.getColumn());
+    }
 }
 
 MethodDecl MethodDecl() :
@@ -347,11 +361,21 @@ FormalList FormalList() :
     FormalList formalList = new FormalList();
     Type type;
     Token id;
-    Identifier name;
 }
 {
-    [type = Type() id = <ID> { formalList.addFormal(new Formal(type, new Identifier(id.image, id.beginLine, id.beginColumn), type.getLine(), type.getColumn())); }
-    (<COMMA> type = Type() id = <ID> { formalList.addFormal(new Formal(type, new Identifier(id.image, id.beginLine, id.beginColumn), type.getLine(), type.getColumn())); } )*]
+    [
+        type = Type() id = <ID>
+        {
+            Identifier name = new Identifier(id.image, id.beginLine, id.beginColumn);
+            formalList.addFormal(new Formal(type, name, type.getLine(), type.getColumn()));
+        }
+        (<COMMA> type = Type() id = <ID>
+            {
+                Identifier nameId = new Identifier(id.image, id.beginLine, id.beginColumn);
+                formalList.addFormal(new Formal(type, nameId, type.getLine(), type.getColumn()));
+            }
+        )*
+    ]
 
     { return formalList; }
 }
@@ -398,13 +422,21 @@ Stmt Stmt() :
 }
 {
     (
-            pos = <LBRACE> (stmt = Stmt() { stmtList.addStmt(stmt); })* <RBRACE> { stmt = new Block(stmtList, pos.beginLine, pos.beginColumn); }
-          | pos = <IF> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() stmt2 = ElseStmt(exp1, stmt, pos) { stmt = stmt2; }
-          | pos = <WHILE> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() { stmt = new While(exp1, stmt, pos.beginLine, pos.beginColumn); }
-          | pos = <SYSO> <LPAREN> exp1 = Exp() <RPAREN> <SEMICOLON> { stmt = new Syso(exp1, pos.beginLine, pos.beginColumn); }
-          | LOOKAHEAD(2)
-            id = <ID> <ASSIGN> exp1 = Exp() <SEMICOLON> { stmt = new Assign(new Identifier(id.image, id.beginLine, id.beginColumn), exp1, id.beginLine, id.beginColumn); }
-          | id = <ID> <LBRACKET> exp1 = Exp() <RBRACKET> <ASSIGN> exp2 = Exp() <SEMICOLON> { stmt = new ArrayAssign(new Identifier(id.image, id.beginLine, id.beginColumn), exp1, exp2, id.beginLine, id.beginColumn ); }
+          pos = <LBRACE> (stmt = Stmt() { stmtList.addStmt(stmt); })* <RBRACE> { stmt = new Block(stmtList, pos.beginLine, pos.beginColumn); }
+        | pos = <IF> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() stmt2 = ElseStmt(exp1, stmt, pos) { stmt = stmt2; }
+        | pos = <WHILE> <LPAREN> exp1 = Exp() <RPAREN> stmt = Stmt() { stmt = new While(exp1, stmt, pos.beginLine, pos.beginColumn); }
+        | pos = <SYSO> <LPAREN> exp1 = Exp() <RPAREN> <SEMICOLON> { stmt = new Syso(exp1, pos.beginLine, pos.beginColumn); }
+        | LOOKAHEAD(2)
+          id = <ID> <ASSIGN> exp1 = Exp() <SEMICOLON>
+          {
+              Identifier assignee = new Identifier(id.image, id.beginLine, id.beginColumn);
+              stmt = new Assign(assignee, exp1, id.beginLine, id.beginColumn);
+          }
+        | id = <ID> <LBRACKET> exp1 = Exp() <RBRACKET> <ASSIGN> exp2 = Exp() <SEMICOLON>
+          {
+              Identifier assignee = new Identifier(id.image, id.beginLine, id.beginColumn);
+              stmt = new ArrayAssign(assignee, exp1, exp2, id.beginLine, id.beginColumn );
+          }
     )
-  { return stmt; }
+    { return stmt; }
 }
