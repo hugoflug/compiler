@@ -33,4 +33,8 @@ public class ObjectType extends Type {
         sb.append('}');
         return sb.toString();
     }
+
+    public String toPrettyString() {
+        return name;
+    }
 }

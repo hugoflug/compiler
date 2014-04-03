@@ -17,6 +17,7 @@ public class WrongArgumentAmountException extends CompilationException {
 
     @Override
     public String toString() {
-        return "WrongArgumentAmountException (line " + line + ", column " + column + "): " + methodName + " was called with the wrong amount of arguments";
+        return "WrongArgumentAmountException (line " + line + ", column " + column + "): " + methodName +
+                " was called with the wrong amount of arguments";
     }
 }

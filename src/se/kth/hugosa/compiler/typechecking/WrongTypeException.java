@@ -28,9 +28,9 @@ public class WrongTypeException extends CompilationException {
         StringBuilder sb = new StringBuilder();
         sb.append("WrongTypeException (line " + line + ", column " + column + "): ");
         if (var == null) {
-            sb.append("Actual type: " + type + ". " + shouldBe + " expected");
+            sb.append("Actual type: " + type.toPrettyString() + ". " + shouldBe.toPrettyString() + " expected");
         } else {
-            sb.append(var + "is of type: " + type + ". " + shouldBe + " expected");
+            sb.append(var + "is of type: " + type.toPrettyString() + ". " + shouldBe.toPrettyString() + " expected");
         }
         return sb.toString();
     }

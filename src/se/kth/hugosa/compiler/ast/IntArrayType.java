@@ -21,4 +21,8 @@ public class IntArrayType extends Type {
     public String toString() {
         return "Int[]{}";
     }
+
+    public String toPrettyString() {
+        return "int[]";
+    }
 }

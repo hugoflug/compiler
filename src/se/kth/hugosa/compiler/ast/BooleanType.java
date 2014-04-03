@@ -21,4 +21,8 @@ public class BooleanType extends Type {
     public String toString() {
         return "BooleanType{}";
     }
+
+    public String toPrettyString() {
+        return "boolean";
+    }
 }
