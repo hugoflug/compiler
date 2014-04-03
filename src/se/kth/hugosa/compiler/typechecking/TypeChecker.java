@@ -86,7 +86,7 @@ public class TypeChecker implements TypeVisitor {
     public Type visit(Assign assign) {
         Type assigneeType = assign.getAssignee().accept(this);
         Type newValueType = assign.getNewValue().accept(this);
-        assertType(assigneeType, newValueType, assign.getLine(), assign.getColumn());
+        assertType(newValueType, assigneeType, assign.getLine(), assign.getColumn());
         return null;
     }
 
