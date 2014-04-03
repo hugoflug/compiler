@@ -37,14 +37,14 @@ public class WrongTypeException extends CompilationException {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("WrongTypeException (line " + line + ", column " + column + "): ");
-        if (var == null) {
+        if (var == null && acceptedTypes == null) {
             sb.append("Actual type: " + type.toPrettyString() + ". " + shouldBe.toPrettyString() + " expected");
         } else if (acceptedTypes != null) {
             sb.append("Actual type: " + type.toPrettyString() + ". One of: ");
             for (Type type : acceptedTypes) {
-                sb.append(type + ", ");
+                sb.append(type.toPrettyString() + ", ");
             }
-            sb.substring(sb.length() - 1);
+            sb.deleteCharAt(sb.length() - 2);
             sb.append("expected");
         } else {
             sb.append(var + "is of type: " + type.toPrettyString() + ". " + shouldBe.toPrettyString() + " expected");

@@ -31,7 +31,7 @@ public class TypeChecker implements TypeVisitor {
             } catch (WrongTypeException e) {}
         }
         //TODO: skriv ut alla expected types
-        throw new WrongTypeException(exp.accept(this), expectedTypes.get(0), exp.getLine(), exp.getColumn());
+        throw new WrongTypeException(exp.accept(this), expectedTypes, exp.getLine(), exp.getColumn());
     }
 
     private void assertType(Exp exp, Type expectedType) {

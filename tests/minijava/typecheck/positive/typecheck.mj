@@ -33,6 +33,7 @@ class Boo {
     public int croo(Foo foo, Boo boo) {
         int e;
         int[] f;
+        System.out.println(f);
         if (e == 2) {
             while (true) {
                 e = boo.croo(new Foo(), new Boo());
