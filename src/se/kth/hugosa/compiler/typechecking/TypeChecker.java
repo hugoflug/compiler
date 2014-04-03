@@ -30,7 +30,6 @@ public class TypeChecker implements TypeVisitor {
                 return;
             } catch (WrongTypeException e) {}
         }
-        //TODO: skriv ut alla expected types
         throw new WrongTypeException(exp.accept(this), expectedTypes, exp.getLine(), exp.getColumn());
     }
 

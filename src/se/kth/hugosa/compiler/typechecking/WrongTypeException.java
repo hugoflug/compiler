@@ -17,6 +17,7 @@ public class WrongTypeException extends CompilationException {
         this.shouldBe = shouldBe;
         this.var = null;
         this.line = line;
+        this.column = column;
     }
 
     public WrongTypeException(Type type, List<Type> acceptedTypes, int line, int column) {
@@ -24,6 +25,7 @@ public class WrongTypeException extends CompilationException {
         this.acceptedTypes = acceptedTypes;
         this.var = null;
         this.line = line;
+        this.column = column;
     }
 
     public WrongTypeException(Type type, Type shouldBe, String var, int line, int column) {
