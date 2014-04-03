@@ -110,8 +110,8 @@ MainClass MainClass() :
         if (!main.image.equals("main")) {
             throw new ParseException("Method in main class must be named main");
         }
-        return new MainClass(new Identifier(className.image, className.beginLine, className.beginColumn), new Identifier(stdArgsName.image,
-            stdArgsName.beginLine, stdArgsName.beginColumn),
+        return new MainClass(new Identifier(className.image, className.beginLine, className.beginColumn),
+            new Identifier(stdArgsName.image, stdArgsName.beginLine, stdArgsName.beginColumn),
             varDecls, statements, pos.beginLine, pos.beginColumn);
     }
 }
@@ -126,7 +126,8 @@ ClassDecl ClassDecl() :
     MethodDecl methodDecl;
 }
 {
-    pos = <CLASS> id = <ID>
+    pos = <CLASS>
+    id  = <ID>
     <LBRACE> (varDecl = VarDecl() { varDecls.addVarDecl(varDecl); })*
     (methodDecl = MethodDecl() { methodDecls.addMethodDecl(methodDecl); })* <RBRACE>
 
@@ -162,7 +163,8 @@ Exp ExpEquality() :
     Token pos;
 }
 {
-    exp1 = ExpCompare() (
+    exp1 = ExpCompare()
+    (
           pos = <EQ> exp2 = ExpCompare() { exp1 = new Equal(exp1, exp2, pos.beginLine, pos.beginColumn); }
         | pos = <NOTEQ> exp2 = ExpCompare() { exp1 = new NotEqual(exp1, exp2, pos.beginLine, pos.beginColumn); }
     )*
@@ -176,7 +178,8 @@ Exp ExpCompare() :
     Token pos;
 }
 {
-    exp1 = ExpPlusMinus() (
+    exp1 = ExpPlusMinus()
+    (
           pos = <LT> exp2 = ExpPlusMinus() { exp1 = new LessThan(exp1, exp2, pos.beginLine, pos.beginColumn); }
         | pos = <MT> exp2 = ExpPlusMinus()  { exp1 = new MoreThan(exp1, exp2, pos.beginLine, pos.beginColumn); }
         | pos = <LET> exp2 = ExpPlusMinus()  { exp1 = new LessOrEqualThan(exp1, exp2, pos.beginLine, pos.beginColumn); }
@@ -192,10 +195,12 @@ Exp ExpPlusMinus() :
     Token pos;
 }
 {
-    exp1 = ExpMult() (
-                 pos = <PLUS> exp2 = ExpMult() { exp1 = new Plus(exp1, exp2, pos.beginLine, pos.beginColumn); }
-               | pos = <MINUS> exp2 = ExpMult() { exp1 = new Minus(exp1, exp2, pos.beginLine, pos.beginColumn); }
-               )*
+    exp1 = ExpMult()
+    (
+
+          pos = <PLUS> exp2 = ExpMult() { exp1 = new Plus(exp1, exp2, pos.beginLine, pos.beginColumn); }
+        | pos = <MINUS> exp2 = ExpMult() { exp1 = new Minus(exp1, exp2, pos.beginLine, pos.beginColumn); }
+    )*
     { return exp1; }
 }
 
@@ -218,12 +223,12 @@ Exp ExpNot ():
 }
 {
     (
-        (pos = <EXCLMARK> { nots++; })+ value = ExpInfo()
-        {
-            for (int i = 0; i < nots; i++) {
-                value = new Not(value, pos.beginLine, pos.beginColumn);
-            }
-        }
+          (pos = <EXCLMARK> { nots++; })+ value = ExpInfo()
+          {
+              for (int i = 0; i < nots; i++) {
+                  value = new Not(value, pos.beginLine, pos.beginColumn);
+              }
+          }
         | value = ExpInfo()
     )
 
@@ -241,15 +246,17 @@ Exp ExpInfo() :
 {
     value = ExpParens()
     (
-             LOOKAHEAD(2)
-             pos = <DOT> <LENGTH> { value = new ArrayLength(value, pos.beginLine, pos.beginColumn); }
-           | pos = <DOT> id = <ID> <LPAREN> expList = ExpList() { value = new MethodCall(value, new Identifier(id.image, id.beginLine, id.beginColumn), expList, pos.beginLine, pos.beginColumn); }  <RPAREN>
-           | pos = <LBRACKET> exp2 = Exp() <RBRACKET> {
-                if (value instanceof NewArray) {
-                    throw new ParseException("Multidimensional arrays not allowed");
-                }
-                value = new ArrayLookup(value, exp2, pos.beginLine, pos.beginColumn);
+          LOOKAHEAD(2)
+          pos = <DOT> <LENGTH> { value = new ArrayLength(value, pos.beginLine, pos.beginColumn); }
+        | pos = <DOT> id = <ID> <LPAREN> expList = ExpList()
+          { value = new MethodCall(value, new Identifier(id.image, id.beginLine, id.beginColumn), expList, pos.beginLine, pos.beginColumn); }  <RPAREN>
+        | pos = <LBRACKET> exp2 = Exp() <RBRACKET>
+          {
+             if (value instanceof NewArray) {
+                 throw new ParseException("Multidimensional arrays not allowed");
              }
+             value = new ArrayLookup(value, exp2, pos.beginLine, pos.beginColumn);
+          }
     )*
     { return value; }
 }
@@ -271,7 +278,7 @@ Exp ExpParens() :
 }
 {
     (
-        pos = <LPAREN> value = Exp() { value = new Parens(value, pos.beginLine, pos.beginColumn); } <RPAREN>
+          pos = <LPAREN> value = Exp() { value = new Parens(value, pos.beginLine, pos.beginColumn); } <RPAREN>
         | value = ExpVal()
     )
     { return value; }
@@ -325,14 +332,13 @@ MethodDecl MethodDecl() :
     Token pos;
 }
 {
-    pos = <PUBLIC>
+    pos  = <PUBLIC>
     type = Type()
-    id = <ID> { name = new Identifier(id.image, id.beginLine, id.beginColumn);}
-    <LPAREN> argList = FormalList() <RPAREN> <LBRACE>
+    id   = <ID> { name = new Identifier(id.image, id.beginLine, id.beginColumn);}
+           <LPAREN> argList = FormalList() <RPAREN> <LBRACE>
     (LOOKAHEAD(2) varDecl = VarDecl() {varDecls.addVarDecl(varDecl);})*
     (stmt = Stmt() {statements.addStmt(stmt);})*
-    <RETURN> returnValue = Exp() <SEMICOLON>
-    <RBRACE>
+    <RETURN> returnValue = Exp() <SEMICOLON> <RBRACE>
     { return new MethodDecl(type, name, argList, varDecls, statements, returnValue, pos.beginLine, pos.beginColumn); }
 }
 
@@ -373,8 +379,9 @@ Stmt ElseStmt(Exp condition, Stmt thenStmt, Token pos) :
     Stmt elseStmt;
 }
 {
-    ( <ELSE> elseStmt = Stmt() { stmt = new If(condition, thenStmt, elseStmt, pos.beginLine, pos.beginColumn); }
-     |{} { stmt = new IfWithoutElse(condition, thenStmt, pos.beginLine, pos.beginColumn); }
+    (
+          <ELSE> elseStmt = Stmt() { stmt = new If(condition, thenStmt, elseStmt, pos.beginLine, pos.beginColumn); }
+        | {} { stmt = new IfWithoutElse(condition, thenStmt, pos.beginLine, pos.beginColumn); }
     )
     { return stmt; }
 }
