@@ -40,7 +40,9 @@ public class TypeChecker implements TypeVisitor {
 
     private void assertType(Type actualType, Type expectedType, int line, int column) {
         if (actualType instanceof ObjectType && expectedType instanceof ObjectType) {
-            if (!((ObjectType)actualType).getName().equals(((ObjectType)expectedType).getName())) {
+            String actualTypeName = ((ObjectType)actualType).getName();
+            String expectedTypeName = ((ObjectType)expectedType).getName();
+            if (!actualTypeName.equals(expectedTypeName)) {
                 throw new WrongTypeException(actualType, expectedType, line, column);
             } else {
                 return;
