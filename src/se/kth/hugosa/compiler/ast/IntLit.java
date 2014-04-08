@@ -18,6 +18,10 @@ public class IntLit extends Exp {
         return v.visit(this);
     }
 
+    public int getValue() {
+        return value;
+    }
+
 
     @Override
     public String toString() {

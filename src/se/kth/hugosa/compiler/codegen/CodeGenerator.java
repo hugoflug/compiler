@@ -66,12 +66,14 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Equal equal) {
-
+        equal.getLeftOp().accept(this);
+        equal.getRightOp().accept(this);
+        //check if equal
     }
 
     @Override
     public void visit(False f) {
-
+        assembler.append("iconst_0");
     }
 
     @Override
@@ -86,7 +88,9 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(If i) {
-
+        i.getCondition().accept(this);
+        assembler.append("ifeq ");
+        //etc..
     }
 
     @Override
@@ -101,7 +105,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(IntLit intLit) {
-
+        assembler.append("ldc " + intLit.getValue());
     }
 
     @Override
@@ -136,7 +140,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Minus minus) {
-
+        assembler.append("isub");
     }
 
     @Override
@@ -151,7 +155,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Mult mult) {
-
+        assembler.append("imul");
     }
 
     @Override
@@ -166,7 +170,8 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Not not) {
-
+        assembler.append("iconst_1");
+        assembler.append("ixor");
     }
 
     @Override
@@ -181,7 +186,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Or or) {
-
+        assembler.append("ior");
     }
 
     @Override
@@ -191,7 +196,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Plus plus) {
-
+        assembler.append("iadd");
     }
 
     @Override
@@ -206,12 +211,12 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(This t) {
-
+        assembler.append("aload_0");
     }
 
     @Override
     public void visit(True tru) {
-
+        assembler.append("iconst_1");
     }
 
     @Override
