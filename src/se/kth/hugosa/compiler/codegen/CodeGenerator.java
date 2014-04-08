@@ -59,9 +59,22 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(ClassDecl classDecl) {
+        assembler.newFile();
         assembler.append(".source " + sourceFile);
         assembler.append(".class public " + classDecl.getClassName());
         assembler.append(".super java/lang/Object");
+
+        VarDeclList varDecls = classDecl.getVarDeclarations();
+        for (int i = 0; i < varDecls.size(); i++) {
+            VarDecl decl = varDecls.get(i);
+            String name = decl.getId().getName();
+            assembler.append(".field public " + name); //+ type descriptor
+        }
+
+        MethodDeclList methodDecls = classDecl.getMethodDeclarations();
+        for (int i = 0; i < methodDecls.size(); i++) {
+            methodDecls.get(i).accept(this);
+        }
     }
 
     @Override
