@@ -1,17 +1,27 @@
 package se.kth.hugosa.compiler.codegen;
 
 import se.kth.hugosa.compiler.ast.*;
+import se.kth.hugosa.compiler.symboltable.ClassTable;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CodeGenerator implements Visitor {
     private JasminAssembler assembler;
     private String sourceFile;
+    private Map<Object, Integer> localVars;
+    private LabelGenerator labelGen;
+    private Map<String, ClassTable> symbolTable;
 
-    public CodeGenerator(String sourceFile, OutputStream outStream) throws IOException {
-        this.assembler = new JasminAssembler(outStream);
+    public CodeGenerator(String sourceFile, Map<String, ClassTable> symbolTable, OutputStream outStream) throws IOException {
         this.sourceFile = sourceFile;
+        assembler = new JasminAssembler(outStream);
+        localVars = new HashMap<Object, Integer>();
+        this.symbolTable = symbolTable;
+        labelGen = new LabelGenerator();
     }
 
     @Override
@@ -44,12 +54,24 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Assign assign) {
-
+        int assigneeNo = localVars.get(assign.getAssignee().getName());
+        assign.getNewValue().accept(this);
+        Exp newValue = assign.getNewValue();
+        /*
+        if (newValue instanceof IntType) {
+            assembler.append("istore " + assigneeNo);
+        } else {
+            assembler.append("astore " + assigneeNo);
+        }
+        */
     }
 
     @Override
     public void visit(Block block) {
-
+        StmtList stmts = block.getStmtList();
+        for (int i = 0; i < stmts.size(); i++) {
+            stmts.get(i).accept(this);
+        }
     }
 
     @Override
@@ -68,7 +90,8 @@ public class CodeGenerator implements Visitor {
         for (int i = 0; i < varDecls.size(); i++) {
             VarDecl decl = varDecls.get(i);
             String name = decl.getId().getName();
-            assembler.append(".field public " + name); //+ type descriptor
+            String jasminType = JasminAssembler.toTypeDescriptor(decl.getType());
+            assembler.append(".field public " + name + " " + jasminType); //+ type descriptor
         }
 
         MethodDeclList methodDecls = classDecl.getMethodDeclarations();
@@ -77,11 +100,28 @@ public class CodeGenerator implements Visitor {
         }
     }
 
+    /*
+        <COMPARE> setTrue
+        iconst_0
+        goto after
+        setTrue: iconst_1
+        after:
+    */
+    private void compare(String comparison) {
+        String setTrue = labelGen.getLabel();
+        String after = labelGen.getLabel();
+        assembler.append(comparison + setTrue);
+        assembler.append("iconst_0 ");
+        assembler.append("goto " + after);
+        assembler.append(setTrue + ": iconst_1");
+        assembler.append(after + ":");
+    }
+
     @Override
     public void visit(Equal equal) {
         equal.getLeftOp().accept(this);
         equal.getRightOp().accept(this);
-        //check if equal
+        compare("if_icmpeq");
     }
 
     @Override
@@ -99,16 +139,39 @@ public class CodeGenerator implements Visitor {
 
     }
 
+    /*
+        ifeq label
+        ;then statements
+        goto after
+        label:
+        ;else statements
+        after:
+    */
     @Override
     public void visit(If i) {
         i.getCondition().accept(this);
-        assembler.append("ifeq ");
-        //etc..
+        String label = labelGen.getLabel();
+        String after = labelGen.getLabel();
+        assembler.append("ifeq " + label);
+        i.getThenStmt().accept(this);
+        assembler.append("goto " + after);
+        assembler.append(label + ":");
+        i.getElseStmt().accept(this);
+        assembler.append(after + ":");
     }
 
+    /*
+        ifeq label
+        ;statements
+        label:
+    */
     @Override
     public void visit(IfWithoutElse ifWithoutElse) {
-
+        ifWithoutElse.getCondition().accept(this);
+        String label = labelGen.getLabel();
+        assembler.append("ifeq " + label);
+        ifWithoutElse.getThenStmt().accept(this);
+        assembler.append(label + ":");
     }
 
     @Override
@@ -128,17 +191,29 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(LessThan lessThan) {
-
+        lessThan.getLeftOp().accept(this);
+        lessThan.getRightOp().accept(this);
+        compare("if_icmplt");
     }
 
     @Override
-    public void visit(LessOrEqualThan lessThan) {
-
+    public void visit(LessOrEqualThan lessOrEqualThan) {
+        lessOrEqualThan.getLeftOp().accept(this);
+        lessOrEqualThan.getRightOp().accept(this);
+        compare("if_icmple");
     }
 
     @Override
     public void visit(MainClass main) {
-
+        assembler.newFile();
+        assembler.append(".source " + sourceFile);
+        assembler.append(".class public " + main.getName());
+        assembler.append(".super java/lang/Object");
+        assembler.append(".method public static main([Ljava/lang/String;)V");
+        main.getVarDeclarations().acceptAll(this);
+        main.getStatements().acceptAll(this);
+        assembler.append("return");
+        assembler.append(".end method");
     }
 
     @Override
@@ -148,7 +223,20 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(MethodDecl decl) {
-
+        String name = decl.getName().getName();
+        String typeDescriptor = "";
+        assembler.append(".method public " + name + typeDescriptor);
+        assembler.append(".limit stack 100");
+        assembler.append(".limit locals 100");
+        decl.getVarDeclarations().acceptAll(this);
+        decl.getStatements().acceptAll(this);
+        decl.getReturnValue().accept(this);
+        Type type = decl.getType();
+        if (type instanceof IntType) {
+            assembler.append("ireturn");
+        } else {
+            assembler.append("areturn");
+        }
     }
 
     @Override
@@ -158,12 +246,16 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(MoreThan moreThan) {
-
+        moreThan.getLeftOp().accept(this);
+        moreThan.getRightOp().accept(this);
+        compare("if_icmpgt");
     }
 
     @Override
     public void visit(MoreOrEqualThan moreOrEqualThan) {
-
+        moreOrEqualThan.getLeftOp().accept(this);
+        moreOrEqualThan.getRightOp().accept(this);
+        compare("if_icmpge");
     }
 
     @Override
@@ -173,23 +265,25 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(NewObject object) {
-
+        assembler.append("new " + object.getName());
     }
 
     @Override
     public void visit(NewArray array) {
-
+        array.getArraySize().accept(this);
+        assembler.append("newarray int");
     }
 
     @Override
     public void visit(Not not) {
-        assembler.append("iconst_1");
-        assembler.append("ixor");
+        assembler.append("ineg");
     }
 
     @Override
     public void visit(NotEqual notEqual) {
-
+        notEqual.getLeftOp().accept(this);
+        notEqual.getRightOp().accept(this);
+        compare("if_icmpne");
     }
 
     @Override
@@ -204,7 +298,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Parens parens) {
-
+        parens.getExp().accept(this);
     }
 
     @Override
@@ -214,12 +308,18 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Program program) {
-
+        program.getMainClass().accept(this);
+        ClassDeclList decls = program.getClassDeclarations();
+        for (int i = 0; i < decls.size(); i++) {
+            decls.get(i).accept(this);
+        }
     }
 
     @Override
     public void visit(Syso syso) {
-
+        assembler.append("getstatic java/lang/System/out Ljava/io/PrintStream;");
+        syso.getPrintee().accept(this);
+        assembler.append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
     }
 
     @Override
@@ -242,8 +342,23 @@ public class CodeGenerator implements Visitor {
 
     }
 
+    /*
+        start:
+        ;condition
+        ifeq after
+        ;statements
+        goto start
+        after:
+     */
     @Override
     public void visit(While w) {
-
+        String start = labelGen.getLabel();
+        String after = labelGen.getLabel();
+        assembler.append(start);
+        w.getCondition().accept(this);
+        assembler.append("ifeq " + after);
+        w.getStatement().accept(this);
+        assembler.append("goto " + start);
+        assembler.append(after + ":");
     }
 }
