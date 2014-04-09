@@ -111,7 +111,7 @@ public class CodeGenerator implements Visitor {
 
         assembler.newFile(currentClass.getName() + ".s");
         assembler.append(".source " + sourceFile);
-        assembler.append(".class public " + classDecl.getClassName());
+        assembler.append(".class public " + classDecl.getClassName().getName());
         assembler.append(".super java/lang/Object");
 
         VarDeclList varDecls = classDecl.getVarDeclarations();
