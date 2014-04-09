@@ -36,8 +36,6 @@ ldc 5
 iadd
 invokevirtual java/io/PrintStream/println(I)V
 l3:
-new Identifier{
-name='Foo'
-}
+new Foo
 astore 2
 getstatic java/lang/System/out Ljava/io/PrintStream;

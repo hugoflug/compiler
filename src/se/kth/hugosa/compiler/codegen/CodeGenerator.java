@@ -351,7 +351,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(NewObject object) {
-        assembler.append("new " + object.getName());
+        assembler.append("new " + object.getName().getName());
     }
 
     @Override
