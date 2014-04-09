@@ -3,11 +3,13 @@ package se.kth.hugosa.compiler.codegen;
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.ClassTable;
 import se.kth.hugosa.compiler.symboltable.MethodTable;
+import se.kth.hugosa.compiler.typechecking.TypeChecker;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CodeGenerator implements Visitor {
@@ -18,6 +20,7 @@ public class CodeGenerator implements Visitor {
     private Map<String, ClassTable> symbolTable;
     private ClassTable currentClass;
     private MethodTable currentMethod;
+    private TypeChecker typeChecker;
 
     public CodeGenerator(String sourceFile, Map<String, ClassTable> symbolTable, OutputStream outStream) throws IOException {
         this.sourceFile = sourceFile;
@@ -25,6 +28,7 @@ public class CodeGenerator implements Visitor {
         localVars = new HashMap<String, Integer>();
         this.symbolTable = symbolTable;
         labelGen = new LabelGenerator();
+        typeChecker = new TypeChecker(symbolTable);
     }
 
     @Override
@@ -268,7 +272,21 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(MethodCall call) {
+        ObjectType type = (ObjectType)call.getObject().accept(typeChecker);
+        String typeName = type.getName();
+        String methodName = call.getMethodName().getName();
+        Type returnType = symbolTable.get(typeName).getType(methodName);
+        ArrayList<Type> typeList = new ArrayList<Type>();
 
+        ExpList expList = call.getArgumentList();
+        for (int i = 0; i < expList.size(); i++) {
+            typeList.add(expList.get(i).accept(typeChecker));
+        }
+
+        String methodDesc = JasminAssembler.toMethodDescriptor(typeName, methodName,
+                typeList, returnType);
+
+        assembler.append("invokevirtual " + methodDesc);
     }
 
     @Override
@@ -276,8 +294,9 @@ public class CodeGenerator implements Visitor {
         String name = decl.getName().getName();
         currentMethod = currentClass.getMethod(name);
 
-        String typeDescriptor = "";
-        assembler.append(".method public " + name + typeDescriptor);
+        String methodDescriptor = JasminAssembler.toMethodDescriptor(currentClass.getName(),
+                currentMethod.getName(),decl.getArgumentList(), currentMethod.getType());
+        assembler.append(".method public " + methodDescriptor);
         assembler.append(".limit stack 100");
         assembler.append(".limit locals 100");
         decl.getVarDeclarations().acceptAll(this);
@@ -371,9 +390,10 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Syso syso) {
+        //TODO: Handle printing booleans
         assembler.append("getstatic java/lang/System/out Ljava/io/PrintStream;");
         syso.getPrintee().accept(this);
-        assembler.append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
+        assembler.append("invokevirtual java/io/PrintStream/println(I)V");
     }
 
     @Override
