@@ -140,7 +140,7 @@ public class CodeGenerator implements Visitor {
     private void compare(String comparison) {
         String setTrue = labelGen.getLabel();
         String after = labelGen.getLabel();
-        assembler.append(comparison + setTrue);
+        assembler.append(comparison + " " + setTrue);
         assembler.append("iconst_0 ");
         assembler.append("goto " + after);
         assembler.append(setTrue + ": iconst_1");
