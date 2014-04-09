@@ -143,7 +143,8 @@ public class CodeGenerator implements Visitor {
         assembler.append(comparison + " " + setTrue);
         assembler.append("iconst_0 ");
         assembler.append("goto " + after);
-        assembler.append(setTrue + ": iconst_1");
+        assembler.append(setTrue + ":");
+        assembler.append("iconst_1");
         assembler.append(after + ":");
     }
 
