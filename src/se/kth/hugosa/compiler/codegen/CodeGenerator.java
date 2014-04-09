@@ -336,7 +336,7 @@ public class CodeGenerator implements Visitor {
             assembler.append("areturn");
         }
 
-
+        assembler.append(".end method");
         endCurrentMethod();
     }
 

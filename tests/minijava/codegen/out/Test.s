@@ -39,7 +39,3 @@ l3:
 new Foo
 astore 2
 getstatic java/lang/System/out Ljava/io/PrintStream;
-invokevirtual Foo/foo()null
-invokevirtual java/io/PrintStream/println(I)V
-return
-.end method
