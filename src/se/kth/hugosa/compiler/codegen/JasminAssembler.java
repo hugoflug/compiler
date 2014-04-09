@@ -45,7 +45,7 @@ public class JasminAssembler {
         } else if (type instanceof BooleanType) {
             return "I";
         }
-        return null;
+        throw new IllegalArgumentException();
     }
 
     public static String toMethodDescriptor(String className, String methodName, FormalList formalList, Type returnType) {
@@ -63,7 +63,7 @@ public class JasminAssembler {
         for (Type type : typeList) {
             sb.append(toTypeDescriptor(type));
         }
-        sb.append(")" + returnType);
+        sb.append(")" + toTypeDescriptor(returnType));
         return sb.toString();
     }
 }
