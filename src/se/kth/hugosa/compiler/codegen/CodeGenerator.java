@@ -262,6 +262,8 @@ public class CodeGenerator implements Visitor {
         assembler.append(".class public " + main.getName().getName());
         assembler.append(".super java/lang/Object");
         assembler.append(".method public static main([Ljava/lang/String;)V");
+        assembler.append(".limit stack 100");
+        assembler.append(".limit locals 100");
 
         currentMethod = currentClass.getMethod("main");
 
