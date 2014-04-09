@@ -2,6 +2,7 @@ package se.kth.hugosa.compiler.codegen;
 
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.ClassTable;
+import se.kth.hugosa.compiler.symboltable.MethodTable;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,14 +13,16 @@ import java.util.Map;
 public class CodeGenerator implements Visitor {
     private JasminAssembler assembler;
     private String sourceFile;
-    private Map<Object, Integer> localVars;
+    private Map<String, Integer> localVars;
     private LabelGenerator labelGen;
     private Map<String, ClassTable> symbolTable;
+    private ClassTable currentClass;
+    private MethodTable currentMethod;
 
     public CodeGenerator(String sourceFile, Map<String, ClassTable> symbolTable, OutputStream outStream) throws IOException {
         this.sourceFile = sourceFile;
         assembler = new JasminAssembler(outStream);
-        localVars = new HashMap<Object, Integer>();
+        localVars = new HashMap<String, Integer>();
         this.symbolTable = symbolTable;
         labelGen = new LabelGenerator();
     }
@@ -54,16 +57,29 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Assign assign) {
-        int assigneeNo = localVars.get(assign.getAssignee().getName());
         assign.getNewValue().accept(this);
-        Exp newValue = assign.getNewValue();
-        /*
-        if (newValue instanceof IntType) {
-            assembler.append("istore " + assigneeNo);
-        } else {
-            assembler.append("astore " + assigneeNo);
+
+        String assigneeName = assign.getAssignee().getName();
+
+        Type type = currentMethod.getLocalType(assigneeName);
+        if (type == null) {
+            type = currentMethod.getParamType(assigneeName);
         }
-        */
+
+        if (type != null) {
+            int assigneeNo = localVars.get(assigneeName);
+            if (type instanceof IntType) {
+                assembler.append("istore " + assigneeNo);
+            } else {
+                assembler.append("astore " + assigneeNo);
+            }
+            return;
+        } else {
+            type = currentClass.getType(assigneeName);
+            String fieldDescriptor = currentClass + "/" + assigneeName;
+            String typeDescriptor = JasminAssembler.toTypeDescriptor(type);
+            assembler.append("putfield " + fieldDescriptor + " " + typeDescriptor);
+        }
     }
 
     @Override
@@ -81,6 +97,8 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(ClassDecl classDecl) {
+        currentClass = symbolTable.get(classDecl.getClassName().getName());
+
         assembler.newFile();
         assembler.append(".source " + sourceFile);
         assembler.append(".class public " + classDecl.getClassName());
@@ -91,13 +109,15 @@ public class CodeGenerator implements Visitor {
             VarDecl decl = varDecls.get(i);
             String name = decl.getId().getName();
             String jasminType = JasminAssembler.toTypeDescriptor(decl.getType());
-            assembler.append(".field public " + name + " " + jasminType); //+ type descriptor
+            assembler.append(".field public " + name + " " + jasminType);
         }
 
         MethodDeclList methodDecls = classDecl.getMethodDeclarations();
         for (int i = 0; i < methodDecls.size(); i++) {
             methodDecls.get(i).accept(this);
         }
+
+        currentClass = null;
     }
 
     /*
@@ -136,7 +156,27 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Identifier id) {
+        String name = id.getName();
+        Type type = currentMethod.getLocalType(name);
 
+        if (type == null) {
+            type = currentMethod.getParamType(name);
+        }
+
+        if (type != null) {
+            int varNo = localVars.get(name);
+            if (type instanceof IntType) {
+                assembler.append("iload " + varNo);
+            } else {
+                assembler.append("aload " + varNo);
+            }
+            return;
+        }
+
+        type = currentClass.getType(name);
+        String fieldDescriptor = currentClass.getName() + "/" + name;
+        String typeDescriptor = JasminAssembler.toTypeDescriptor(type);
+        assembler.append("getfield " + fieldDescriptor + " " + typeDescriptor);
     }
 
     /*
@@ -205,15 +245,25 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(MainClass main) {
+        currentClass = symbolTable.get(main.getName().getName());
+
         assembler.newFile();
         assembler.append(".source " + sourceFile);
         assembler.append(".class public " + main.getName());
         assembler.append(".super java/lang/Object");
         assembler.append(".method public static main([Ljava/lang/String;)V");
+
+        currentMethod = currentClass.getMethod("main");
+
         main.getVarDeclarations().acceptAll(this);
         main.getStatements().acceptAll(this);
+
+        currentMethod = null;
+
         assembler.append("return");
         assembler.append(".end method");
+
+        currentClass = null;
     }
 
     @Override
@@ -224,6 +274,8 @@ public class CodeGenerator implements Visitor {
     @Override
     public void visit(MethodDecl decl) {
         String name = decl.getName().getName();
+        currentMethod = currentClass.getMethod(name);
+
         String typeDescriptor = "";
         assembler.append(".method public " + name + typeDescriptor);
         assembler.append(".limit stack 100");
@@ -237,6 +289,8 @@ public class CodeGenerator implements Visitor {
         } else {
             assembler.append("areturn");
         }
+
+        currentMethod = null;
     }
 
     @Override
@@ -339,7 +393,15 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(VarDecl varDecl) {
-
+        int newNo = localVars.size() + 1;
+        Type type = varDecl.getType();
+        String name = varDecl.getId().getName();
+        localVars.put(name, newNo);
+        if (type instanceof IntType) {
+            assembler.append("istore " + newNo);
+        } else {
+            assembler.append("astore " + newNo);
+        }
     }
 
     /*

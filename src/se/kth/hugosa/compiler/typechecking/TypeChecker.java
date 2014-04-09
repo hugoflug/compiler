@@ -154,10 +154,12 @@ public class TypeChecker implements TypeVisitor {
             return idType;
         }
 
+        //not sure if necessary
         idType = currentClass.getType(name);
         if (idType == null) {
             throw new UndefinedVariableException(name, id.getLine(), id.getColumn());
         }
+
         return idType;
     }
 
