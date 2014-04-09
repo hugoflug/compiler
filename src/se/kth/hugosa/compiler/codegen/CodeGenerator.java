@@ -426,11 +426,6 @@ public class CodeGenerator implements Visitor {
         Type type = varDecl.getType();
         String name = varDecl.getId().getName();
         localVars.put(name, newNo);
-        if (type instanceof IntType) {
-            assembler.append("istore " + newNo);
-        } else {
-            assembler.append("astore " + newNo);
-        }
     }
 
     /*
