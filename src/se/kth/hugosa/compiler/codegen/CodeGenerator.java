@@ -23,9 +23,9 @@ public class CodeGenerator implements Visitor {
     private TypeChecker typeChecker;
     private Program program;
 
-    public CodeGenerator(String sourceFile, Program program, Map<String, ClassTable> symbolTable, OutputStream outStream) throws IOException {
+    public CodeGenerator(String sourceFile, Program program, Map<String, ClassTable> symbolTable, String outDirectory) throws IOException {
         this.sourceFile = sourceFile;
-        assembler = new JasminAssembler(outStream);
+        assembler = new JasminAssembler(outDirectory);
         localVars = new HashMap<String, Integer>();
         this.symbolTable = symbolTable;
         labelGen = new LabelGenerator();
@@ -109,7 +109,7 @@ public class CodeGenerator implements Visitor {
     public void visit(ClassDecl classDecl) {
         currentClass = symbolTable.get(classDecl.getClassName().getName());
 
-        assembler.newFile();
+        assembler.newFile(currentClass.getName() + ".s");
         assembler.append(".source " + sourceFile);
         assembler.append(".class public " + classDecl.getClassName());
         assembler.append(".super java/lang/Object");
@@ -258,7 +258,7 @@ public class CodeGenerator implements Visitor {
     public void visit(MainClass main) {
         currentClass = symbolTable.get(main.getName().getName());
 
-        assembler.newFile();
+        assembler.newFile(currentClass.getName() + ".s");
         assembler.append(".source " + sourceFile);
         assembler.append(".class public " + main.getName().getName());
         assembler.append(".super java/lang/Object");

@@ -28,8 +28,7 @@ public class CodeGeneratorTest {
                 TypeChecker typeChecker = new TypeChecker(classes);
                 typeChecker.typeCheck(program);
 
-                FileOutputStream outStream = new FileOutputStream("tests/minijava/codegen/out/" + file.getName());
-                CodeGenerator gen = new CodeGenerator(file.getName(), program, classes, outStream);
+                CodeGenerator gen = new CodeGenerator(file.getName(), program, classes,"tests/minijava/codegen/out");
                 gen.generateCode();
             }
         }

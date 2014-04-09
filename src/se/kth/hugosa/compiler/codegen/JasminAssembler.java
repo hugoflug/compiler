@@ -3,21 +3,19 @@ package se.kth.hugosa.compiler.codegen;
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.MethodTable;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JasminAssembler {
     private OutputStreamWriter writer;
+    private String outDir;
 
-    public JasminAssembler(OutputStream stream) throws IOException {
-        writer = new OutputStreamWriter(stream);
+    public JasminAssembler(String directory) throws IOException {
+        outDir = directory;
     }
 
     public void append(String instruction) {
-
         try {
             writer.append(instruction + "\n");
             writer.flush();
@@ -27,8 +25,13 @@ public class JasminAssembler {
         }
     }
 
-    public void newFile() {
-
+    public void newFile(String filename) {
+        File outFile = new File(outDir + "/" + filename);
+        try {
+            writer = new OutputStreamWriter(new FileOutputStream(outFile));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String toTypeDescriptor(Type type) {
