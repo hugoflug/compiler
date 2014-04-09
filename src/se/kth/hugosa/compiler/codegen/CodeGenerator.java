@@ -259,7 +259,7 @@ public class CodeGenerator implements Visitor {
 
         assembler.newFile();
         assembler.append(".source " + sourceFile);
-        assembler.append(".class public " + main.getName());
+        assembler.append(".class public " + main.getName().getName());
         assembler.append(".super java/lang/Object");
         assembler.append(".method public static main([Ljava/lang/String;)V");
 
