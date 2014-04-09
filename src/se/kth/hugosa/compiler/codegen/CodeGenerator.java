@@ -281,7 +281,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(MethodCall call) {
-        ObjectType type = (ObjectType)call.getObject().accept(typeChecker);
+        ObjectType type = (ObjectType)(call.getObject().accept(typeChecker));
         String typeName = type.getName();
         String methodName = call.getMethodName().getName();
         Type returnType = symbolTable.get(typeName).getType(methodName);
