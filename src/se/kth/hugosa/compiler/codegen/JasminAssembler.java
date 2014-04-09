@@ -17,8 +17,10 @@ public class JasminAssembler {
     }
 
     public void append(String instruction) {
+
         try {
             writer.append(instruction + "\n");
+            writer.flush();
         } catch (IOException e) {
             //temp
             throw new RuntimeException(e);

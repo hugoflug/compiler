@@ -21,14 +21,20 @@ public class CodeGenerator implements Visitor {
     private ClassTable currentClass;
     private MethodTable currentMethod;
     private TypeChecker typeChecker;
+    private Program program;
 
-    public CodeGenerator(String sourceFile, Map<String, ClassTable> symbolTable, OutputStream outStream) throws IOException {
+    public CodeGenerator(String sourceFile, Program program, Map<String, ClassTable> symbolTable, OutputStream outStream) throws IOException {
         this.sourceFile = sourceFile;
         assembler = new JasminAssembler(outStream);
         localVars = new HashMap<String, Integer>();
         this.symbolTable = symbolTable;
         labelGen = new LabelGenerator();
         typeChecker = new TypeChecker(symbolTable);
+        this.program = program;
+    }
+
+    public void generateCode() {
+        program.accept(this);
     }
 
     @Override
