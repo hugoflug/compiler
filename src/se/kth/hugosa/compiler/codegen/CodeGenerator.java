@@ -323,6 +323,8 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Minus minus) {
+        minus.getLeftOp().accept(this);
+        minus.getRightOp().accept(this);
         assembler.append("isub");
     }
 
@@ -342,6 +344,8 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Mult mult) {
+        mult.getLeftOp().accept(this);
+        mult.getRightOp().accept(this);
         assembler.append("imul");
     }
 
@@ -358,6 +362,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Not not) {
+        not.getExpression().accept(this);
         assembler.append("ineg");
     }
 
@@ -375,6 +380,8 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Or or) {
+        or.getLeftOp().accept(this);
+        or.getRightOp().accept(this);
         assembler.append("ior");
     }
 
@@ -385,6 +392,8 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Plus plus) {
+        plus.getLeftOp().accept(this);
+        plus.getRightOp().accept(this);
         assembler.append("iadd");
     }
 
