@@ -37,6 +37,24 @@ public class CodeGenerator implements Visitor {
         program.accept(this);
     }
 
+    public void setCurrentClass(ClassTable currentClass) {
+        this.currentClass = currentClass;
+        typeChecker.setCurrentClass(currentClass);
+    }
+
+    public void endCurrentClass() {
+        setCurrentClass(null);
+    }
+
+    public void setCurrentMethod(MethodTable currentMethod) {
+        this.currentMethod = currentMethod;
+        typeChecker.setCurrentMethod(currentMethod);
+    }
+
+    public void endCurrentMethod() {
+        setCurrentMethod(null);
+    }
+
     @Override
     public void visit(And and) {
         and.getLeftOp().accept(this);
@@ -107,7 +125,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(ClassDecl classDecl) {
-        currentClass = symbolTable.get(classDecl.getClassName().getName());
+        setCurrentClass(symbolTable.get(classDecl.getClassName().getName()));
 
         assembler.newFile(currentClass.getName() + ".s");
         assembler.append(".source " + sourceFile);
@@ -127,7 +145,7 @@ public class CodeGenerator implements Visitor {
             methodDecls.get(i).accept(this);
         }
 
-        currentClass = null;
+        endCurrentClass();
     }
 
     /*
@@ -256,7 +274,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(MainClass main) {
-        currentClass = symbolTable.get(main.getName().getName());
+        setCurrentClass(symbolTable.get(main.getName().getName()));
 
         assembler.newFile(currentClass.getName() + ".s");
         assembler.append(".source " + sourceFile);
@@ -266,17 +284,17 @@ public class CodeGenerator implements Visitor {
         assembler.append(".limit stack 100");
         assembler.append(".limit locals 100");
 
-        currentMethod = currentClass.getMethod("main");
+        setCurrentMethod(currentClass.getMethod("main"));
 
         main.getVarDeclarations().acceptAll(this);
         main.getStatements().acceptAll(this);
 
-        currentMethod = null;
+        endCurrentMethod();
 
         assembler.append("return");
         assembler.append(".end method");
 
-        currentClass = null;
+        endCurrentClass();
     }
 
     @Override
@@ -301,7 +319,7 @@ public class CodeGenerator implements Visitor {
     @Override
     public void visit(MethodDecl decl) {
         String name = decl.getName().getName();
-        currentMethod = currentClass.getMethod(name);
+        setCurrentMethod(currentClass.getMethod(name));
 
         String methodDescriptor = JasminAssembler.toMethodDescriptor(currentClass.getName(),
                 currentMethod.getName(),decl.getArgumentList(), currentMethod.getType());
@@ -318,7 +336,8 @@ public class CodeGenerator implements Visitor {
             assembler.append("areturn");
         }
 
-        currentMethod = null;
+
+        endCurrentMethod();
     }
 
     @Override

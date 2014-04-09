@@ -19,6 +19,14 @@ public class TypeChecker implements TypeVisitor {
         this.classes = classes;
     }
 
+    public void setCurrentClass(ClassTable currentClass) {
+        this.currentClass = currentClass;
+    }
+
+    public void setCurrentMethod(MethodTable currentMethod) {
+        this.currentMethod = currentMethod;
+    }
+
     public void typeCheck(Program program) throws CompilationException {
         visit(program);
     }
