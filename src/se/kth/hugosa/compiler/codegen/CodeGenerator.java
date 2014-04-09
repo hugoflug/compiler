@@ -302,7 +302,8 @@ public class CodeGenerator implements Visitor {
         ObjectType type = (ObjectType)(call.getObject().accept(typeChecker));
         String typeName = type.getName();
         String methodName = call.getMethodName().getName();
-        Type returnType = symbolTable.get(typeName).getType(methodName);
+
+        Type returnType = symbolTable.get(typeName).getMethod(methodName).getType();
         ArrayList<Type> typeList = new ArrayList<Type>();
 
         ExpList expList = call.getArgumentList();
