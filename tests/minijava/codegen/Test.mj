@@ -1,9 +1,9 @@
 class Test {
     public static void main(String[] args) {
 
-    //	int a;
+    	int a;
         Foo foo;
-    /*
+
     	a = 3;
     	System.out.println(a);
     	System.out.println(5);
@@ -12,7 +12,7 @@ class Test {
     	} else {
     		System.out.println((a - 1)*3+5);
     	}
-        */
+
         foo = new Foo();
         System.out.println(foo.foo());
     }
@@ -22,7 +22,9 @@ class Foo {
     int a;
     int b;
     int c;
+    Foo foo;
     public int foo() {
+    /*
         System.out.println(78);
         a = 4;
         b = 5;
@@ -32,9 +34,17 @@ class Foo {
             System.out.println(999);
             a = 77;
         }
+*/
+        if (!false) {
+            System.out.println(666);
+        }
+/*
+        foo = new Foo();
+        System.out.println(this.add(5, 7));
+        System.out.println(foo.add(5, 7));
 
-        System.out.println(a);
-        return this.add(b, c);
+        System.out.println(a); */
+        return 0; //this.add(b, this.add(a, c));
     }
 
     public boolean boo() {
@@ -42,6 +52,8 @@ class Foo {
     }
 
     public int add(int a, int b) {
+        int ajabaja;
+        ajabaja = 56;
         return a + b;
     }
 }

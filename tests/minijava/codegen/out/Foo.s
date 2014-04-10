@@ -4,6 +4,7 @@
 .field public a I
 .field public b I
 .field public c I
+.field public foo LFoo;
 .method public <init>()V
 .limit stack 100
 .limit locals 100
@@ -14,60 +15,13 @@ return
 .method public foo()I
 .limit stack 100
 .limit locals 100
-getstatic java/lang/System/out Ljava/io/PrintStream;
-ldc 78
-invokevirtual java/io/PrintStream/println(I)V
-ldc 4
-aload_0
-swap
-putfield Foo/a I
-ldc 5
-aload_0
-swap
-putfield Foo/b I
-ldc 7
-aload_0
-swap
-putfield Foo/c I
-aload_0
-invokevirtual Foo/boo()I
-aload_0
-getfield Foo/b I
-aload_0
-getfield Foo/a I
-if_icmpgt l0
-iconst_0 
-goto l1
-l0:
-iconst_1
-l1:
-iand
-aload_0
-getfield Foo/b I
-aload_0
-getfield Foo/c I
-if_icmplt l2
-iconst_0 
-goto l3
-l2:
-iconst_1
-l3:
-ior
+ineg
 ifeq l4
 getstatic java/lang/System/out Ljava/io/PrintStream;
-ldc 999
+ldc 666
 invokevirtual java/io/PrintStream/println(I)V
-ldc 77
-aload_0
-swap
-putfield Foo/a I
 l4:
-getstatic java/lang/System/out Ljava/io/PrintStream;
-aload_0
-getfield Foo/a I
-invokevirtual java/io/PrintStream/println(I)V
-aload_0
-invokevirtual Foo/add(II)I
+ldc 0
 ireturn
 .end method
 .method public boo()I
@@ -79,6 +33,8 @@ ireturn
 .method public add(II)I
 .limit stack 100
 .limit locals 100
+ldc 56
+istore 3
 iload 1
 iload 2
 iadd

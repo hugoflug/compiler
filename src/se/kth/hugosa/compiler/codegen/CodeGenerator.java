@@ -1,5 +1,6 @@
 package se.kth.hugosa.compiler.codegen;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.ClassTable;
 import se.kth.hugosa.compiler.symboltable.MethodTable;
