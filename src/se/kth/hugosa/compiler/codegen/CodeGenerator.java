@@ -131,13 +131,6 @@ public class CodeGenerator implements Visitor {
         assembler.append(".source " + sourceFile);
         assembler.append(".class public " + classDecl.getClassName().getName());
         assembler.append(".super java/lang/Object");
-        assembler.append(".method public <init>()V");
-        assembler.append(".limit stack 100");
-        assembler.append(".limit locals 100");
-        assembler.append("aload_0");
-        assembler.append("invokespecial java/lang/Object/<init>()V");
-        assembler.append("return");
-        assembler.append(".end method");
 
         VarDeclList varDecls = classDecl.getVarDeclarations();
         for (int i = 0; i < varDecls.size(); i++) {
@@ -146,6 +139,14 @@ public class CodeGenerator implements Visitor {
             String jasminType = JasminAssembler.toTypeDescriptor(decl.getType());
             assembler.append(".field public " + name + " " + jasminType);
         }
+
+        assembler.append(".method public <init>()V");
+        assembler.append(".limit stack 100");
+        assembler.append(".limit locals 100");
+        assembler.append("aload_0");
+        assembler.append("invokespecial java/lang/Object/<init>()V");
+        assembler.append("return");
+        assembler.append(".end method");
 
         MethodDeclList methodDecls = classDecl.getMethodDeclarations();
         for (int i = 0; i < methodDecls.size(); i++) {

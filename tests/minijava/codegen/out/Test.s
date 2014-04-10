@@ -43,7 +43,6 @@ astore 2
 getstatic java/lang/System/out Ljava/io/PrintStream;
 aload 2
 invokevirtual Foo/foo()I
-ldc 17
 invokevirtual java/io/PrintStream/println(I)V
 return
 .end method

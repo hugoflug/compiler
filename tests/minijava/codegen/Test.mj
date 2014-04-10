@@ -17,8 +17,17 @@ class Test {
 }
 
 class Foo {
+    int a;
     public int foo() {
         System.out.println(78);
+        if (this.boo()) {
+            a = 3;
+        }
+        System.out.println(a*2);
         return 5;
+    }
+
+    public boolean boo() {
+        return true;
     }
 }
