@@ -1,13 +1,21 @@
 class Test {
     public static void main(String[] args) {
         int[] array;
+        boolean b;
+        boolean c;
 
         array = new int[5];
         array[3] = 2;
 
+        b = true;
+        c = false;
+        System.out.println(b);
+        System.out.println(c);
+
+
         System.out.println(array[3]);
-    /*    System.out.println(array.length);
-        */
+        System.out.println(array.length);
+
 /*
     	int a;
         Foo foo;

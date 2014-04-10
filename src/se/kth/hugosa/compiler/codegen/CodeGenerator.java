@@ -449,12 +449,35 @@ public class CodeGenerator implements Visitor {
         }
     }
 
+    /*
+    ifeq falze
+    lcd "true"
+    goto after
+    falze:
+    ldc "false"
+    after:
+    */
     @Override
     public void visit(Syso syso) {
-        //TODO: Handle printing booleans
         assembler.append("getstatic java/lang/System/out Ljava/io/PrintStream;");
-        syso.getPrintee().accept(this);
-        assembler.append("invokevirtual java/io/PrintStream/println(I)V");
+        Exp printee = syso.getPrintee();
+        printee.accept(this);
+
+        Type type = printee.accept(typeChecker);
+        if (type instanceof IntType) {
+            printee.accept(this);
+            assembler.append("invokevirtual java/io/PrintStream/println(I)V");
+        } else {
+            String falze = labelGen.getLabel();
+            String after = labelGen.getLabel();
+            assembler.append("ifeq " + falze);
+            assembler.append("ldc \"true\"");
+            assembler.append("goto " + after); //or false
+            assembler.append(falze + ":");
+            assembler.append("ldc \"false\"");
+            assembler.append(after + ":");
+            assembler.append("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
+        }
     }
 
     @Override
