@@ -21,21 +21,27 @@ class Test {
 class Foo {
     int a;
     int b;
+    int c;
     public int foo() {
         System.out.println(78);
         a = 4;
         b = 5;
+        c = 7;
 
-        if (this.boo() && b > a) {
+        if (this.boo() && b > a || b < c) {
             System.out.println(999);
             a = 77;
         }
 
         System.out.println(a);
-        return 5;
+        return this.add(b, c);
     }
 
     public boolean boo() {
         return true;
+    }
+
+    public int add(int a, int b) {
+        return a + b;
     }
 }

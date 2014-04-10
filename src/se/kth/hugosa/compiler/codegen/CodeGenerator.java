@@ -202,6 +202,7 @@ public class CodeGenerator implements Visitor {
             type = currentMethod.getParamType(name);
         }
 
+        //TODO: if id is a parameter, make sure it sometime gets added to localVars
         if (type != null) {
             int varNo = localVars.get(name);
             if (type instanceof IntType || type instanceof BooleanType) {
