@@ -60,6 +60,7 @@ public class CodeGenerator implements Visitor {
     public void visit(And and) {
         and.getLeftOp().accept(this);
         and.getRightOp().accept(this);
+
         assembler.append("iand");
     }
 
@@ -313,6 +314,7 @@ public class CodeGenerator implements Visitor {
     @Override
     public void visit(MethodCall call) {
         call.getObject().accept(this);
+        call.getArgumentList().acceptAll(this);
 
         ObjectType type = (ObjectType)(call.getObject().accept(typeChecker));
         String typeName = type.getName();
