@@ -83,7 +83,7 @@ public class CodeGenerator implements Visitor {
     public void visit(ArrayLookup arrayLookup) {
         arrayLookup.getArray().accept(this);
         arrayLookup.getIndex().accept(this);
-        assembler.append("aaload");
+        assembler.append("iaload");
     }
 
     @Override
