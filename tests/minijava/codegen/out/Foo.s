@@ -12,10 +12,12 @@ return
 .method public foo()I
 .limit stack 100
 .limit locals 100
-getstatic java/lang/System/out Ljava/io/PrintStream;
+iconst_1
+ifeq l4
+ldc 3
 aload_0
-getfield Foo/a I
-invokevirtual java/io/PrintStream/println(I)V
+putfield Foo/a I
+l4:
 ldc 5
 ireturn
 .end method
