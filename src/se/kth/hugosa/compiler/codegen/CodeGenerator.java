@@ -99,7 +99,7 @@ public class CodeGenerator implements Visitor {
 
         if (type != null) {
             int assigneeNo = localVars.get(assigneeName);
-            if (type instanceof IntType) {
+            if (type instanceof IntType || type instanceof BooleanType) {
                 assembler.append("istore " + assigneeNo);
             } else {
                 assembler.append("astore " + assigneeNo);
