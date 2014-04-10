@@ -70,7 +70,7 @@ public class CodeGenerator implements Visitor {
         arrayAssign.getId().accept(this);
         arrayAssign.getIndex().accept(this);
         arrayAssign.getNewValue().accept(this);
-        assembler.append("aastore");
+        assembler.append("iastore");
     }
 
     @Override

@@ -1,6 +1,10 @@
 class Test {
     public static void main(String[] args) {
+        int[] array;
 
+        array = new int[5];
+        array[3] = 2;
+/*
     	int a;
         Foo foo;
 
@@ -15,6 +19,7 @@ class Test {
 
         foo = new Foo();
         System.out.println(foo.foo());
+*/
     }
 }
 
