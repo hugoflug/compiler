@@ -23,5 +23,5 @@ ireturn
 .limit stack 100
 .limit locals 100
 iconst_1
-areturn
+ireturn
 .end method

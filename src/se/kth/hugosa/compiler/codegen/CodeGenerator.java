@@ -202,7 +202,7 @@ public class CodeGenerator implements Visitor {
 
         if (type != null) {
             int varNo = localVars.get(name);
-            if (type instanceof IntType) {
+            if (type instanceof IntType || type instanceof BooleanType) {
                 assembler.append("iload " + varNo);
             } else {
                 assembler.append("aload " + varNo);
@@ -342,7 +342,7 @@ public class CodeGenerator implements Visitor {
         decl.getStatements().acceptAll(this);
         decl.getReturnValue().accept(this);
         Type type = decl.getType();
-        if (type instanceof IntType) {
+        if (type instanceof IntType || type instanceof BooleanType) {
             assembler.append("ireturn");
         } else {
             assembler.append("areturn");
