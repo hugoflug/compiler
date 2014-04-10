@@ -465,7 +465,6 @@ public class CodeGenerator implements Visitor {
 
         Type type = printee.accept(typeChecker);
         if (type instanceof IntType) {
-            printee.accept(this);
             assembler.append("invokevirtual java/io/PrintStream/println(I)V");
         } else {
             String falze = labelGen.getLabel();
