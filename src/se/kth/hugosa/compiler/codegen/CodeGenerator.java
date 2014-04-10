@@ -131,6 +131,13 @@ public class CodeGenerator implements Visitor {
         assembler.append(".source " + sourceFile);
         assembler.append(".class public " + classDecl.getClassName().getName());
         assembler.append(".super java/lang/Object");
+        assembler.append(".method public <init>()V");
+        assembler.append(".limit stack 100");
+        assembler.append(".limit locals 100");
+        assembler.append("aload_0");
+        assembler.append("invokespecial java/lang/Object/<init>()V");
+        assembler.append("return");
+        assembler.append(".end method");
 
         VarDeclList varDecls = classDecl.getVarDeclarations();
         for (int i = 0; i < varDecls.size(); i++) {
@@ -299,6 +306,8 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(MethodCall call) {
+        call.getObject().accept(this);
+
         ObjectType type = (ObjectType)(call.getObject().accept(typeChecker));
         String typeName = type.getName();
         String methodName = call.getMethodName().getName();
