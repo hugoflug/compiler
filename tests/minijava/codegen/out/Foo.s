@@ -19,27 +19,7 @@ aload_0
 invokevirtual Foo/boo()I
 ifeq l4
 ldc 3
-putfield ClassTable{
-methods={
-boo = MethodTable{
-params={
-}
-fields={
-}
-}
-
-foo = MethodTable{
-params={
-}
-fields={
-}
-}
-
-}
-fields={
-a = Int{}
-}
-}/a I
+putfield Foo/a I
 l4:
 getstatic java/lang/System/out Ljava/io/PrintStream;
 getfield Foo/a I
