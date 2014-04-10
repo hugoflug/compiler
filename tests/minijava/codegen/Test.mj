@@ -1,7 +1,9 @@
 class Test {
     public static void main(String[] args) {
-    	int a;
+
+    //	int a;
         Foo foo;
+    /*
     	a = 3;
     	System.out.println(a);
     	System.out.println(5);
@@ -10,7 +12,7 @@ class Test {
     	} else {
     		System.out.println((a - 1)*3+5);
     	}
-
+        */
         foo = new Foo();
         System.out.println(foo.foo());
     }
@@ -18,14 +20,18 @@ class Test {
 
 class Foo {
     int a;
+    int b;
     public int foo() {
-        //System.out.println(78);
+        System.out.println(78);
+        a = 4;
+        b = 5;
 
-        if (true) {
-            a = 3;
+        if (this.boo() && b > a) {
+            System.out.println(999);
+            a = 77;
         }
 
-//        System.out.println(a);
+        System.out.println(a);
         return 5;
     }
 
