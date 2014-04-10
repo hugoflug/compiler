@@ -15,7 +15,9 @@ return
 .method public foo()I
 .limit stack 100
 .limit locals 100
-ineg
+iconst_0
+iconst_1
+ixor
 ifeq l4
 getstatic java/lang/System/out Ljava/io/PrintStream;
 ldc 666

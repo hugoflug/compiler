@@ -405,7 +405,8 @@ public class CodeGenerator implements Visitor {
     @Override
     public void visit(Not not) {
         not.getExpression().accept(this);
-        assembler.append("ineg");
+        assembler.append("iconst_1");
+        assembler.append("ixor");
     }
 
     @Override
