@@ -79,3 +79,8 @@ ireturn
 .method public add(II)I
 .limit stack 100
 .limit locals 100
+iload 1
+iload 2
+iadd
+ireturn
+.end method

@@ -52,6 +52,7 @@ public class CodeGenerator implements Visitor {
     }
 
     public void endCurrentMethod() {
+        localVars.clear();
         setCurrentMethod(null);
     }
 
@@ -190,7 +191,7 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(Formal formal) {
-
+        localVars.put(formal.getName().getName(), localVars.size() + 1);
     }
 
     @Override
@@ -341,6 +342,7 @@ public class CodeGenerator implements Visitor {
         assembler.append(".method public " + methodDescriptor);
         assembler.append(".limit stack 100");
         assembler.append(".limit locals 100");
+        decl.getArgumentList().acceptAll(this);
         decl.getVarDeclarations().acceptAll(this);
         decl.getStatements().acceptAll(this);
         decl.getReturnValue().accept(this);
