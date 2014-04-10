@@ -107,6 +107,7 @@ public class CodeGenerator implements Visitor {
             String fieldDescriptor = currentClass.getName() + "/" + assigneeName;
             String typeDescriptor = JasminAssembler.toTypeDescriptor(type);
             assembler.append("aload_0");
+            assembler.append("swap");
             assembler.append("putfield " + fieldDescriptor + " " + typeDescriptor);
         }
     }

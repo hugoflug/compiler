@@ -16,6 +16,7 @@ iconst_1
 ifeq l4
 ldc 3
 aload_0
+swap
 putfield Foo/a I
 l4:
 ldc 5
