@@ -38,6 +38,9 @@ class Foo {
         if (!false) {
             System.out.println(666);
         }
+
+
+
 /*
         foo = new Foo();
         System.out.println(this.add(5, 7));

@@ -492,7 +492,7 @@ public class CodeGenerator implements Visitor {
     public void visit(While w) {
         String start = labelGen.getLabel();
         String after = labelGen.getLabel();
-        assembler.append(start);
+        assembler.append(start + ":");
         w.getCondition().accept(this);
         assembler.append("ifeq " + after);
         w.getStatement().accept(this);
