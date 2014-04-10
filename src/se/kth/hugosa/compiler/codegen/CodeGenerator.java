@@ -331,8 +331,8 @@ public class CodeGenerator implements Visitor {
         String name = decl.getName().getName();
         setCurrentMethod(currentClass.getMethod(name));
 
-        String methodDescriptor = JasminAssembler.toMethodDescriptor(currentClass.getName(),
-                currentMethod.getName(),decl.getArgumentList(), currentMethod.getType());
+        String methodDescriptor = JasminAssembler.toMethodDescriptor(currentMethod.getName(),
+                decl.getArgumentList(), currentMethod.getType());
         assembler.append(".method public " + methodDescriptor);
         assembler.append(".limit stack 100");
         assembler.append(".limit locals 100");

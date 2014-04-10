@@ -57,6 +57,25 @@ public class JasminAssembler {
         return toMethodDescriptor(className, methodName, types, returnType);
     }
 
+    public static String toMethodDescriptor(String methodName, FormalList formalList, Type returnType) {
+        ArrayList<Type> types = new ArrayList<Type>();
+        for (int i = 0; i < formalList.size(); i++) {
+            Formal formal = formalList.get(i);
+            types.add(formal.getType());
+        }
+        return toMethodDescriptor(methodName, types, returnType);
+    }
+
+    public static String toMethodDescriptor(String methodName, List<Type> typeList, Type returnType) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(methodName + "(");
+        for (Type type : typeList) {
+            sb.append(toTypeDescriptor(type));
+        }
+        sb.append(")" + toTypeDescriptor(returnType));
+        return sb.toString();
+    }
+
     public static String toMethodDescriptor(String className, String methodName, List<Type> typeList, Type returnType) {
         StringBuilder sb = new StringBuilder();
         sb.append(className + "/" + methodName + "(");
