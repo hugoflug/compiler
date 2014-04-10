@@ -19,11 +19,13 @@ class Test {
 class Foo {
     int a;
     public int foo() {
-        System.out.println(78);
+        //System.out.println(78);
+        /*
         if (this.boo()) {
             a = 3;
         }
-        System.out.println(a*2);
+        */
+        System.out.println(a);
         return 5;
     }
 
