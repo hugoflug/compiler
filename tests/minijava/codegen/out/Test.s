@@ -37,9 +37,13 @@ iadd
 invokevirtual java/io/PrintStream/println(I)V
 l3:
 new Foo
+dup
+invokespecial Foo/<init>()V
 astore 2
 getstatic java/lang/System/out Ljava/io/PrintStream;
+aload 2
 invokevirtual Foo/foo()I
+ldc 17
 invokevirtual java/io/PrintStream/println(I)V
 return
 .end method

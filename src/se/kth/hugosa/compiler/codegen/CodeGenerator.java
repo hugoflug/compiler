@@ -380,7 +380,10 @@ public class CodeGenerator implements Visitor {
 
     @Override
     public void visit(NewObject object) {
-        assembler.append("new " + object.getName().getName());
+        String typeName = object.getName().getName();
+        assembler.append("new " + typeName);
+        assembler.append("dup");
+        assembler.append("invokespecial " + typeName + "/<init>()V");
     }
 
     @Override
