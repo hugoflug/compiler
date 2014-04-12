@@ -1,16 +1,13 @@
 package se.kth.hugosa.compiler.codegen;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import se.kth.hugosa.compiler.ast.*;
 import se.kth.hugosa.compiler.symboltable.ClassTable;
 import se.kth.hugosa.compiler.symboltable.MethodTable;
 import se.kth.hugosa.compiler.typechecking.TypeChecker;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CodeGenerator implements Visitor {
@@ -38,24 +35,26 @@ public class CodeGenerator implements Visitor {
         program.accept(this);
     }
 
-    public void setCurrentClass(ClassTable currentClass) {
+    private void setCurrentClass(ClassTable currentClass) {
         this.currentClass = currentClass;
         typeChecker.setCurrentClass(currentClass);
     }
 
-    public void endCurrentClass() {
+    private void endCurrentClass() {
         setCurrentClass(null);
     }
 
-    public void setCurrentMethod(MethodTable currentMethod) {
+    private void setCurrentMethod(MethodTable currentMethod) {
         this.currentMethod = currentMethod;
         typeChecker.setCurrentMethod(currentMethod);
     }
 
-    public void endCurrentMethod() {
+    private void endCurrentMethod() {
         localVars.clear();
         setCurrentMethod(null);
     }
+
+
 
     @Override
     public void visit(And and) {

@@ -18,12 +18,11 @@ return
 iconst_0
 iconst_1
 ixor
-ifeq l0
+ifeq l4
 getstatic java/lang/System/out Ljava/io/PrintStream;
 ldc 666
-ldc 666
 invokevirtual java/io/PrintStream/println(I)V
-l0:
+l4:
 ldc 0
 ireturn
 .end method
