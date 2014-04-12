@@ -54,7 +54,9 @@ public class CodeGenerator implements Visitor {
         setCurrentMethod(null);
     }
 
-
+    private String escape(String s) {
+        return "'" + s + "'";
+    }
 
     @Override
     public void visit(And and) {
@@ -110,7 +112,7 @@ public class CodeGenerator implements Visitor {
             String typeDescriptor = JasminAssembler.toTypeDescriptor(type);
             assembler.append("aload_0");
             assembler.append("swap");
-            assembler.append("putfield " + fieldDescriptor + " " + typeDescriptor);
+            assembler.append("putfield " + escape(fieldDescriptor) + " " + escape(typeDescriptor));
         }
     }
 
@@ -132,7 +134,7 @@ public class CodeGenerator implements Visitor {
         setCurrentClass(symbolTable.get(classDecl.getClassName().getName()));
 
         assembler.newFile(currentClass.getName() + ".s");
-        assembler.append(".source " + sourceFile);
+        assembler.append(".source " + escape(sourceFile));
         assembler.append(".class public " + classDecl.getClassName().getName());
         assembler.append(".super java/lang/Object");
 
@@ -141,7 +143,7 @@ public class CodeGenerator implements Visitor {
             VarDecl decl = varDecls.get(i);
             String name = decl.getId().getName();
             String jasminType = JasminAssembler.toTypeDescriptor(decl.getType());
-            assembler.append(".field public " + name + " " + jasminType);
+            assembler.append(".field public " + escape(name) + " " + escape(jasminType));
         }
 
         assembler.append(".method public <init>()V");
@@ -219,7 +221,7 @@ public class CodeGenerator implements Visitor {
         String fieldDescriptor = currentClass.getName() + "/" + name;
         String typeDescriptor = JasminAssembler.toTypeDescriptor(type);
         assembler.append("aload_0");
-        assembler.append("getfield " + fieldDescriptor + " " + typeDescriptor);
+        assembler.append("getfield " + escape(fieldDescriptor) + " " + escape(typeDescriptor));
     }
 
     /*
@@ -292,7 +294,7 @@ public class CodeGenerator implements Visitor {
 
         assembler.newFile(currentClass.getName() + ".s");
         assembler.append(".source " + sourceFile);
-        assembler.append(".class public " + main.getName().getName());
+        assembler.append(".class public " + escape(main.getName().getName()));
         assembler.append(".super java/lang/Object");
         assembler.append(".method public static main([Ljava/lang/String;)V");
         assembler.append(".limit stack 100");
@@ -331,7 +333,7 @@ public class CodeGenerator implements Visitor {
         String methodDesc = JasminAssembler.toMethodDescriptor(typeName, methodName,
                 typeList, returnType);
 
-        assembler.append("invokevirtual " + methodDesc);
+        assembler.append("invokevirtual " + escape(methodDesc));
     }
 
     @Override
@@ -341,7 +343,7 @@ public class CodeGenerator implements Visitor {
 
         String methodDescriptor = JasminAssembler.toMethodDescriptor(currentMethod.getName(),
                 decl.getArgumentList(), currentMethod.getType());
-        assembler.append(".method public " + methodDescriptor);
+        assembler.append(".method public " + escape(methodDescriptor));
         assembler.append(".limit stack 100");
         assembler.append(".limit locals 100");
         decl.getArgumentList().acceptAll(this);
@@ -392,7 +394,7 @@ public class CodeGenerator implements Visitor {
         String typeName = object.getName().getName();
         assembler.append("new " + typeName);
         assembler.append("dup");
-        assembler.append("invokespecial " + typeName + "/<init>()V");
+        assembler.append("invokespecial " + escape(typeName) + "/<init>()V");
     }
 
     @Override
