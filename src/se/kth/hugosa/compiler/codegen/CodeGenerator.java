@@ -135,7 +135,7 @@ public class CodeGenerator implements Visitor {
 
         assembler.newFile(currentClass.getName() + ".s");
         assembler.append(".source " + escape(sourceFile));
-        assembler.append(".class public " + classDecl.getClassName().getName());
+        assembler.append(".class public " + escape(classDecl.getClassName().getName()));
         assembler.append(".super java/lang/Object");
 
         VarDeclList varDecls = classDecl.getVarDeclarations();
@@ -206,7 +206,6 @@ public class CodeGenerator implements Visitor {
             type = currentMethod.getParamType(name);
         }
 
-        //TODO: if id is a parameter, make sure it sometime gets added to localVars
         if (type != null) {
             int varNo = localVars.get(name);
             if (type instanceof IntType || type instanceof BooleanType) {
@@ -293,7 +292,7 @@ public class CodeGenerator implements Visitor {
         setCurrentClass(symbolTable.get(main.getName().getName()));
 
         assembler.newFile(currentClass.getName() + ".s");
-        assembler.append(".source " + sourceFile);
+        assembler.append(".source " + escape(sourceFile));
         assembler.append(".class public " + escape(main.getName().getName()));
         assembler.append(".super java/lang/Object");
         assembler.append(".method public static main([Ljava/lang/String;)V");
@@ -392,9 +391,9 @@ public class CodeGenerator implements Visitor {
     @Override
     public void visit(NewObject object) {
         String typeName = object.getName().getName();
-        assembler.append("new " + typeName);
+        assembler.append("new " + escape(typeName));
         assembler.append("dup");
-        assembler.append("invokespecial " + escape(typeName) + "/<init>()V");
+        assembler.append("invokespecial " + escape(typeName + "/<init>()V"));
     }
 
     @Override
