@@ -58,12 +58,21 @@ public class CodeGenerator implements Visitor {
         return "'" + s + "'";
     }
 
+    /*
+        ;eval left operator
+        ifeq end
+        ;eval right operator
+        end:
+     */
     @Override
     public void visit(And and) {
         and.getLeftOp().accept(this);
+        String end = labelGen.getLabel();
+        assembler.append("dup");
+        assembler.append("ifeq " + end);
+        assembler.append("pop");
         and.getRightOp().accept(this);
-
-        assembler.append("iand");
+        assembler.append(end + ":");
     }
 
     @Override

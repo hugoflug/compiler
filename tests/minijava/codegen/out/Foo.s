@@ -1,10 +1,10 @@
-.source 'Test.mj'
+.source Test.mj
 .class public Foo
 .super java/lang/Object
-.field public 'a' 'I'
-.field public 'b' 'I'
-.field public 'c' 'I'
-.field public 'foo' 'LFoo;'
+.field public a I
+.field public b I
+.field public c I
+.field public foo LFoo;
 .method public <init>()V
 .limit stack 100
 .limit locals 100
@@ -12,7 +12,7 @@ aload_0
 invokespecial java/lang/Object/<init>()V
 return
 .end method
-.method public 'foo()I'
+.method public foo()I
 .limit stack 100
 .limit locals 100
 iconst_0
@@ -26,13 +26,13 @@ l4:
 ldc 0
 ireturn
 .end method
-.method public 'boo()I'
+.method public boo()I
 .limit stack 100
 .limit locals 100
 iconst_1
 ireturn
 .end method
-.method public 'add(II)I'
+.method public add(II)I
 .limit stack 100
 .limit locals 100
 ldc 56
