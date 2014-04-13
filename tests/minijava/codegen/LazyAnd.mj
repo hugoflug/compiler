@@ -2,6 +2,7 @@ class LazyAnd {
     public static void main(String[] args) {
         LazyAnd2 la;
         la = new LazyAnd2();
+        /*
         if (false && la.foo()) {
 
         }
@@ -9,8 +10,15 @@ class LazyAnd {
         if (true && la.bar()) {
 
         }
+        */
 
+        if (true || la.foo()) {
 
+        }
+
+        if (false || la.bar()) {
+
+        }
     }
 }
 

@@ -433,8 +433,12 @@ public class CodeGenerator implements Visitor {
     @Override
     public void visit(Or or) {
         or.getLeftOp().accept(this);
+        String end = labelGen.getLabel();
+        assembler.append("dup");
+        assembler.append("ifne " + end);
+        assembler.append("pop");
         or.getRightOp().accept(this);
-        assembler.append("ior");
+        assembler.append(end + ":");
     }
 
     @Override
