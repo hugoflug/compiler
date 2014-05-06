@@ -3,7 +3,6 @@ package se.kth.hugosa.compiler.typechecking;
 import org.junit.Assert;
 import org.junit.Test;
 import se.kth.hugosa.compiler.CompilationException;
-import se.kth.hugosa.compiler.Indenter;
 import se.kth.hugosa.compiler.ast.Program;
 import se.kth.hugosa.compiler.parser.MiniJavaParser;
 import se.kth.hugosa.compiler.symboltable.ClassTable;

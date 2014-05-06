@@ -1,0 +1,18 @@
+class LazyAnd {
+    public static void main(String[] args) {
+        LazyAnd2 la;
+        la = new LazyAnd2();
+        if (false && la.foo()) {
+           System.out.println(1);
+        } else {
+           System.out.println(2);
+        }
+    }
+}
+
+class LazyAnd2 {
+    public boolean foo() {
+        System.out.println(6);
+        return true;
+    }
+}

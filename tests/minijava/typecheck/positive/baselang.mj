@@ -7,8 +7,10 @@ class Foo {
 
 class Zoo {
     int[] x;
+    boolean main;
 
     public int[] getX() {
+        main = true;
         return x;
     }
 
@@ -19,25 +21,40 @@ class Zoo {
 }
 
 class Boo {
+    int e;
+
     public int foo(int[] bar, int[] zoo) {
         int asdf;
         Foo foo;
         int a;
+        a = 3;
         bar[5] = 7;
         System.out.println(bar.length);
+        System.out.println(a < 3);
         a = bar[3];
         foo = new Foo();
-        return 0;
+        return a + 2;
     }
 
     public int croo(Foo foo, Boo boo) {
         int e;
         int[] f;
-        if (e == 2) {
+        e = 1;
+        if (e < 2 && false) {
             while (true) {
                 e = boo.croo(new Foo(), new Boo());
                 f = new int[e];
                 f[0] = 56;
+                f[1] = 2;
+            }
+        } else {
+            {
+                /*
+                    boolean a = 5;
+                    comments should work!
+                */
+                /* also on only one line */
+                //boolean class = 7; and this kind too
             }
         }
         return 0;

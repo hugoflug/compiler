@@ -17,7 +17,7 @@ public class CodeGeneratorTest {
     public void testGenerateCode() throws Exception {
         File dir = new File("tests/minijava/codegen");
         for (File file : dir.listFiles()) {
-            if (!file.isDirectory()) {
+            if (!file.isDirectory() && !file.getName().endsWith(".out")) {
                 System.out.println(file);
                 MiniJavaParser parser = new MiniJavaParser(new FileInputStream(file));
                 Program program = parser.parse();

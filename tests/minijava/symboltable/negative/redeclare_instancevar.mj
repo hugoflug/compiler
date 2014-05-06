@@ -1,0 +1,10 @@
+class MiniJavaTest1 {
+    public static void main(String[] args) {
+
+    }
+}
+
+class Foo {
+    int a;
+    int a;
+}

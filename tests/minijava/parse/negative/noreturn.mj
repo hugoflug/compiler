@@ -5,8 +5,7 @@ class MiniJavaTest1 {
 }
 
 class MiniJavaTest2 {
-    public int doStuff(int a, int b) {
-        boolean a;
-        return a;
+    public boolean stuff() {
+
     }
 }
