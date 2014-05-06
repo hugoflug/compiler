@@ -193,7 +193,13 @@ public class CodeGenerator implements Visitor {
     public void visit(Equal equal) {
         equal.getLeftOp().accept(this);
         equal.getRightOp().accept(this);
-        compare("if_icmpeq");
+
+        Type operandType = equal.getRightOp().accept(typeChecker);
+        if (operandType instanceof ObjectType || operandType instanceof IntArrayType) {
+            compare("if_acmpeq");
+        } else {
+            compare("if_icmpeq");
+        }
     }
 
     @Override
@@ -422,7 +428,12 @@ public class CodeGenerator implements Visitor {
     public void visit(NotEqual notEqual) {
         notEqual.getLeftOp().accept(this);
         notEqual.getRightOp().accept(this);
-        compare("if_icmpne");
+        Type operandType = notEqual.getRightOp().accept(typeChecker);
+        if (operandType instanceof ObjectType || operandType instanceof IntArrayType) {
+            compare("if_acmpne");
+        } else {
+            compare("if_icmpne");
+        }
     }
 
     @Override
