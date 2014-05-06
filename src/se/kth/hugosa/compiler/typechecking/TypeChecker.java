@@ -62,6 +62,15 @@ public class TypeChecker implements TypeVisitor {
         }
     }
 
+    private void assertTypeExistence(Type type, int line, int column) {
+        if (type instanceof ObjectType) {
+            String typeName = ((ObjectType)type).getName();
+            if (!classes.containsKey(typeName)) {
+                throw new UndefinedVariableException(typeName, line, column);
+            }
+        }
+    }
+
     @Override
     public Type visit(And and) {
         assertType(and.getLeftOp(), new BooleanType());
@@ -420,13 +429,7 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(VarDecl varDecl) {
-        Type type = varDecl.getType();
-        if (type instanceof ObjectType) {
-            String typeName = ((ObjectType)type).getName();
-            if (!classes.containsKey(typeName)) {
-                throw new UndefinedVariableException(typeName, varDecl.getLine(), varDecl.getColumn());
-            }
-        }
+        assertTypeExistence(varDecl.getType(), varDecl.getLine(), varDecl.getColumn());
         return null;
     }
 
