@@ -117,6 +117,11 @@ public class TypeChecker implements TypeVisitor {
     public Type visit(ClassDecl classDecl) {
         currentClass = classes.get(classDecl.getClassName().getName());
 
+        VarDeclList varDecls = classDecl.getVarDeclarations();
+        for (int i = 0; i < varDecls.size(); i++) {
+            varDecls.get(i).accept(this);
+        }
+
         MethodDeclList methodDecls = classDecl.getMethodDeclarations();
         for (int i = 0; i < methodDecls.size(); i++) {
             methodDecls.get(i).accept(this);
@@ -222,6 +227,11 @@ public class TypeChecker implements TypeVisitor {
 
         currentMethod = currentClass.getMethod("main");
 
+        VarDeclList varDecls = main.getVarDeclarations();
+        for (int i = 0; i < varDecls.size(); i++) {
+            varDecls.get(i).accept(this);
+        }
+
         StmtList statements = main.getStatements();
         for (int i = 0; i < statements.size(); i++) {
             statements.get(i).accept(this);
@@ -272,6 +282,11 @@ public class TypeChecker implements TypeVisitor {
     @Override
     public Type visit(MethodDecl decl) {
         currentMethod = currentClass.getMethod(decl.getName().getName());
+
+        VarDeclList varDecls = decl.getVarDeclarations();
+        for (int i = 0; i < varDecls.size(); i++) {
+            varDecls.get(i).accept(this);
+        }
 
         StmtList statements = decl.getStatements();
         for (int i = 0; i < statements.size(); i++) {
@@ -405,6 +420,13 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(VarDecl varDecl) {
+        Type type = varDecl.getType();
+        if (type instanceof ObjectType) {
+            String typeName = ((ObjectType)type).getName();
+            if (!classes.containsKey(typeName)) {
+                throw new UndefinedVariableException(typeName, varDecl.getLine(), varDecl.getColumn());
+            }
+        }
         return null;
     }
 
