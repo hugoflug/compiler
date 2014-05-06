@@ -155,6 +155,7 @@ public class TypeChecker implements TypeVisitor {
 
     @Override
     public Type visit(Formal formal) {
+        assertTypeExistence(formal.getType(), formal.getLine(), formal.getColumn());
         return formal.getType();
     }
 
@@ -291,6 +292,11 @@ public class TypeChecker implements TypeVisitor {
     @Override
     public Type visit(MethodDecl decl) {
         currentMethod = currentClass.getMethod(decl.getName().getName());
+
+        FormalList formals = decl.getArgumentList();
+        for (int i = 0; i < formals.size(); i++) {
+            formals.get(i).accept(this);
+        }
 
         VarDeclList varDecls = decl.getVarDeclarations();
         for (int i = 0; i < varDecls.size(); i++) {
