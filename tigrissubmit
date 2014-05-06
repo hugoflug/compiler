@@ -1,4 +1,5 @@
 #!/bin/sh
 ant clean
 cd ..
-tar cf - compiler --exclude='.*' --exclude='tests' --exclude='tigrissubmit' --exclude='compiler.iml' --exclude='txt' | gzip | uuencode x | mail -s "" submit@tigris.csc.kth.se
+tar cf - compiler --exclude='.*' --exclude='tests' --exclude='tigrissubmit' --exclude='compiler.iml' --exclude='txt' \
+| gzip | uuencode x | mail -s "" submit@tigris.csc.kth.se
