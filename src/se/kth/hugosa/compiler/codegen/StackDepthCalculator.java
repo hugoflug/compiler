@@ -155,6 +155,7 @@ public class StackDepthCalculator implements Visitor {
         call.getObject().accept(this);
         call.getArgumentList().acceptAll(this);
         changeStackDepth(-1 - call.getArgumentList().size());
+        changeStackDepth(+1);
     }
 
     @Override
