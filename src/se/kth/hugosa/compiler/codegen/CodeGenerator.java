@@ -316,7 +316,8 @@ public class CodeGenerator implements Visitor {
 
         setCurrentMethod(currentClass.getMethod("main"));
 
-        assembler.append(".limit stack 100");
+        int maxStack = stackDepthCalc.calcMaxStackDepth(main.getStatements()) + 1;
+        assembler.append(".limit stack " + maxStack);
         assembler.append(".limit locals " + (currentMethod.getAmountOfVars() + 1));
 
         main.getVarDeclarations().acceptAll(this);

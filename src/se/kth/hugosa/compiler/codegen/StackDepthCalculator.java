@@ -16,6 +16,12 @@ public class StackDepthCalculator implements Visitor {
         return maxStackDepth;
     }
 
+    public int calcMaxStackDepth(StmtList statements) {
+        stackDepth = maxStackDepth = 0;
+        statements.acceptAll(this);
+        return maxStackDepth;
+    }
+
     public void changeStackDepth(int delta) {
         stackDepth += delta;
         if (stackDepth > maxStackDepth) {
