@@ -3,7 +3,7 @@
 .super java/lang/Object
 .method public static main([Ljava/lang/String;)V
 .limit stack 100
-.limit locals 100
+.limit locals 4
 ldc 5
 newarray int
 astore 1

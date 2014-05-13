@@ -20,6 +20,7 @@ public class CodeGenerator implements Visitor {
     private MethodTable currentMethod;
     private TypeChecker typeChecker;
     private Program program;
+    private StackDepthCalculator stackDepthCalc;
 
     public CodeGenerator(String sourceFile, Program program, Map<String, ClassTable> symbolTable, String outDirectory) throws IOException {
         this.sourceFile = sourceFile;
@@ -28,6 +29,7 @@ public class CodeGenerator implements Visitor {
         this.symbolTable = symbolTable;
         labelGen = new LabelGenerator();
         typeChecker = new TypeChecker(symbolTable);
+        stackDepthCalc = new StackDepthCalculator();
         this.program = program;
     }
 
@@ -359,7 +361,8 @@ public class CodeGenerator implements Visitor {
         String methodDescriptor = JasminAssembler.toMethodDescriptor(currentMethod.getName(),
                 decl.getArgumentList(), currentMethod.getType());
         assembler.append(".method public " + escape(methodDescriptor));
-        assembler.append(".limit stack 100");
+        int maxStack = stackDepthCalc.calcMaxStackDepth(decl);
+        assembler.append(".limit stack " + maxStack);
         assembler.append(".limit locals " + (currentMethod.getAmountOfVars() + 1));
         decl.getArgumentList().acceptAll(this);
         decl.getVarDeclarations().acceptAll(this);
