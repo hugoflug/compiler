@@ -361,7 +361,7 @@ public class CodeGenerator implements Visitor {
         String methodDescriptor = JasminAssembler.toMethodDescriptor(currentMethod.getName(),
                 decl.getArgumentList(), currentMethod.getType());
         assembler.append(".method public " + escape(methodDescriptor));
-        int maxStack = stackDepthCalc.calcMaxStackDepth(decl);
+        int maxStack = stackDepthCalc.calcMaxStackDepth(decl) + 1;
         assembler.append(".limit stack " + maxStack);
         assembler.append(".limit locals " + (currentMethod.getAmountOfVars() + 1));
         decl.getArgumentList().acceptAll(this);

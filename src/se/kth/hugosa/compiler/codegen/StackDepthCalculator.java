@@ -11,6 +11,7 @@ public class StackDepthCalculator implements Visitor {
     }
 
     public int calcMaxStackDepth(MethodDecl methodDecl) {
+        stackDepth = maxStackDepth = 0;
         methodDecl.accept(this);
         return maxStackDepth;
     }
@@ -26,7 +27,7 @@ public class StackDepthCalculator implements Visitor {
     public void visit(And and) {
         and.getLeftOp().accept(this);
         changeStackDepth(+1);
-        changeStackDepth(-1);
+        changeStackDepth(-2);
         and.getRightOp().accept(this);
     }
 
@@ -228,7 +229,7 @@ public class StackDepthCalculator implements Visitor {
     public void visit(Or or) {
         or.getLeftOp().accept(this);
         changeStackDepth(+1);
-        changeStackDepth(-1);
+        changeStackDepth(-2);
         or.getRightOp().accept(this);
     }
 
@@ -252,7 +253,8 @@ public class StackDepthCalculator implements Visitor {
     @Override
     public void visit(Syso syso) {
         changeStackDepth(+1);
-        changeStackDepth(-1);
+        syso.getPrintee().accept(this);
+        changeStackDepth(-2);
     }
 
     @Override

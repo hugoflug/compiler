@@ -13,7 +13,7 @@ invokespecial java/lang/Object/<init>()V
 return
 .end method
 .method public 'foo()I'
-.limit stack 2
+.limit stack 3
 .limit locals 1
 iconst_0
 iconst_1
@@ -27,13 +27,13 @@ ldc 0
 ireturn
 .end method
 .method public 'boo()I'
-.limit stack 2
+.limit stack 3
 .limit locals 1
 iconst_1
 ireturn
 .end method
 .method public 'add(II)I'
-.limit stack 2
+.limit stack 3
 .limit locals 4
 ldc 56
 istore 3
