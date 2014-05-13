@@ -1,9 +1,11 @@
 package se.kth.hugosa.compiler.symboltable;
 
-import se.kth.hugosa.compiler.ast.ObjectType;
 import se.kth.hugosa.compiler.ast.Type;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class MethodTable {
 
@@ -34,6 +36,10 @@ public class MethodTable {
 
     public Set<Map.Entry<String, Type>> getParams() {
         return params.entrySet();
+    }
+
+    public int getAmountOfVars() {
+        return locals.size() + params.size();
     }
 
     public boolean hasParam(String name) {

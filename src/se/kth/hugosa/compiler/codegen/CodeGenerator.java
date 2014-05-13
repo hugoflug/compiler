@@ -156,8 +156,8 @@ public class CodeGenerator implements Visitor {
         }
 
         assembler.append(".method public <init>()V");
-        assembler.append(".limit stack 100");
-        assembler.append(".limit locals 100");
+        assembler.append(".limit stack 1");
+        assembler.append(".limit locals 1");
         assembler.append("aload_0");
         assembler.append("invokespecial java/lang/Object/<init>()V");
         assembler.append("return");
@@ -311,10 +311,11 @@ public class CodeGenerator implements Visitor {
         assembler.append(".class public " + escape(main.getName().getName()));
         assembler.append(".super java/lang/Object");
         assembler.append(".method public static main([Ljava/lang/String;)V");
-        assembler.append(".limit stack 100");
-        assembler.append(".limit locals 100");
 
         setCurrentMethod(currentClass.getMethod("main"));
+
+        assembler.append(".limit stack 100");
+        assembler.append(".limit locals " + (currentMethod.getAmountOfVars() + 1));
 
         main.getVarDeclarations().acceptAll(this);
         main.getStatements().acceptAll(this);
@@ -359,7 +360,7 @@ public class CodeGenerator implements Visitor {
                 decl.getArgumentList(), currentMethod.getType());
         assembler.append(".method public " + escape(methodDescriptor));
         assembler.append(".limit stack 100");
-        assembler.append(".limit locals 100");
+        assembler.append(".limit locals " + (currentMethod.getAmountOfVars() + 1));
         decl.getArgumentList().acceptAll(this);
         decl.getVarDeclarations().acceptAll(this);
         decl.getStatements().acceptAll(this);
