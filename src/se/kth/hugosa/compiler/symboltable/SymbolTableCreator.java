@@ -16,7 +16,7 @@ public class SymbolTableCreator implements Visitor {
         classes = new HashMap<String, ClassTable>();
     }
 
-    public Map<String, ClassTable> createSymbolTable(Program program) throws CompilationException {
+    public Map<String, ClassTable> createSymbolTable(Program program) throws RedefinitionException {
         visit(program);
         return classes;
     }
