@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class MethodTable {
-
-    //params should be a list of (String, Type) tuples
     private Map<String, Type> params;
     private Map<String, Type> locals;
     private Type type;
