@@ -1,5 +1,6 @@
 package mjc;
 
+import se.kth.hugosa.compiler.Main;
 import se.kth.hugosa.compiler.ast.Program;
 import se.kth.hugosa.compiler.codegen.CodeGenerator;
 import se.kth.hugosa.compiler.parser.MiniJavaParser;
@@ -13,18 +14,6 @@ import java.util.Map;
 
 public class JVMMain {
     public static void main(String[] args) throws IOException {
-        try {
-            MiniJavaParser parser = new MiniJavaParser(new FileInputStream(args[0]));
-            Program program = parser.parse();
-            SymbolTableCreator creator = new SymbolTableCreator();
-            Map<String, ClassTable> classes = creator.createSymbolTable(program);
-            TypeChecker typeChecker = new TypeChecker(classes);
-            typeChecker.typeCheck(program);
-            CodeGenerator gen = new CodeGenerator(args[0], program, classes, ".");
-            gen.generateCode();
-        } catch (Exception e) {
-            System.exit(1);
-        }
-        System.exit(0);
+        Main.main(args);
     }
 }

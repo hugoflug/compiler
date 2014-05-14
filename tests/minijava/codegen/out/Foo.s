@@ -27,7 +27,7 @@ ldc 0
 ireturn
 .end method
 .method public 'boo()I'
-.limit stack 3
+.limit stack 2
 .limit locals 1
 iconst_1
 ireturn
