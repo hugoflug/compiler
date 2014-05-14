@@ -2,11 +2,11 @@ package se.kth.hugosa.compiler.typechecking;
 
 import se.kth.hugosa.compiler.CompilationException;
 
-public class UndefinedVariableException extends CompilationException {
+public class UndefinedNameException extends CompilationException {
     private String var;
     private int line, column;
 
-    public UndefinedVariableException(String var, int line, int column) {
+    public UndefinedNameException(String var, int line, int column) {
         this.var = var;
         this.line = line;
         this.column = column;
@@ -14,6 +14,6 @@ public class UndefinedVariableException extends CompilationException {
 
     @Override
     public String toString() {
-        return "UndefinedVariableException (line " + line + ", column " + column + "): " + var + " is undefined";
+        return "UndefinedNameException (line " + line + ", column " + column + "): " + var + " is undefined";
     }
 }

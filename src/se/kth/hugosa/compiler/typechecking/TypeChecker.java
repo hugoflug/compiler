@@ -66,7 +66,7 @@ public class TypeChecker implements TypeVisitor {
         if (type instanceof ObjectType) {
             String typeName = ((ObjectType)type).getName();
             if (!classes.containsKey(typeName)) {
-                throw new UndefinedVariableException(typeName, line, column);
+                throw new UndefinedNameException(typeName, line, column);
             }
         }
     }
@@ -170,7 +170,7 @@ public class TypeChecker implements TypeVisitor {
                 if (idType == null) {
                     idType = currentClass.getType(name);
                     if (idType == null) {
-                        throw new UndefinedVariableException(name, id.getLine(), id.getColumn());
+                        throw new UndefinedNameException(name, id.getLine(), id.getColumn());
                     }
                 }
             }
@@ -180,7 +180,7 @@ public class TypeChecker implements TypeVisitor {
         //not sure if necessary
         idType = currentClass.getType(name);
         if (idType == null) {
-            throw new UndefinedVariableException(name, id.getLine(), id.getColumn());
+            throw new UndefinedNameException(name, id.getLine(), id.getColumn());
         }
 
         return idType;
@@ -263,13 +263,13 @@ public class TypeChecker implements TypeVisitor {
         String typeName = ((ObjectType)objectType).getName();
         ClassTable classTable = classes.get(typeName);
         if (classTable == null) {
-            throw new UndefinedVariableException(typeName, call.getMethodName().getLine(), call.getMethodName().getColumn());
+            throw new UndefinedNameException(typeName, call.getMethodName().getLine(), call.getMethodName().getColumn());
         }
 
         String methodName = call.getMethodName().getName();
         MethodTable method = classTable.getMethod(methodName);
         if (method == null) {
-            throw new UndefinedVariableException(methodName, call.getMethodName().getLine(), call.getMethodName().getColumn());
+            throw new UndefinedNameException(methodName, call.getMethodName().getLine(), call.getMethodName().getColumn());
         }
 
         ExpList callParams = call.getArgumentList();
@@ -346,7 +346,7 @@ public class TypeChecker implements TypeVisitor {
     public Type visit(NewObject object) {
         String name = object.getName().getName();
         if (classes.get(name) == null) {
-            throw new UndefinedVariableException(name, object.getLine(), object.getColumn());
+            throw new UndefinedNameException(name, object.getLine(), object.getColumn());
         }
 
         return new ObjectType(name);
@@ -418,7 +418,7 @@ public class TypeChecker implements TypeVisitor {
     @Override
     public Type visit(This t) {
         if (currentClass == null) {
-            throw new UndefinedVariableException("this", t.getLine(), t.getColumn());
+            throw new UndefinedNameException("this", t.getLine(), t.getColumn());
         }
         return new ObjectType(currentClass.getName());
     }
