@@ -2,6 +2,7 @@
     <target name="javacc">
         <javacc javacchome="lib" target="src/se/kth/hugosa/compiler/parser/MiniJavaParser.jj" />
     </target>
+
     <target name="compile" depends="javacc">
         <mkdir dir="bin"/>
         <javac srcdir="src" destdir="bin" />
@@ -14,6 +15,13 @@
         </delete>
     </target>
     <target name="jar" depends="compile">
-        <jar destfile="mjc.jar" basedir="bin"/>
+        <manifest file="MANIFEST.MF">
+            <attribute name="Main-Class"
+                       value="se.kth.hugosa.compiler.Main" />
+        </manifest>
+        <jar destfile="mjc.jar"
+             basedir="bin"
+             manifest="MANIFEST.MF"/>
     </target>
+
 </project>
