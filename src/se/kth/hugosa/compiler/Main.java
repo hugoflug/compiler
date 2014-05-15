@@ -23,6 +23,7 @@ public class Main {
             CodeGenerator gen = new CodeGenerator(args[0], program, classes, ".");
             gen.generateCode();
         } catch (Exception e) {
+            System.err.println(e);
             System.exit(1);
         }
         System.exit(0);
